@@ -12,6 +12,11 @@ permissions:
 
 jobs:
   prepare-next-task:
+    # Hub-internal automation: only run on the private source repo, never on the
+    # public brainforge mirror. Keyed on the bare repo name, which the publish
+    # sync does NOT rewrite (it only rewrites the `izakl/brainforge` slug), so
+    # this evaluates false on `brainforge` and the job is skipped there.
+    if: github.event.repository.name == 'brain-factory'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
