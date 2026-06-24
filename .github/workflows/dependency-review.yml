@@ -1,0 +1,25 @@
+name: Dependency review
+
+# Flags pull requests that introduce dependencies with known vulnerabilities.
+# The dependency graph it relies on is free on PUBLIC repositories, so this runs
+# only on the public `brainforge` mirror (skipped on the private source repo).
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    name: dependency-review
+    if: github.event.repository.name == 'brainforge'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Dependency review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

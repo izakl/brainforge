@@ -107,13 +107,22 @@ def _skill_copy(text: str) -> str:
     return f"{text.rstrip()}\n\n{GENERATED_NOTE}\n"
 
 
-def _agent_md(name: str, description: str, body: str) -> str:
-    """A GitHub Copilot custom agent (.agent.md) built from the skill."""
+def _agent_md(name: str, description: str, body: str,
+              tools: str | None = None, model: str | None = None) -> str:
+    """A GitHub Copilot custom agent (.agent.md) built from the skill.
+
+    Carries ``tools``/``model`` frontmatter through from the source command when
+    it declares them (ADR 0022), so the emitted agent is no longer a lossy
+    projection of the skill.
+    """
+    front = [f"name: {name}", f"description: {description}"]
+    if tools:
+        front.append(f"tools: {tools}")
+    if model:
+        front.append(f"model: {model}")
+    fm = "\n".join(front)
     return (
-        "---\n"
-        f"name: {name}\n"
-        f"description: {description}\n"
-        "---\n\n"
+        f"---\n{fm}\n---\n\n"
         f"{GENERATED_NOTE}\n\n"
         f"{body.rstrip()}\n"
     )
@@ -144,12 +153,14 @@ def emit_targets(brain: str | Path) -> EmitResult:
         meta, body = _split_frontmatter(text)
         name = meta.get("name") or base_name
         description = meta.get("description", "").strip()
+        tools = meta.get("tools") or None
+        model = meta.get("model") or None
 
         result.commands.append(name)
         _write(claude_skills / name / "SKILL.md", _skill_copy(text), result, brain)
         _write(gh_skills / name / "SKILL.md", _skill_copy(text), result, brain)
         _write(gh_agents / f"{name}.agent.md",
-               _agent_md(name, description, body), result, brain)
+               _agent_md(name, description, body, tools=tools, model=model), result, brain)
 
     result.notes.append(
         f"Emitted {len(result.commands)} command(s) to "

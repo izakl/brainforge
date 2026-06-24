@@ -13,17 +13,18 @@ disturbing project-owned work. Follows the propagation contract; lands via PR.
 ## Steps
 1. OPEN-lite: read the operating contract §7 and the propagation contract; state the upgrade
    objective.
-2. Resolve the gap: compare the hub registry `brain-factory/registry/framework-version.json`
-   against the brain manifest `framework_version`. If equal, report "up to date" and stop.
-3. Collect deltas: read each intervening release note from current (exclusive) to latest
-   (inclusive); note each changed core module and its change kind.
-4. Build the upgrade plan: skip disabled core modules; surface `adopted: false` artifacts as
-   manual-review; stage the rest from the hub brain template.
-5. Apply core-layer deltas. PRESERVE all extensions — never touch `extensions` paths; surface
-   any collision for operator review. Bump `synced_from` and set manifest
-   `framework_version = latest`.
-6. CLOSE ritual: append a continuity entry describing the upgrade; regenerate the capabilities
-   map; run the test suite the way the project runs it; open the change as a PR and push.
+2. Preview (dry-run): run the down-sync engine through the adapter seam —
+   `run.sh upgrade-brain --brain <this brain>` (the `upgrade-brain` task; no `--apply`). It
+   resolves the gap and, if behind, prints the planned core refresh, the manual-review modules
+   (`adopted: false`), and any extension conflicts. If it reports "up to date", stop.
+3. Review the plan: confirm every planned write is core-layer and that no `extensions` path
+   appears under conflicts. Handle manual-review modules by hand — never overwrite them.
+4. Apply: re-run with `--apply` (add `--force` only to repair drift at the same version). The
+   engine refreshes the enabled core modules, bumps each `synced_from` and the manifest
+   `framework_version = latest`, and records the upgrade under `05-logs/upgrades/`; extensions
+   are never touched.
+5. CLOSE ritual: regenerate the capabilities map; run the test suite the way the project runs
+   it; open the change as a PR and push (the PR is the control gate).
 
 ## Done when
 The manifest is at the latest framework version, core deltas are applied with extensions

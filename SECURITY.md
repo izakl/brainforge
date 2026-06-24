@@ -12,7 +12,9 @@ The "security surface" is therefore primarily:
 
 ## Supported versions
 
-Only the `main` branch is supported. Tagged releases are not produced.
+The latest released framework version (see [`CHANGELOG.md`](CHANGELOG.md))
+receives security fixes. Releases are cut from `main` and tagged `vX.Y.Z`; brains
+on older versions are upgraded forward via the down-sync (`<prefix>-upgrade`).
 
 ## Reporting a vulnerability
 
@@ -42,7 +44,16 @@ For non-sensitive security hardening ideas (for example checklist improvements o
 
 - GitHub Actions are pinned to major versions and updated weekly via Dependabot
   (`.github/dependabot.yml`).
-- The markdown CI workflow uses least-privilege permissions (`contents: read`).
+- CI workflows use least-privilege permissions (`contents: read`).
+- **Automated scanning.** CodeQL static analysis
+  ([`codeql.yml`](.github/workflows/codeql.yml)), dependency review
+  ([`dependency-review.yml`](.github/workflows/dependency-review.yml)), and a
+  gitleaks secret scan ([`gitleaks.yml`](.github/workflows/gitleaks.yml)) run in
+  CI. Code scanning and dependency review run on the public mirror (where they
+  are free); the secret scan runs in both repositories.
+- The public mirror is published as a clean snapshot by
+  [`scripts/sync-public.sh`](scripts/sync-public.sh), which scrubs authorship
+  trailers and internal names — the secret scan is an additional backstop.
 - Review routing is enforced via [CODEOWNERS](.github/CODEOWNERS).
 - See [docs/governance-checklist.md](docs/governance-checklist.md) for the broader
   governance contract.

@@ -38,3 +38,30 @@ without disturbing project-owned work.
 - Every applied upgrade lands via a PR in the brain repo with validation evidence.
 - A brain may pin a `framework_version` and decline upgrades; the gap is then
   reported by `<prefix>-status` until resolved.
+
+## Implementation
+
+Down-sync execution is implemented as the `upgrade` CLI subcommand
+(`brainfactory upgrade`) and the `upgrade-brain` adapter task, callable from a
+brain via `<prefix>-upgrade` or `run.sh upgrade-brain`. It is **dry-run by
+default**; `--apply` writes, and `--force` re-materialises the core even with no
+version gap (drift repair).
+
+The hub keeps a single `brain-template` representing the *latest* core, so the
+engine reconciles a brain **forward to that template** rather than replaying
+per-release deltas: it refreshes every enabled, hub-adopted core module from the
+template, bumps `framework_version` plus each refreshed module's `synced_from`,
+and writes a record under the brain's `05-logs/upgrades/`. `adopted: false`
+modules are surfaced as manual-review and disabled modules are skipped (steps 3
+and 4); extensions are never written.
+
+Follow-ups (not yet built):
+
+- **Per-release delta narrowing.** Parse the intervening release notes (step 2)
+  to touch only the modules a release actually changed, instead of refreshing
+  all enabled core modules. The end state is identical for an unmodified core;
+  this is an optimisation and a finer manual-review signal.
+- **`removed` handling.** Delete core modules retired upstream — the engine
+  currently refreshes and adds, but never deletes.
+- **Auto-open the PR.** The engine stages the change in the working tree; the
+  operator opens the PR today (step 6). Opening it automatically is a follow-up.

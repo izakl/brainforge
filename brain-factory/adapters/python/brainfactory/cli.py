@@ -11,9 +11,11 @@ Usage:
     python -m brainfactory capabilities [--brain DIR] (--check | --write) [--json out.json]
     python -m brainfactory docs-mesh [--brain DIR] [--json out.json]
     python -m brainfactory intent-gate [--brain DIR] [--json out.json]
+    python -m brainfactory upgrade [--brain DIR] [--apply] [--force] [--json out.json]
     python -m brainfactory mcp
 
-``adopt`` defaults to DRY-RUN and prints the plan; pass ``--apply`` to write.
+``adopt`` and ``upgrade`` default to DRY-RUN and print the plan; pass ``--apply``
+to write.
 ``mcp`` runs a Model Context Protocol server (stdio) for any MCP-capable agent.
 """
 
@@ -29,6 +31,7 @@ from . import capabilities as capabilities_mod
 from . import docsmesh as docsmesh_mod
 from . import emit as emit_mod
 from . import inspect as inspect_mod
+from . import upgrade as upgrade_mod
 
 
 def _split_csv(value: str) -> list[str]:
@@ -151,6 +154,20 @@ def cmd_intent_gate(args: argparse.Namespace) -> int:
     return 1
 
 
+def cmd_upgrade(args: argparse.Namespace) -> int:
+    result = upgrade_mod.upgrade(
+        brain=args.brain or ".",
+        apply=args.apply,
+        force=args.force,
+    )
+    print(upgrade_mod.render_upgrade_text(result))
+    if args.json:
+        Path(args.json).write_text(
+            json.dumps(result.to_dict(), indent=2) + "\n", encoding="utf-8")
+        print(f"\nWrote JSON result: {args.json}")
+    return 0
+
+
 def cmd_mcp(args: argparse.Namespace) -> int:
     from . import mcpserver
     return mcpserver.serve_stdio()
@@ -246,6 +263,21 @@ def build_parser() -> argparse.ArgumentParser:
     p_ig.add_argument("--brain", help="Brain directory (default: cwd).")
     p_ig.add_argument("--json", help="Write the JSON result here.")
     p_ig.set_defaults(func=cmd_intent_gate)
+
+    # upgrade (down-sync execution)
+    p_up = sub.add_parser(
+        "upgrade",
+        help="Down-sync: reconcile a brain's core modules to the hub's latest "
+             "framework version (DRY-RUN by default; --apply to write).")
+    p_up.add_argument("--brain", help="Brain directory (default: cwd).")
+    p_up.add_argument("--apply", action="store_true",
+                      help="Actually write refreshed core + bump the manifest "
+                           "(default is dry-run).")
+    p_up.add_argument("--force", action="store_true",
+                      help="Re-materialise core even when already at the latest "
+                           "version (repair drift).")
+    p_up.add_argument("--json", help="Write the JSON result here.")
+    p_up.set_defaults(func=cmd_upgrade)
 
     # mcp
     p_mcp = sub.add_parser(

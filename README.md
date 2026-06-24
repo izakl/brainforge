@@ -44,6 +44,23 @@ New here? Read **[Brain Factory: how it works](docs/how-brain-factory-works.md)*
 
 Prerequisites: `git`, Python 3, and Node.js (for the markdown checks).
 
+### Install the CLI (optional)
+
+The onboarding engine ships as a Python package with a `brainfactory` command —
+no clone needed to use it. Once published to PyPI:
+
+```bash
+pipx install brainfactory        # isolated CLI (or: pip install brainfactory)
+brainfactory inspect --repo .    # read-only gap report for any repo
+```
+
+`npx brainfactory` forwards to the same engine. Until the PyPI release, install
+straight from the repo — see
+[`brain-factory/adapters/python/`](brain-factory/adapters/python/README.md) and
+[`installers/npm/`](installers/npm/README.md).
+
+### From a clone
+
 ```bash
 # 1. Clone the hub
 git clone https://github.com/izakl/brainforge.git brain-factory

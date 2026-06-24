@@ -50,13 +50,13 @@ Trade-offs:
 
 - Each command has three generated copies; they are marked generated and must not
   be hand-edited (edit the source `SKILL.md`).
-- `.agent.md` is a lossy projection of the skill (no tools/model frontmatter yet).
+- `.agent.md` carries `tools`/`model` frontmatter through when the source command
+  declares them; otherwise it projects `name`/`description` only.
 
 ## Follow-ups
 
 - Run `emit-commands` as part of the close ritual / capabilities refresh so the
   emitted artifacts never drift from the authored source.
-- Add `tools`/`model` frontmatter to emitted agents when commands declare them.
 - Consider emitting per-command MCP tool definitions alongside the file targets.
 
 ## References
