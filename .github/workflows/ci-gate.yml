@@ -28,6 +28,7 @@ jobs:
       - name: Framework guardrail scripts
         run: |
           bash scripts/check-brain-factory.sh
+          bash scripts/check-version-parity.sh
           bash scripts/check-index-parity.sh
           bash scripts/check-framework-task-queue.sh
           bash scripts/check-queue-health.sh

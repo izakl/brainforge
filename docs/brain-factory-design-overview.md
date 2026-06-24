@@ -154,29 +154,32 @@ Brain Factory is built to run on what an individual already has:
 
 ## Proposed and optional flows
 
-The flows above are built today. The ones here are either the next planned
-increments or additive layers a brain can switch on if it wants them. They are
-shown so the target state is clear, with each item's status in the table below.
+The flows above are built today. The ones here are a mix of recently shipped
+increments (inspect-first adoption, improve-down) and additive or proposed
+layers a brain can switch on if it wants them. Each item's status is in the
+table below.
 
-### Improve-down: applying an upgrade (planned)
+### Improve-down: applying an upgrade
 
-The down-sync contract is defined; executing it end-to-end is the next core
-increment. A brain compares its version to the hub, builds a plan from the
-intervening release notes, stages only the changed core modules, and lands the
-result as a PR — extensions untouched.
+Down-sync execution is built. A brain compares its `framework_version` to the
+hub, reconciles its enabled core modules to the current framework template,
+bumps `framework_version` and each refreshed module's `synced_from`, and lands
+the result as a PR. Pre-existing (project-owned) modules are surfaced for manual
+review rather than overwritten, and project extensions are never touched.
 
 ```mermaid
 flowchart LR
     S["brain framework_version"] --> G{"gap vs hub latest?"}
     G -->|none| U["up to date"]
-    G -->|behind| P["build upgrade plan<br>from release notes"]
-    P --> ST["stage core-layer deltas"]
+    G -->|behind| P["build upgrade plan<br>(reconcile to template)"]
+    P --> ST["refresh enabled core modules<br>manual-review the rest"]
     ST --> PR["open PR in brain<br>extensions preserved"]
-    PR --> B["bump framework_version"]
+    PR --> B["bump framework_version + synced_from"]
 ```
 
-Today the MCP `version_status` tool and `<prefix>-status` report the gap; applying
-the plan is the planned piece.
+The MCP `version_status` tool and `<prefix>-status` report the gap; the
+`upgrade` task (`<prefix>-upgrade`) applies the plan — dry-run by default, with
+`--apply` to write.
 
 ### Inspect-first adoption
 
@@ -257,9 +260,10 @@ flowchart LR
 | Multi-target command emission | ✅ Built | [ADR 0022](adr/0022-multi-target-command-emission.md) |
 | Test suite in the CI gate | ✅ Built | [`check-python-tests.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-python-tests.sh) |
 | Documentation framework (operating model, profiles, runbooks) | ✅ Built | [`docs/`](README.md) |
-| Down-sync **execution** (apply an upgrade plan) | ◻️ Planned | [`propagation.md`](https://github.com/izakl/brainforge/blob/main/brain-factory/registry/propagation.md) |
-| `tools`/`model` frontmatter on emitted agents | ◻️ Planned | [ADR 0022](adr/0022-multi-target-command-emission.md) |
-| Installer (pipx/npx) + published docs site | ◻️ In progress | [docs site](#go-deeper) |
+| Down-sync **execution** (apply an upgrade plan) | ✅ Built | [`propagation.md`](https://github.com/izakl/brainforge/blob/main/brain-factory/registry/propagation.md) |
+| `tools`/`model` frontmatter on emitted agents | ✅ Built | [ADR 0022](adr/0022-multi-target-command-emission.md) |
+| Installer (pipx/npx) + published docs site | ✅ Built | [`adapters/python`](https://github.com/izakl/brainforge/blob/main/brain-factory/adapters/python/README.md) |
+| Security scanning (CodeQL / secret scan / dep review) | ✅ Built | [`SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md) |
 | Spec Kit adapter; pluggable self-hosted memory | ◻️ Optional | this page |
 | GitHub Agent HQ / Mission Control integration | ◻️ Optional (paid) | this page |
 

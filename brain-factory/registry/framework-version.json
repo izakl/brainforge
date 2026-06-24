@@ -1,7 +1,7 @@
 {
-  "framework_version": "0.1.0",
-  "released": "2026-06-17",
-  "summary": "Initial brain-factory foundation: brain template, core command catalog, manifest schema, registry, onboarding engine spec, and cross-platform adapter seam.",
+  "framework_version": "0.2.0",
+  "released": "2026-06-24",
+  "summary": "Down-sync execution, an installable CLI (pipx/npx), release automation behind a version-parity guardrail, tools/model frontmatter on emitted agents, and cross-platform adapter parity tests.",
   "core_modules": [
     "operating-contract",
     "session-ritual-hooks",

@@ -38,6 +38,12 @@
       "python": "python/brainfactory (module: python -m brainfactory emit-commands)",
       "bash": "bash/emit-commands.sh",
       "powershell": "powershell/emit-commands.ps1"
+    },
+    "upgrade-brain": {
+      "summary": "Down-sync execution: reconcile a brain's enabled core modules to the hub's latest framework version, bumping framework_version + synced_from and preserving project extensions. Surfaces pre-existing (adopted:false) modules for manual review. Defaults to dry-run; pass --apply to write.",
+      "python": "python/brainfactory (module: python -m brainfactory upgrade)",
+      "bash": "bash/upgrade.sh",
+      "powershell": "powershell/upgrade.ps1"
     }
   }
 }

@@ -8,6 +8,39 @@ and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2
 The framework version that brains stamp and sync against is tracked separately in
 [`brain-factory/registry/framework-version.json`](brain-factory/registry/framework-version.json).
 
+## [0.2.0] - 2026-06-24
+
+A capability wave on the Phase 1 foundation: the down-sync now executes
+end-to-end, the engine installs as a CLI, and releases are automated and
+version-checked.
+
+### Added
+
+- **Down-sync execution.** A new `upgrade` engine — CLI `brainfactory upgrade`
+  and the `upgrade-brain` adapter task — reconciles a brain's enabled core
+  modules to the hub's current template, bumping `framework_version` and each
+  refreshed module's `synced_from`, surfacing pre-existing (`adopted: false`)
+  modules for manual review, and never touching extensions. Dry-run by default;
+  `--apply` writes, `--force` repairs drift.
+- **Installable CLI.** `brain-factory/adapters/python/pyproject.toml` packages the
+  engine with a `brainfactory` console script (pipx / pip), and `installers/npm/`
+  adds an `npx brainfactory` launcher that forwards to it.
+- **Release automation.** A tag-triggered `release.yml` publishes a GitHub
+  Release from the matching CHANGELOG section, and `check-version-parity.sh` (in
+  the `CI gate`) keeps the CHANGELOG, `framework-version.json`, release-notes
+  file, and changelog link in lockstep.
+- **`tools`/`model` frontmatter** carried onto emitted `.agent.md` projections
+  when the source command declares them (ADR 0022).
+- **Adapter parity tests** covering the bash + PowerShell dispatcher seam against
+  the Python source of truth.
+
+### Changed
+
+- The `<prefix>-upgrade` core command now drives the down-sync engine (dry-run →
+  review → apply) instead of describing a manual delta application.
+- `sync-public.sh` gained a `--via-pr` publishing mode for a protected public
+  `main`.
+
 ## [0.1.0] - 2026-06-19
 
 First public release: the Phase 1 foundation of Brain Factory — a hub that
@@ -42,4 +75,5 @@ project-owned extension layer, and a two-way improvement loop.
   deletion of merged head branches, and the consolidated `CI gate` required
   check.
 
+[0.2.0]: https://github.com/izakl/brainforge/releases/tag/v0.2.0
 [0.1.0]: https://github.com/izakl/brainforge/releases/tag/v0.1.0

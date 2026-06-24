@@ -1,0 +1,60 @@
+name: Release
+
+# Cut a GitHub Release when a vX.Y.Z tag is pushed. The release notes are the
+# matching CHANGELOG section, so a published release can never drift from the
+# changelog by hand. Version parity (CHANGELOG == framework-version.json ==
+# release-notes file) is enforced by check-version-parity.sh; this workflow
+# additionally asserts the pushed tag matches that version before publishing.
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Check version parity
+        run: bash scripts/check-version-parity.sh
+
+      - name: Assert tag matches framework version
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          repo_version="$(grep -oE '"framework_version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' \
+            brain-factory/registry/framework-version.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+          if [ "$tag_version" != "$repo_version" ]; then
+            echo "tag ${GITHUB_REF_NAME} (=${tag_version}) does not match framework_version ${repo_version}" >&2
+            exit 1
+          fi
+          echo "OK: tag ${GITHUB_REF_NAME} matches framework_version ${repo_version}"
+
+      - name: Extract release notes from CHANGELOG
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v ver="$version" '
+            $0 ~ "^## \\[" ver "\\]" { grab=1; next }
+            grab && (/^## \[/ || /^\[[0-9]+\.[0-9]+\.[0-9]+\]:/) { exit }
+            grab { print }
+          ' CHANGELOG.md | sed -e '/./,$!d' > notes.md
+          if [ ! -s notes.md ]; then
+            echo "no CHANGELOG section found for ${version}" >&2
+            exit 1
+          fi
+          echo "---- release notes ----"
+          cat notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "Brain Factory ${GITHUB_REF_NAME}" \
+            --notes-file notes.md \
+            --verify-tag
