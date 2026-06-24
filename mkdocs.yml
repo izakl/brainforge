@@ -19,6 +19,7 @@ theme:
     text: Inter
     code: JetBrains Mono
   features:
+    - navigation.tabs
     - navigation.sections
     - navigation.indexes
     - navigation.top
@@ -55,6 +56,9 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.highlight
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -124,24 +128,23 @@ nav:
       - governance-checklist.md
       - security-and-secure-delivery.md
       - framework-upgrade-and-maintenance.md
-  - Planning & roadmap:
+  - Planning & reporting:
       - framework-roadmap-next-prompts.md
       - framework-prompt-library.md
       - framework-next-monster-prompts.md
       - framework-health.md
-  - Metrics & reporting:
       - framework-metrics-and-feedback.md
       - framework-reporting-and-review-cadence.md
       - framework-review-cadence-template.md
       - framework-weekly-hygiene-summary-template.md
       - framework-quarterly-adoption-portability-summary-template.md
       - framework-effectiveness-scorecard-template.md
-  - Release notes:
-      - framework-release-notes.md
-      - framework-release-notes-and-upgrade-summaries.md
-      - release-notes/README.md
-      - release-notes/2026-05-25-automation-bundles-hardened.md
-      - release-notes/2026-05-25-release-notes-upgrade-summary-model.md
+      - Release notes:
+          - framework-release-notes.md
+          - framework-release-notes-and-upgrade-summaries.md
+          - release-notes/README.md
+          - release-notes/2026-05-25-automation-bundles-hardened.md
+          - release-notes/2026-05-25-release-notes-upgrade-summary-model.md
   - Runbooks:
       - runbooks/README.md
       - runbooks/framework-lifecycle-map.md
@@ -170,28 +173,28 @@ nav:
       - branching-and-cleanup.md
       - visual-diagrams-plan.md
       - diagrams/README.md
-  - Architecture decisions:
-      - adr/README.md
-      - adr/0001-github-as-durable-control-plane.md
-      - adr/0002-multi-surface-hybrid-execution-model.md
-      - adr/0003-pull-requests-as-primary-control-gate.md
-      - adr/0004-markdown-ci-guardrail.md
-      - adr/0005-dependabot-for-github-actions.md
-      - adr/0006-codeowners-for-review-routing.md
-      - adr/0007-path-based-pr-auto-labeler.md
-      - adr/0008-stale-branch-cleanup-automation.md
-      - adr/0009-mermaid-as-primary-diagram-format.md
-      - adr/0010-diagrams-convention.md
-      - adr/0011-documentation-navigation.md
-      - adr/0012-svg-companions-for-diagrams.md
-      - adr/0013-mobile-quick-action-convention.md
-      - adr/0014-deployment-infrastructure-scope.md
-      - adr/0015-handoff-packet-enforcement.md
-      - adr/0016-continuous-checks-layer.md
-      - adr/0017-queue-health-check-layer.md
-      - adr/0018-framework-change-governance-and-deprecation-policy.md
-      - adr/0019-project-brain-factory-and-improvement-loop.md
-      - adr/0020-portable-core-additive-enterprise.md
-      - adr/0021-expose-brain-factory-over-mcp.md
-      - adr/0022-multi-target-command-emission.md
-      - adr/0023-docs-site-github-pages.md
+      - Architecture decisions:
+          - adr/README.md
+          - adr/0001-github-as-durable-control-plane.md
+          - adr/0002-multi-surface-hybrid-execution-model.md
+          - adr/0003-pull-requests-as-primary-control-gate.md
+          - adr/0004-markdown-ci-guardrail.md
+          - adr/0005-dependabot-for-github-actions.md
+          - adr/0006-codeowners-for-review-routing.md
+          - adr/0007-path-based-pr-auto-labeler.md
+          - adr/0008-stale-branch-cleanup-automation.md
+          - adr/0009-mermaid-as-primary-diagram-format.md
+          - adr/0010-diagrams-convention.md
+          - adr/0011-documentation-navigation.md
+          - adr/0012-svg-companions-for-diagrams.md
+          - adr/0013-mobile-quick-action-convention.md
+          - adr/0014-deployment-infrastructure-scope.md
+          - adr/0015-handoff-packet-enforcement.md
+          - adr/0016-continuous-checks-layer.md
+          - adr/0017-queue-health-check-layer.md
+          - adr/0018-framework-change-governance-and-deprecation-policy.md
+          - adr/0019-project-brain-factory-and-improvement-loop.md
+          - adr/0020-portable-core-additive-enterprise.md
+          - adr/0021-expose-brain-factory-over-mcp.md
+          - adr/0022-multi-target-command-emission.md
+          - adr/0023-docs-site-github-pages.md

@@ -44,3 +44,37 @@
 .md-typeset h2 {
   letter-spacing: -0.005em;
 }
+
+/* ---- Landing hero: roomier buttons under the intro ------------------- */
+.md-typeset .md-button {
+  margin-top: 0.4rem;
+  margin-right: 0.4rem;
+}
+
+/* ---- Grid cards: lift, border, and accented icons -------------------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.7rem;
+  padding: 0.9rem 1rem;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > ol > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.10);
+  transform: translateY(-3px);
+}
+.md-typeset .grid.cards .twemoji.lg svg,
+.md-typeset .grid.cards .lg.twemoji svg {
+  fill: var(--md-primary-fg-color);
+}
+/* Card icon sizing + colour for the first-line glyphs */
+.md-typeset .grid.cards .middle {
+  vertical-align: middle;
+}
+
+/* ---- Comfortable measure for long-form reading ----------------------- */
+.md-grid {
+  max-width: 62rem;
+}

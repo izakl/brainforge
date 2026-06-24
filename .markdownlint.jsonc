@@ -3,5 +3,8 @@
   // MD013 is disabled to avoid noisy failures in long-form narrative docs and templates.
   "MD013": false,
   // MD033 is disabled because some framework docs may intentionally use inline HTML.
-  "MD033": false
+  "MD033": false,
+  // MD030 is disabled for Material for MkDocs "grid cards", whose list items use
+  // aligned multi-space markers (`-   :icon:`) by design.
+  "MD030": false
 }
