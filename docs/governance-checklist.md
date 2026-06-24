@@ -5,7 +5,7 @@ practical, reviewable, and anchored in GitHub. Run it on the cadence described
 under [Review cadence](#review-cadence). New to the project? See
 [How Brain Factory works](how-brain-factory-works.md) first.
 
-Repository review ownership is defined in [`.github/CODEOWNERS`](../.github/CODEOWNERS).
+Repository review ownership is defined in [`.github/CODEOWNERS`](https://github.com/izakl/brainforge/blob/main/.github/CODEOWNERS).
 Use it when assigning reviewers and validating approval routing.
 
 ## Diagram
@@ -76,7 +76,7 @@ flowchart LR
 - [ ] Security/permission implications were reviewed for changed files/workflows
 - [ ] Security routing is explicit (public issue for sanitized hardening vs private advisory for sensitive findings)
 - [ ] No secrets, credentials, or sensitive exploit details appear in issues, prompts, docs, handoffs, or PR text
-- [ ] Security concerns: see [SECURITY.md](../SECURITY.md) for the private reporting path
+- [ ] Security concerns: see [SECURITY.md](https://github.com/izakl/brainforge/blob/main/SECURITY.md) for the private reporting path
 - [ ] Dependency and security-alert intake has clear ownership and remediation path
 - [ ] Acceptance criteria are re-checked during review before approval
 
@@ -109,9 +109,9 @@ Run this checklist when:
 - templates are changed
 - new automation/agents are introduced
 - path-based labels are auto-applied via
-  [`.github/workflows/labeler.yml`](../.github/workflows/labeler.yml), and weekly
+  [`.github/workflows/labeler.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/labeler.yml), and weekly
   branching discipline is enforced via
-  [`.github/workflows/stale-branches.yml`](../.github/workflows/stale-branches.yml)
+  [`.github/workflows/stale-branches.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/stale-branches.yml)
 - support-to-product routing quality drops
 - handoffs show repeated constraint loss or validation gaps
 

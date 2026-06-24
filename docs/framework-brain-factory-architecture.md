@@ -110,7 +110,7 @@ The command/skill set is **core + extensible**, and onboarding an existing
 project must **inspect first** before extending.
 
 - **Core commands** ship with every brain and are upgraded by the hub. See
-  [`brain-factory/core-commands/CATALOG.md`](../brain-factory/core-commands/CATALOG.md)
+  [`brain-factory/core-commands/CATALOG.md`](https://github.com/izakl/brainforge/blob/main/brain-factory/core-commands/CATALOG.md)
   for the authoritative list. They cover governance/flow, quality/security, and
   the brain/framework loop itself (`upgrade`, `learn`, `capabilities`).
 - **Extension commands** are declared per project in the manifest and live under
@@ -155,7 +155,7 @@ project must **inspect first** before extending.
 ### Learn-up (brain to hub)
 
 - A pattern proven in a brain is emitted as a **structured learning** (see
-  [`brain-factory/registry/learnings-inbox/`](../brain-factory/registry/learnings-inbox/))
+  [`brain-factory/registry/learnings-inbox/`](https://github.com/izakl/brainforge/tree/main/brain-factory/registry/learnings-inbox))
   and opened as a proposal against the hub.
 - The hub curates accepted learnings into a framework **release**.
 
@@ -250,6 +250,6 @@ Tracked as queue items rather than assumed:
 ## Related docs
 
 - [Brain Factory: how it works](how-brain-factory-works.md) — the newcomer-level overview of the same model.
-- [`brain-factory/` README](../brain-factory/README.md) — the executable layer and its directory map.
+- [`brain-factory/` README](https://github.com/izakl/brainforge/blob/main/brain-factory/README.md) — the executable layer and its directory map.
 - [ADR 0019: Project brain factory and improvement loop](adr/0019-project-brain-factory-and-improvement-loop.md) — the decision record.
 - [Framework setup intent schema and application model](framework-setup-intent-schema-and-application-model.md) — the setup contract the onboarding engine generalizes.

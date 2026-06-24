@@ -8,7 +8,7 @@ Start with [how it works](how-brain-factory-works.md).
 
 The nine fields below are the **required minimum** defined in
 [`docs/multi-agent-handoff-playbook.md`](multi-agent-handoff-playbook.md) and
-enforced by [`scripts/check-handoff-packet.sh`](../scripts/check-handoff-packet.sh).
+enforced by [`scripts/check-handoff-packet.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-handoff-packet.sh).
 
 See [`docs/adr/0015-handoff-packet-enforcement.md`](adr/0015-handoff-packet-enforcement.md)
 for the decision record.

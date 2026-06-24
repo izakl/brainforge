@@ -235,7 +235,7 @@ flowchart LR
   to a durable artifact.
 - **Decisions are durable.** The [ADR log](adr/README.md) records why each piece
   exists and what alternatives were weighed; the
-  [task queue](../.github/framework-task-queue.json) tracks what is next.
+  [task queue](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json) tracks what is next.
 - **One always-on CI gate.** A single required check runs the framework guardrails
   (markdown lint, link check, diagram companions, mobile coverage, handoff
   completeness, index parity, security anchors, queue health, and brain-factory
@@ -248,16 +248,16 @@ flowchart LR
 | Capability | State | Reference |
 | --- | --- | --- |
 | Hub/brain model and manifest boundary | ✅ Built | [ADR 0019](adr/0019-project-brain-factory-and-improvement-loop.md) |
-| Onboarding engine (inspect / provision / adopt) | ✅ Built | [`onboard/`](../brain-factory/onboard/README.md) |
-| Registry + down-sync contract | ✅ Built | [`propagation.md`](../brain-factory/registry/propagation.md) |
-| Cross-platform adapter seam | ✅ Built | [`adapters/`](../brain-factory/adapters/README.md) |
+| Onboarding engine (inspect / provision / adopt) | ✅ Built | [`onboard/`](https://github.com/izakl/brainforge/blob/main/brain-factory/onboard/README.md) |
+| Registry + down-sync contract | ✅ Built | [`propagation.md`](https://github.com/izakl/brainforge/blob/main/brain-factory/registry/propagation.md) |
+| Cross-platform adapter seam | ✅ Built | [`adapters/`](https://github.com/izakl/brainforge/blob/main/brain-factory/adapters/README.md) |
 | Runtime-agnostic brains (`agent_runtimes`, `none`) | ✅ Built | [ADR 0020](adr/0020-portable-core-additive-enterprise.md) |
 | Standards-native `AGENTS.md` per brain | ✅ Built | [ADR 0020](adr/0020-portable-core-additive-enterprise.md) |
 | MCP server | ✅ Built | [ADR 0021](adr/0021-expose-brain-factory-over-mcp.md) |
 | Multi-target command emission | ✅ Built | [ADR 0022](adr/0022-multi-target-command-emission.md) |
-| Test suite in the CI gate | ✅ Built | [`check-python-tests.sh`](../scripts/check-python-tests.sh) |
+| Test suite in the CI gate | ✅ Built | [`check-python-tests.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-python-tests.sh) |
 | Documentation framework (operating model, profiles, runbooks) | ✅ Built | [`docs/`](README.md) |
-| Down-sync **execution** (apply an upgrade plan) | ◻️ Planned | [`propagation.md`](../brain-factory/registry/propagation.md) |
+| Down-sync **execution** (apply an upgrade plan) | ◻️ Planned | [`propagation.md`](https://github.com/izakl/brainforge/blob/main/brain-factory/registry/propagation.md) |
 | `tools`/`model` frontmatter on emitted agents | ◻️ Planned | [ADR 0022](adr/0022-multi-target-command-emission.md) |
 | Installer (pipx/npx) + published docs site | ◻️ In progress | [docs site](#go-deeper) |
 | Spec Kit adapter; pluggable self-hosted memory | ◻️ Optional | this page |
@@ -267,6 +267,6 @@ flowchart LR
 
 - [Brain Factory architecture](framework-brain-factory-architecture.md) — the formal model and contracts.
 - [How it works](how-brain-factory-works.md) — the five-minute intro.
-- [`brain-factory/` README](../brain-factory/README.md) — the executable layer.
+- [`brain-factory/` README](https://github.com/izakl/brainforge/blob/main/brain-factory/README.md) — the executable layer.
 - [ADR log](adr/README.md) — every decision, with context and alternatives.
-- [Core command catalog](../brain-factory/core-commands/CATALOG.md) — the commands every brain inherits.
+- [Core command catalog](https://github.com/izakl/brainforge/blob/main/brain-factory/core-commands/CATALOG.md) — the commands every brain inherits.

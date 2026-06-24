@@ -72,7 +72,7 @@ Follow the routing model in
 ## Convert to an actionable issue or PR
 
 Create or update a durable artifact using the right template in
-[`.github/ISSUE_TEMPLATE/`](../../.github/ISSUE_TEMPLATE/). Fill these minimum
+[`.github/ISSUE_TEMPLATE/`](https://github.com/izakl/brainforge/tree/main/.github/ISSUE_TEMPLATE). Fill these minimum
 fields before any execution starts:
 
 - [ ] Objective

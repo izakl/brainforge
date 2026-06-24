@@ -29,7 +29,7 @@ What was still missing is a reusable prompt library that:
 ## Relationship to existing queue artifacts
 
 - Canonical queue state and dependency truth:
-  [`.github/framework-task-queue.json`](../.github/framework-task-queue.json)
+  [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json)
 - Human-readable roadmap companion:
   [`framework-roadmap-next-prompts.md`](framework-roadmap-next-prompts.md)
 - Queue schema/linkage/governance model:

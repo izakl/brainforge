@@ -17,7 +17,7 @@ Run this audit on a recurring cadence and after meaningful framework changes.
 
 Recommended triggers:
 
-- Monthly maintenance pass. The [`framework-audit.yml`](../../.github/workflows/framework-audit.yml)
+- Monthly maintenance pass. The [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml)
   workflow runs automatically on the first of each month and can be triggered at any time
   via `workflow_dispatch` — use it to run all automated framework checks before the manual
   walkthrough.
@@ -49,7 +49,7 @@ flowchart TD
 Use [`docs/framework-health.md`](../framework-health.md) as the source checklist.
 
 1. Open `framework-health.md` and walk each section in order.
-2. Trigger the [`framework-audit.yml`](../../.github/workflows/framework-audit.yml) workflow via `workflow_dispatch` to run all automated framework checks (index parity, security guardrails, handoff packet, SVG companions, mobile quick action). Review any failures before continuing.
+2. Trigger the [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml) workflow via `workflow_dispatch` to run all automated framework checks (index parity, security guardrails, handoff packet, SVG companions, mobile quick action). Review any failures before continuing.
 3. Re-verify each charter-to-artifact row against the current repository state.
 4. Re-run the operational hygiene checks: CI status, stale branches, ADR index, `docs/README.md` index parity, link paths, and security guardrail checks.
 5. Confirm governance and routing references still point to valid files.

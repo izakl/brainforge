@@ -51,7 +51,7 @@ Decision checklist:
 
 ## Open the right issue
 
-Start from issue templates in [`.github/ISSUE_TEMPLATE/`](../../.github/ISSUE_TEMPLATE/).
+Start from issue templates in [`.github/ISSUE_TEMPLATE/`](https://github.com/izakl/brainforge/tree/main/.github/ISSUE_TEMPLATE).
 
 Quick routing:
 
@@ -85,7 +85,7 @@ Operational steps:
 
 ## Validation expectations
 
-Markdown/docs changes must pass the markdown workflow at [`.github/workflows/markdown.yml`](../../.github/workflows/markdown.yml).
+Markdown/docs changes must pass the markdown workflow at [`.github/workflows/markdown.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/markdown.yml).
 
 Before requesting review:
 

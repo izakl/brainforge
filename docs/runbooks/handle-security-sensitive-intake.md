@@ -34,7 +34,7 @@ Classification checklist:
 
 If security-sensitive:
 
-1. File a private advisory as described in [`SECURITY.md`](../../SECURITY.md).
+1. File a private advisory as described in [`SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md).
 2. Capture reproduction context with redacted detail only.
 3. Do not open public issues that contain exploit detail or secrets.
 

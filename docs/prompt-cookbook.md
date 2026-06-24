@@ -23,8 +23,8 @@ Use these documents as source of truth when writing or reusing prompts:
 - **Issue template/work-type selection and required intake fields:** [`issue-taxonomy.md`](issue-taxonomy.md)
 - **Issue filing procedure:** [`runbooks/open-an-issue.md`](runbooks/open-an-issue.md)
 - **Handoff packet structure:** [`handoff-packet-template.md`](handoff-packet-template.md)
-- **PR continuity/validation framing:** [`.github/pull_request_template.md`](../.github/pull_request_template.md)
-- **Security-sensitive routing and redaction:** [`security-and-secure-delivery.md`](security-and-secure-delivery.md) and [`../SECURITY.md`](../SECURITY.md)
+- **PR continuity/validation framing:** [`.github/pull_request_template.md`](https://github.com/izakl/brainforge/blob/main/.github/pull_request_template.md)
+- **Security-sensitive routing and redaction:** [`security-and-secure-delivery.md`](security-and-secure-delivery.md) and [`../SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md)
 - **Work-type rigor and stricter-path precedence:** [`work-type-matrix.md`](work-type-matrix.md)
 
 Examples and runbooks are supporting surfaces; when wording differs, follow the canonical artifacts above.
@@ -39,7 +39,7 @@ Examples and runbooks are supporting surfaces; when wording differs, follow the 
 
 Rule: normalize external context into GitHub issues, ADRs, discussions, or PRs before implementation.
 
-Security rule: never include secrets, credentials, or exploit payloads in prompts; route suspected vulnerabilities through private reporting in [`SECURITY.md`](../SECURITY.md).
+Security rule: never include secrets, credentials, or exploit payloads in prompts; route suspected vulnerabilities through private reporting in [`SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md).
 
 ## Prompts by execution surface
 
@@ -225,7 +225,7 @@ Unresolved risks / questions:
 For a standalone reusable file, see
 [`docs/handoff-packet-template.md`](handoff-packet-template.md).
 For the GitHub Issues form, use the
-[Handoff Packet issue template](../.github/ISSUE_TEMPLATE/handoff-packet.yml).
+[Handoff Packet issue template](https://github.com/izakl/brainforge/blob/main/.github/ISSUE_TEMPLATE/handoff-packet.yml).
 
 ### Discovery and redevelopment
 

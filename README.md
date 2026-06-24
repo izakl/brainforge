@@ -46,7 +46,7 @@ Prerequisites: `git`, Python 3, and Node.js (for the markdown checks).
 
 ```bash
 # 1. Clone the hub
-git clone https://github.com/izakl/brainforge.git
+git clone https://github.com/izakl/brainforge.git brain-factory
 cd brain-factory
 
 # 2. See what a brain would add to any repo — read-only, changes nothing

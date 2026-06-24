@@ -216,5 +216,5 @@ Then add recommended/optional layers in separate bounded PRs.
 - [Framework reporting and review cadence](framework-reporting-and-review-cadence.md)
 - [GitHub Projects setup](github-projects-setup.md)
 - [Framework health](framework-health.md)
-- [Adoption example: starter-kit bootstrap in one bounded issue → PR flow](../examples/adoption-example-starter-kit-bootstrap-flow.md)
-- [Adoption example: profile upgrade from small-repo baseline to product team](../examples/adoption-example-profile-upgrade-small-to-product.md)
+- [Adoption example: starter-kit bootstrap in one bounded issue → PR flow](https://github.com/izakl/brainforge/blob/main/examples/adoption-example-starter-kit-bootstrap-flow.md)
+- [Adoption example: profile upgrade from small-repo baseline to product team](https://github.com/izakl/brainforge/blob/main/examples/adoption-example-profile-upgrade-small-to-product.md)

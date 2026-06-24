@@ -27,7 +27,7 @@ For the reasoning behind upgrade decisions and queue hygiene, see
 - Release summary model/template: [`../framework-release-notes-and-upgrade-summaries.md`](../framework-release-notes-and-upgrade-summaries.md), [`../framework-change-summary-template.md`](../framework-change-summary-template.md)
 - Queue health check runbook: [`run-queue-health-check.md`](run-queue-health-check.md)
 - Framework health: [`../framework-health.md`](../framework-health.md)
-- Queue source of truth: [`.github/framework-task-queue.json`](../../.github/framework-task-queue.json)
+- Queue source of truth: [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json)
 
 ## Procedure
 

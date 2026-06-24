@@ -65,7 +65,7 @@ and what its non-negotiable rules are before touching any artifacts.
 
 | Artifact | Description |
 | --- | --- |
-| [`../../AGENTS.md`](../../AGENTS.md) | Minimum operating contract for agents and contributors |
+| [`../../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) | Minimum operating contract for agents and contributors |
 | [`../framework-continuity-and-memory.md`](../framework-continuity-and-memory.md) | Durable principles and continuity model |
 | [`../operating-model.md`](../operating-model.md) | How the framework runs day-to-day |
 | [`../operator-onboarding-pack.md`](../operator-onboarding-pack.md) | Practical day-0/day-1 path |
@@ -466,4 +466,4 @@ Use this checklist to locate yourself when re-entering the framework.
 - [Framework state milestones](../framework-state-milestones.md)
 - [Operator onboarding pack](../operator-onboarding-pack.md)
 - [Operating model](../operating-model.md)
-- [AGENTS.md](../../AGENTS.md)
+- [AGENTS.md](https://github.com/izakl/brainforge/blob/main/AGENTS.md)

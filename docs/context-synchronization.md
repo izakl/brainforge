@@ -151,7 +151,7 @@ Before assigning implementation:
 5. Implement via PR linked to routed issue (`Closes #...`) with validation evidence.
 
 For a concrete end-to-end trace of this pattern, see the
-[worked example: external context normalization flow](../examples/worked-example-external-context-normalization.md).
+[worked example: external context normalization flow](https://github.com/izakl/brainforge/blob/main/examples/worked-example-external-context-normalization.md).
 
 ## Security and Governance
 

@@ -71,7 +71,7 @@ Trade-offs:
 ## References
 
 - [`docs/framework-brain-factory-architecture.md`](../framework-brain-factory-architecture.md)
-- [`brain-factory/brain-template/brain.manifest.schema.json`](../../brain-factory/brain-template/brain.manifest.schema.json)
+- [`brain-factory/brain-template/brain.manifest.schema.json`](https://github.com/izakl/brainforge/blob/main/brain-factory/brain-template/brain.manifest.schema.json)
 - [ADR 0002: Multi-surface hybrid execution model](./0002-multi-surface-hybrid-execution-model.md)
 - [ADR 0019: Project brain factory and bidirectional improvement loop](./0019-project-brain-factory-and-improvement-loop.md)
 - [AGENTS.md standard](https://agents.md)

@@ -37,7 +37,7 @@ Negative:
 
 Follow-ups:
 
-- This PR added CI enforcement in [`../../.github/workflows/check-svg-companions.yml`](../../.github/workflows/check-svg-companions.yml), which flags Mermaid blocks missing matching SVG companions and orphaned SVG companions.
+- This PR added CI enforcement in [`../../.github/workflows/check-svg-companions.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/check-svg-companions.yml), which flags Mermaid blocks missing matching SVG companions and orphaned SVG companions.
 
 ## References
 

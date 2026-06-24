@@ -8,6 +8,10 @@
     },
     {
       "pattern": "^mailto:"
+    },
+    {
+      "comment": "Internal repo cross-references; validity is guaranteed by repo structure (and unauthenticated checks 404 on the private source repo).",
+      "pattern": "^https://github\\.com/izakl/(brain-factory|brainforge)/"
     }
   ],
   "retryOn429": true,

@@ -103,8 +103,8 @@ Follow-ups:
 
 ## References
 
-- [`scripts/check-index-parity.sh`](../../scripts/check-index-parity.sh)
-- [`.github/workflows/framework-audit.yml`](../../.github/workflows/framework-audit.yml)
+- [`scripts/check-index-parity.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-index-parity.sh)
+- [`.github/workflows/framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml)
 - [`docs/framework-health.md`](../framework-health.md)
 - [ADR 0012: SVG companions for diagrams](./0012-svg-companions-for-diagrams.md)
 - [ADR 0013: Mobile quick action section convention](./0013-mobile-quick-action-convention.md)

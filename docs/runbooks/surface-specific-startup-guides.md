@@ -36,7 +36,7 @@ natural-language-to-setup path, use
 
 #### Shortest startup path on the GitHub cloud agent surface
 
-1. Read [`../../AGENTS.md`](../../AGENTS.md).
+1. Read [`../../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md).
 2. Use this surface guide to confirm cloud is appropriate.
 3. Start from [`prompt-to-setup-bootstrap.md`](prompt-to-setup-bootstrap.md) if
    setup intent is not yet established.
@@ -71,7 +71,7 @@ natural-language-to-setup path, use
 
 #### Shortest startup path on the local VS Code/Copilot surface
 
-1. Read [`../../AGENTS.md`](../../AGENTS.md).
+1. Read [`../../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md).
 2. Run [Local-first quickstart](local-first-quickstart.md) (recommended
    `solo_prototype` default path).
 3. If needed, use [Prompt-to-setup bootstrap](prompt-to-setup-bootstrap.md) to
@@ -154,4 +154,4 @@ natural-language-to-setup path, use
 - [Apply setup](apply-setup.md)
 - [Operator onboarding pack](../operator-onboarding-pack.md)
 - [Using the framework with GitHub Mobile](../github-mobile-guide.md)
-- [AGENTS.md](../../AGENTS.md)
+- [AGENTS.md](https://github.com/izakl/brainforge/blob/main/AGENTS.md)

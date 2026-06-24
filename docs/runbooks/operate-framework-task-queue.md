@@ -6,7 +6,7 @@ state, or when the automation prepares the wrong item.
 
 The *framework task queue* is an ordered, version-controlled backlog of framework
 work, stored in
-[`.github/framework-task-queue.json`](../../.github/framework-task-queue.json).
+[`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json).
 After each merge to `main`, a GitHub Actions workflow reads the queue and
 *prepares* the next ready task by opening a tracking issue for it. This runbook
 keeps that queue honest and recovers the preparation step when it goes wrong. New
@@ -21,14 +21,14 @@ the five-minute tour.
 
 ## Primary artifacts
 
-- Queue source of truth: [`.github/framework-task-queue.json`](../../.github/framework-task-queue.json)
+- Queue source of truth: [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json)
 - Canonical queue schema/governance model: [`../framework-queued-execution-memory.md`](../framework-queued-execution-memory.md)
-- Merge-triggered preparation workflow: [`.github/workflows/prepare-next-framework-task.yml`](../../.github/workflows/prepare-next-framework-task.yml)
+- Merge-triggered preparation workflow: [`.github/workflows/prepare-next-framework-task.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml)
 - Human-readable queue narrative: [`../framework-roadmap-next-prompts.md`](../framework-roadmap-next-prompts.md)
 
 ## Procedure
 
-1. Open [`.github/framework-task-queue.json`](../../.github/framework-task-queue.json).
+1. Open [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json).
 2. Confirm every entry uses the status model consistently:
    - `blocked` = dependencies are not yet complete
    - `pending` = ready to be picked once dependencies are satisfied
@@ -52,7 +52,7 @@ the five-minute tour.
    - why you made the transition
    - any related issue or PR links
 8. After merge, confirm that the latest run of
-   [Prepare Next Framework Task](../../.github/workflows/prepare-next-framework-task.yml) either:
+   [Prepare Next Framework Task](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml) either:
    - created exactly one next-task issue when appropriate, or
    - found an already-open prepared issue and skipped creation.
 
@@ -72,7 +72,7 @@ Run this whenever a queue-backed implementation PR merges:
    - the issue and PR links you treated as the source of truth
    - any manual closure or reconciliation that was required
 5. After that PR merges, verify the latest
-   [Prepare Next Framework Task](../../.github/workflows/prepare-next-framework-task.yml) run prepared (or intentionally skipped) the correct next item.
+   [Prepare Next Framework Task](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml) run prepared (or intentionally skipped) the correct next item.
 
 ## Issue-backed state mapping quick reference
 
@@ -88,7 +88,7 @@ Run this whenever a queue-backed implementation PR merges:
 
 If next-task preparation did not run as expected:
 
-1. Trigger [Prepare Next Framework Task](../../.github/workflows/prepare-next-framework-task.yml)
+1. Trigger [Prepare Next Framework Task](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml)
    manually with `workflow_dispatch`.
 2. If the wrong task was selected:
    - fix task states/dependencies in `.github/framework-task-queue.json`
