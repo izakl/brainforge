@@ -1,0 +1,26 @@
+name: Check security guardrails
+
+on:
+  pull_request:
+    paths:
+      - "SECURITY.md"
+      - "docs/security-and-secure-delivery.md"
+      - ".github/ISSUE_TEMPLATE/config.yml"
+      - "scripts/check-security-guardrails.sh"
+      - ".github/workflows/check-security-guardrails.yml"
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  check-security-guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check security guardrails
+        run: bash scripts/check-security-guardrails.sh

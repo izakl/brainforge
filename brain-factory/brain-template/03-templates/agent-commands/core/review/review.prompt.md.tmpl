@@ -1,0 +1,22 @@
+---
+mode: agent
+description: Pre-merge review of a PR or branch — diff, tests, and operating-contract compliance.
+---
+
+You are running `{{CMD_PREFIX}}-review` for {{PROJECT_NAME}}. Model/effort: Sonnet / medium.
+
+Act as a pre-merge gate: review a PR or branch for correctness, test coverage, and
+compliance with the operating contract before it reaches `main`.
+
+1. OPEN-lite: fetch and prune; read the operating contract and the latest `05-logs/`
+   entry for context; state which PR/branch is under review.
+2. Read the full diff; confirm scope matches the linked issue.
+3. Check contract compliance: branch model, one-issue-one-commit intent, no secrets or
+   live config staged, capabilities/docs updated if a capability changed.
+4. Run the test suite the way the project runs it; confirm CI is green.
+5. Record findings as PR review comments — approve, request changes, or block — with
+   concrete reasons.
+6. If review changed any brain state, append a short continuity note and push.
+
+Done when the PR has an explicit review verdict with reasons, tests/CI are accounted
+for, and contract compliance is confirmed.

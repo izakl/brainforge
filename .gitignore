@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# MkDocs site build output
+/site/
+
+# OS / editor
+.DS_Store
+*.swp

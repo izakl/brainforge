@@ -1,0 +1,85 @@
+name: Improvement
+description: Improve framework operations, governance, prompts, templates, or workflow reliability.
+title: "[Improvement]: "
+labels:
+  - improvement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Standard work-packet contract: Objective, Context, Constraints and non-goals, Acceptance criteria,
+        Validation expectations, and Related artifacts.
+        References: `docs/framework-continuity-and-memory.md`, `docs/work-type-matrix.md`,
+        `docs/runbooks/open-an-issue.md`.
+  - type: dropdown
+    id: origin_surface
+    attributes:
+      label: Origin surface
+      options:
+        - GitHub Mobile
+        - VS Code Copilot (local)
+        - GitHub Copilot Chat/Coding Agent (GitHub cloud)
+        - GH CLI
+        - External AI agent output
+        - Support channel
+        - Retrospective
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Context
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_change
+    attributes:
+      label: Objective
+      description: What must happen next to improve this process/tooling path?
+    validations:
+      required: true
+  - type: textarea
+    id: external_context
+    attributes:
+      label: External context to normalize
+      description: Summarize external notes/data that justify this improvement.
+      placeholder: Include source/provenance or write N/A if all context is already in GitHub artifacts.
+    validations:
+      required: false
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints and non-goals
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation expectations
+    validations:
+      required: true
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts
+      description: Link supporting issues, PRs, ADRs, discussions, docs, or project items.
+    validations:
+      required: true
+  - type: dropdown
+    id: execution_mode
+    attributes:
+      label: Proposed execution mode
+      options:
+        - VS Code Copilot (local)
+        - GitHub Copilot Coding Agent (GitHub cloud)
+        - Human-led without agent
+        - Hybrid
+    validations:
+      required: true

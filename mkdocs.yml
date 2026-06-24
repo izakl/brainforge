@@ -1,0 +1,64 @@
+# MkDocs configuration for the Brain Factory documentation site.
+# Build:   pip install mkdocs-material && mkdocs build
+# Preview: mkdocs serve
+# Published to GitHub Pages by .github/workflows/docs-site.yml (manual until
+# Pages is enabled — see ADR 0023).
+site_name: Brain Factory
+site_description: A hub that gives every project an upgradeable, runtime-agnostic brain for AI-assisted delivery.
+site_url: https://izakl.github.io/brainforge/
+repo_url: https://github.com/izakl/brainforge
+repo_name: izakl/brainforge
+docs_dir: docs
+
+theme:
+  name: material
+  features:
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - content.code.copy
+    - toc.follow
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+
+# The site builds from docs/. Files outside docs/ (AGENTS.md, brain-factory/,
+# examples/) are linked out to GitHub; do not fail the build on those links.
+validation:
+  nav:
+    omitted_files: ignore
+  links:
+    absolute_links: ignore
+    unrecognized_links: ignore
+    not_found: ignore
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/izakl/brainforge

@@ -1,0 +1,17 @@
+{
+  "framework_version": "0.1.0",
+  "released": "2026-06-17",
+  "summary": "Initial brain-factory foundation: brain template, core command catalog, manifest schema, registry, onboarding engine spec, and cross-platform adapter seam.",
+  "core_modules": [
+    "operating-contract",
+    "session-ritual-hooks",
+    "continuity-log",
+    "capabilities-map",
+    "docs-mesh",
+    "decision-board",
+    "core-commands"
+  ],
+  "compatibility": {
+    "min_manifest_version": "1.0.0"
+  }
+}

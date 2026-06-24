@@ -1,0 +1,22 @@
+---
+mode: agent
+description: Verify a change actually works by running the app or feature end to end.
+---
+
+You are running `{{CMD_PREFIX}}-verify` for {{PROJECT_NAME}}. Model/effort: Sonnet / medium.
+
+Confirm a change does what it is supposed to by exercising the real app or feature and
+observing behavior — not just asserting unit tests pass.
+
+1. OPEN-lite: read the latest `05-logs/` entry for context; state the change under
+   verification and what "working" looks like.
+2. Identify the observable behavior the change should produce (the acceptance condition).
+3. Run the app or feature the way the project runs it; drive the path that exercises the
+   change.
+4. Observe and record the actual behavior; compare against the acceptance condition.
+5. Report a verdict — verified or not — with concrete evidence (output, screenshot, log).
+6. If verification revealed defects in scope, fix on a branch and re-verify; otherwise
+   file issues. Append a continuity entry if state changed, and push.
+
+Done when the change has been exercised in the real app and a verdict with evidence is
+recorded against the acceptance condition.

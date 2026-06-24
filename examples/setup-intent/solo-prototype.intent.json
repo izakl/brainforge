@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "setup_id": "setup-2026-05-26-solo-prototype",
+  "setup_mode": "new_adoption",
+  "project": {
+    "name": "solo-prototype-app",
+    "primary_work_types": ["enhancement", "docs"],
+    "repo_shape": "small_repo"
+  },
+  "team": {
+    "primary_profile": "small_repo_solo",
+    "owners": ["@owner"]
+  },
+  "deployment": {
+    "model": "local_only",
+    "targets": ["github_actions"]
+  },
+  "governance": {
+    "evidence_level": "lightweight"
+  },
+  "automation": {
+    "bundle": "A",
+    "stage": "minimum"
+  },
+  "execution_surfaces": ["vscode_local", "github_cloud_agent"],
+  "security": {
+    "posture": "standard"
+  },
+  "preferences": {
+    "setup_profile": "solo_prototype",
+    "projects_enabled": false,
+    "mobile_surface": false
+  },
+  "deferred": [
+    {
+      "item": "handoff packet enforcement workflow",
+      "reason": "single-owner flow with low handoff frequency",
+      "enablement_criteria": "handoff volume increases across multiple contributors",
+      "owner": "@owner"
+    }
+  ]
+}

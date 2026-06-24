@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability (private)
+    url: https://github.com/izakl/brainforge/security/advisories/new
+    about: Report a security vulnerability privately via GitHub Security Advisories. Do not open a public issue.
+  - name: Issue taxonomy guide
+    url: https://github.com/izakl/brainforge/blob/main/docs/issue-taxonomy.md
+    about: Not sure which template to use? Read the issue taxonomy guide for the full decision reference.
+  - name: Framework continuity charter
+    url: https://github.com/izakl/brainforge/blob/main/docs/framework-continuity-and-memory.md
+    about: Read the continuity charter before proposing framework changes.
+  - name: Security and secure-delivery guardrails
+    url: https://github.com/izakl/brainforge/blob/main/docs/security-and-secure-delivery.md
+    about: Review secure intake, redaction, and delivery guardrails before filing security-adjacent work.

@@ -1,0 +1,29 @@
+{
+  "editor.formatOnSave": true,
+  "editor.rulers": [100, 140],
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 100,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/.turbo": true,
+    "**/.cache": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.next": true,
+    "**/coverage": true
+  },
+  "markdown.preview.breaks": true,
+  "markdown.extension.toc.updateOnSave": true,
+  "yaml.format.enable": true,
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "github.copilot.chat.scopeSelection": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "githubPullRequests.pullBranch": "never"
+}

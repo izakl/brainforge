@@ -1,0 +1,43 @@
+{
+  "_contract": "Task registry for the cross-platform adapter seam. Each ops capability is defined ONCE as a task id with per-platform entrypoints. Callers (core commands, hooks, onboarding) invoke a task via the dispatcher (run.sh / run.ps1); the dispatcher resolves task id -> platform -> entrypoint and execs it, passing args through. Entrypoint paths are relative to this adapters/ directory. The 'python' entrypoint is the source of truth; 'bash' and 'powershell' are thin wrappers over it so behaviour is identical across runtimes. Add a new runtime by adding its key to each task; callers do not change.",
+  "version": "0.1.0",
+  "default_platform": "bash",
+  "tasks": {
+    "inspect-repo": {
+      "summary": "Read-only audit of a target repo; emits a gap report (markdown) and JSON summary. Never modifies the target.",
+      "python": "python/brainfactory (module: python -m brainfactory inspect)",
+      "bash": "bash/inspect.sh",
+      "powershell": "powershell/inspect.ps1"
+    },
+    "apply-brain": {
+      "summary": "Apply the brain to a destination: 'provision' a new brain into an empty dir, or 'adopt' into an existing repo (adopt defaults to dry-run; pass --apply to write). First arg selects the subcommand.",
+      "python": "python/brainfactory (module: python -m brainfactory <provision|adopt>)",
+      "bash": "bash/apply.sh",
+      "powershell": "powershell/apply.ps1"
+    },
+    "generate-capabilities": {
+      "summary": "Regenerate (or --check) a brain's 01-docs/CAPABILITIES.md from code (commands + manifest) so the capabilities map cannot drift. --write writes it; --check (default) diffs against disk and exits non-zero on drift.",
+      "python": "python/brainfactory (module: python -m brainfactory capabilities)",
+      "bash": "bash/capabilities.sh",
+      "powershell": "powershell/capabilities.ps1"
+    },
+    "docs-mesh": {
+      "summary": "Read-only docs anti-drift checks over a brain: relative-link and wikilink resolution, mermaid fence balance/safety, and freshness-stamp parsing. Exits non-zero if a hard check (links, mermaid balance) fails.",
+      "python": "python/brainfactory (module: python -m brainfactory docs-mesh)",
+      "bash": "bash/docs-mesh.sh",
+      "powershell": "powershell/docs-mesh.ps1"
+    },
+    "intent-gate": {
+      "summary": "CI intent gate: fail if a command directory exists under core/ or extensions/ with no matching row in the committed CAPABILITIES.md. Enforces 'a feature cannot land without the brain growing with it'.",
+      "python": "python/brainfactory (module: python -m brainfactory intent-gate)",
+      "bash": "bash/intent-gate.sh",
+      "powershell": "powershell/intent-gate.ps1"
+    },
+    "emit-commands": {
+      "summary": "Emit each authored command (03-templates/agent-commands/{core,extensions}) to the standard agent discovery locations — .claude/skills, .github/skills, and .github/agents — so one source works across Claude Code and GitHub Copilot.",
+      "python": "python/brainfactory (module: python -m brainfactory emit-commands)",
+      "bash": "bash/emit-commands.sh",
+      "powershell": "powershell/emit-commands.ps1"
+    }
+  }
+}

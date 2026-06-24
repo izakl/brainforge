@@ -1,0 +1,86 @@
+name: Redevelopment / Discovery
+description: Structure modernization or unknown-heavy discovery before phased implementation.
+title: "[Redevelopment/Discovery]: "
+labels:
+  - redevelopment
+  - discovery
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Standard work-packet contract: Objective, Context, Constraints and non-goals, Acceptance criteria,
+        Validation expectations, and Related artifacts.
+        References: `docs/framework-continuity-and-memory.md`, `docs/work-type-matrix.md`,
+        `docs/runbooks/open-an-issue.md`.
+  - type: dropdown
+    id: origin_surface
+    attributes:
+      label: Origin surface
+      options:
+        - GitHub Mobile
+        - VS Code Copilot (local)
+        - GitHub Copilot Chat/Coding Agent (GitHub cloud)
+        - GH CLI
+        - External AI agent output
+        - Support channel
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Discovery/redevelopment objective
+    validations:
+      required: true
+  - type: textarea
+    id: current_state
+    attributes:
+      label: Context
+    validations:
+      required: true
+  - type: textarea
+    id: external_context
+    attributes:
+      label: External context to normalize
+      description: Summarize source docs/files/interviews and unresolved questions in GitHub artifacts.
+      placeholder: Include source/provenance or write N/A if all context is already in GitHub artifacts.
+    validations:
+      required: false
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints and non-goals
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria for this phase
+      description: Define expected discovery outputs or implementation outcomes.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation expectations
+    validations:
+      required: true
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts
+      description: Link supporting issues, PRs, ADRs, discussions, docs, or project items for this phase.
+    validations:
+      required: true
+  - type: dropdown
+    id: execution_mode
+    attributes:
+      label: Proposed execution mode
+      options:
+        - External AI discovery then GitHub implementation
+        - VS Code Copilot (local)
+        - GitHub Copilot Coding Agent (GitHub cloud)
+        - Human-led without agent
+        - Hybrid
+    validations:
+      required: true

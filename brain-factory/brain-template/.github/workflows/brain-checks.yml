@@ -1,0 +1,58 @@
+# Brain self-extending checks — the anti-drift + intent gate for a brain.
+#
+# These run on every PR and push and enforce the self-extending-brain rules:
+#   1. capabilities --check : CAPABILITIES.md must match what the generator
+#      derives from code (commands + manifest). A drifted map fails.
+#   2. intent-gate          : every command dir under core/ and extensions/ must
+#      have a row in the committed CAPABILITIES.md — a feature cannot land
+#      without the brain growing with it.
+#   3. docs-mesh            : links, wikilinks, and mermaid blocks must resolve
+#      and balance (hard); freshness stamps must parse (hard).
+#
+# Dependency-light: just Python (stdlib-only adapters). The brainfactory package
+# is vendored under the framework; this workflow expects it on PYTHONPATH. A
+# brain that vendors the adapters sets BRAINFACTORY_PYTHONPATH; otherwise the
+# default below is used. Adjust the path to wherever your brain keeps the
+# adapters/python tree.
+name: brain-checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  brain-checks:
+    runs-on: ubuntu-latest
+    env:
+      # Path to the brainfactory adapters package. Override in repo settings if
+      # the adapters live elsewhere in (or alongside) the brain.
+      BRAINFACTORY_PYTHONPATH: ${{ vars.BRAINFACTORY_PYTHONPATH || 'adapters/python' }}
+      # Brain root to check (the repo root by default).
+      BRAIN_DIR: ${{ vars.BRAIN_DIR || '.' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Capabilities map is in sync (anti-drift)
+        run: |
+          export PYTHONPATH="${BRAINFACTORY_PYTHONPATH}${PYTHONPATH:+:${PYTHONPATH}}"
+          python -m brainfactory capabilities --brain "${BRAIN_DIR}" --check
+
+      - name: Intent gate (no command without a capabilities row)
+        run: |
+          export PYTHONPATH="${BRAINFACTORY_PYTHONPATH}${PYTHONPATH:+:${PYTHONPATH}}"
+          python -m brainfactory intent-gate --brain "${BRAIN_DIR}"
+
+      - name: Docs mesh (links, mermaid, freshness)
+        run: |
+          export PYTHONPATH="${BRAINFACTORY_PYTHONPATH}${PYTHONPATH:+:${PYTHONPATH}}"
+          python -m brainfactory docs-mesh --brain "${BRAIN_DIR}"

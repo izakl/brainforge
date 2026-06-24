@@ -1,0 +1,27 @@
+---
+name: {{CMD_PREFIX}}-deps
+description: Audit dependencies for {{PROJECT_NAME}} and apply bounded, tested updates. Use to keep dependencies current without unbounded churn.
+---
+
+# {{CMD_PREFIX}}-deps
+
+Model/effort: Sonnet / medium.
+
+A dependency audit with bounded updates. Surveys what is outdated or vulnerable, then
+upgrades within safe bounds and proves nothing broke.
+
+## Steps
+1. OPEN-lite: read the latest `05-logs/` entry for context; state which repo(s) you are
+   auditing.
+2. Audit dependencies: outdated, deprecated, and vulnerable packages across the manifest
+   repos.
+3. Plan bounded updates — prefer patch and minor bumps; flag majors as separate, reviewed
+   changes.
+4. Apply the bounded updates on a branch the way the project manages dependencies.
+5. Verify: run the test suite the way the project runs it; confirm green.
+6. CLOSE-lite: append a continuity entry summarizing what changed and why; open a PR; push.
+   File issues for deferred major upgrades.
+
+## Done when
+Dependencies are audited, bounded updates are applied and tested green in a PR, and major
+upgrades are filed as separate issues.

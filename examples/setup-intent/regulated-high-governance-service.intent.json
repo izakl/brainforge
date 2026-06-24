@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "setup_id": "setup-2026-05-26-regulated-high-governance-service",
+  "setup_mode": "existing_repo_upgrade",
+  "project": {
+    "name": "regulated-service",
+    "primary_work_types": ["security", "operations", "enhancement", "defect"],
+    "repo_shape": "governance_heavy"
+  },
+  "team": {
+    "primary_profile": "governance_compliance_overlay",
+    "owners": ["@governance-board", "@service-owners"],
+    "maturity_level": "4"
+  },
+  "deployment": {
+    "model": "regulated",
+    "targets": ["github_actions", "internal_runner"]
+  },
+  "governance": {
+    "evidence_level": "strict",
+    "cadence": {
+      "weekly": "hygiene review",
+      "monthly": "control evidence audit",
+      "quarterly": "adoption and portability review"
+    }
+  },
+  "automation": {
+    "bundle": "E",
+    "stage": "recommended"
+  },
+  "execution_surfaces": [
+    "vscode_local",
+    "github_cloud_agent",
+    "gh_cli",
+    "github_mobile"
+  ],
+  "security": {
+    "posture": "compliance_strict"
+  },
+  "preferences": {
+    "setup_profile": "regulated_high_governance_service",
+    "projects_enabled": true,
+    "mobile_surface": true
+  },
+  "deferred": [
+    {
+      "item": "external AI surface participation",
+      "reason": "policy requires additional review controls before enabling",
+      "enablement_criteria": "approved external-context handling protocol is merged",
+      "owner": "@governance-board"
+    }
+  ]
+}

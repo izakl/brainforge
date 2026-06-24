@@ -1,0 +1,55 @@
+name: Docs site
+
+# Builds the MkDocs site and deploys it to GitHub Pages.
+#
+# GATED ON PURPOSE: this runs only on manual dispatch. Enabling GitHub Pages
+# (Settings -> Pages -> Source: GitHub Actions) publishes the site publicly, so
+# while the repository is private this stays off until you choose to publish
+# (see ADR 0023). Once Pages is enabled, run this workflow from the Actions tab
+# (or uncomment the push trigger below to deploy on every merge to main).
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Build site
+        run: mkdocs build --site-dir _site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

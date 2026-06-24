@@ -1,0 +1,111 @@
+name: Framework Audit
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/check-index-parity.sh"
+      - "scripts/check-framework-task-queue.sh"
+      - "scripts/check-queue-health.sh"
+      - "scripts/check-security-guardrails.sh"
+      - "scripts/check-handoff-packet.sh"
+      - "scripts/check-svg-companions.sh"
+      - "scripts/check-mobile-quick-action.sh"
+      - "scripts/check-brain-factory.sh"
+      - "brain-factory/**"
+      - ".github/framework-task-queue.json"
+      - ".github/workflows/framework-audit.yml"
+      - ".github/workflows/prepare-next-framework-task.yml"
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  index-parity:
+    name: Index parity (ADR / runbooks / examples)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check index parity
+        run: bash scripts/check-index-parity.sh
+
+  framework-task-queue:
+    name: Framework task queue integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check framework task queue
+        run: bash scripts/check-framework-task-queue.sh
+
+  security-guardrails:
+    name: Security guardrail anchors
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check security guardrails
+        run: bash scripts/check-security-guardrails.sh
+
+  handoff-packet:
+    name: Handoff packet completeness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check handoff packet coverage
+        run: bash scripts/check-handoff-packet.sh
+
+  svg-companions:
+    name: SVG companion parity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check SVG companions
+        run: bash scripts/check-svg-companions.sh
+
+  mobile-quick-action:
+    name: Mobile quick-action coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check mobile quick-action convention coverage
+        run: bash scripts/check-mobile-quick-action.sh
+
+  queue-health:
+    name: Queue health and drift detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check queue health and drift signals
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_API_URL: ${{ github.api_url }}
+          QUEUE_HEALTH_STRICT_GITHUB_DRIFT: ${{ github.event_name != 'pull_request' }}
+        run: bash scripts/check-queue-health.sh
+
+  brain-factory:
+    name: Brain-factory invariants
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check brain-factory invariants
+        run: bash scripts/check-brain-factory.sh

@@ -1,0 +1,26 @@
+---
+name: {{CMD_PREFIX}}-bootstrap
+description: Configure a fresh machine or Codespace for {{PROJECT_NAME}} — toolchain, clone the coordinated repos, install hooks. Use when standing up a new dev environment.
+---
+
+# {{CMD_PREFIX}}-bootstrap
+
+Model/effort: Sonnet / medium.
+
+Brings a clean environment up to a working state. Reads the workspace manifest and
+installs everything needed to coordinate the system from this machine.
+
+## Steps
+1. OPEN-lite: read the operating contract and `brain.manifest.json`; state which
+   environment is being bootstrapped.
+2. Install the toolchain the project declares (language runtimes, package managers, CLIs).
+3. Clone every repo listed in the manifest `app_repos`, plus the brain repo itself, into
+   the workspace layout the project expects.
+4. Install dependencies for each repo the way that repo installs them.
+5. Install the session hooks (SessionStart / SessionEnd) so the ritual runs automatically.
+6. Verify the environment: run a smoke check per repo (build or test) and report results.
+   Never stage secrets or live config.
+
+## Done when
+The toolchain is installed, all manifest repos are cloned and ready, hooks are active,
+and smoke checks pass.

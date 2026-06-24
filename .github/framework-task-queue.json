@@ -1,0 +1,402 @@
+{
+  "version": 1,
+  "description": "Durable merge-driven framework task queue. Keep tasks ordered for deterministic next-task preparation.",
+  "schema_reference": "docs/framework-queued-execution-memory.md",
+  "default_issue_template": "agent-execution-task.yml",
+  "issue_backed_queue_model": {
+    "prepared_issue_marker_prefix": "framework-task-queue-id:",
+    "prepared_issue_label": "agent-task",
+    "prepared_issue_template": "agent-execution-task.yml",
+    "issue_required_statuses": [
+      "in_progress",
+      "done",
+      "superseded"
+    ],
+    "allow_issueless_statuses": [
+      "blocked",
+      "pending"
+    ]
+  },
+  "status_model": [
+    "blocked",
+    "pending",
+    "in_progress",
+    "done",
+    "superseded"
+  ],
+  "continuity_writeback_model": [
+    "yes",
+    "likely",
+    "no"
+  ],
+  "tasks": [
+    {
+      "id": "starter-kit-bootstrap-pack",
+      "title": "Starter kit / bootstrap pack",
+      "status": "done",
+      "depends_on": [],
+      "why_now": "Provide a minimum viable adoption path before deeper framework completion work.",
+      "suggested_prompt": "Add a practical starter-kit bootstrap layer that identifies essential, recommended, and optional framework artifacts for adopting this framework in another repository.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-starter-kit.md",
+        "docs/framework-portability-and-adoption.md"
+      ]
+    },
+    {
+      "id": "template-harmonization-pass",
+      "title": "Template harmonization pass",
+      "status": "done",
+      "depends_on": [
+        "starter-kit-bootstrap-pack"
+      ],
+      "why_now": "Align issue/PR/handoff/review packets to one contract before adding more automation.",
+      "suggested_prompt": "Run a bounded harmonization pass across issue templates, PR template, handoff packet template, and review packet templates so required fields and terminology are consistent with the continuity charter.",
+      "continuity_writeback_expected": "likely",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-roadmap-next-prompts.md",
+        "docs/framework-continuity-and-memory.md"
+      ]
+    },
+    {
+      "id": "reporting-summary-templates",
+      "title": "Reporting summary templates",
+      "status": "done",
+      "depends_on": [
+        "template-harmonization-pass"
+      ],
+      "why_now": "Standardize weekly/monthly/quarterly writebacks after templates are harmonized.",
+      "suggested_prompt": "Add concise reporting summary templates that operationalize weekly hygiene and quarterly adoption/portability writebacks, aligned with existing metrics and cadence guidance.",
+      "continuity_writeback_expected": "likely",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-reporting-and-review-cadence.md",
+        "docs/framework-metrics-and-feedback.md",
+        "docs/framework-weekly-hygiene-summary-template.md",
+        "docs/framework-quarterly-adoption-portability-summary-template.md"
+      ]
+    },
+    {
+      "id": "automation-bundles-by-profile",
+      "title": "Automation bundles by profile",
+      "status": "done",
+      "depends_on": [
+        "template-harmonization-pass"
+      ],
+      "why_now": "Translate profile guidance into reusable automation enablement bundles.",
+      "suggested_prompt": "Create bounded automation bundle guidance by framework profile (lighter/heavier settings), defining what to enable first and what to defer while preserving invariants.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-automation-bundles-by-profile.md",
+        "docs/framework-profile-packs.md",
+        "docs/gh-agents-and-automation.md"
+      ]
+    },
+    {
+      "id": "adoption-examples-expansion",
+      "title": "Adoption examples expansion",
+      "status": "done",
+      "depends_on": [
+        "template-harmonization-pass"
+      ],
+      "why_now": "Lower onboarding cost with concrete adoption traces once templates are aligned.",
+      "suggested_prompt": "Add a small set of high-signal worked examples that demonstrate starter-kit onboarding and profile-based adoption in bounded issue\u2192PR flows.",
+      "continuity_writeback_expected": "likely",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "examples/README.md",
+        "docs/framework-starter-kit.md"
+      ]
+    },
+    {
+      "id": "repo-transplant-checklist",
+      "title": "Repo transplant checklist",
+      "status": "done",
+      "depends_on": [
+        "adoption-examples-expansion"
+      ],
+      "why_now": "Turn portability guidance into an execution-safe migration control list.",
+      "suggested_prompt": "Create a durable repo-transplant checklist that converts portability guidance into a step-by-step migration control list with explicit invariants and validation gates.",
+      "continuity_writeback_expected": "likely",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-portability-and-adoption.md",
+        "docs/framework-starter-kit.md"
+      ]
+    },
+    {
+      "id": "operator-onboarding-pack",
+      "title": "Operator onboarding pack",
+      "status": "done",
+      "depends_on": [
+        "repo-transplant-checklist"
+      ],
+      "why_now": "Provide a first-week path after adoption/transplant flows are concrete.",
+      "suggested_prompt": "Add an operator onboarding pack that provides a bounded first-week path for new maintainers/agents, including required reading order, first tasks, and validation expectations.",
+      "continuity_writeback_expected": "likely",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/runbooks/README.md",
+        "docs/operating-model.md"
+      ]
+    },
+    {
+      "id": "framework-change-governance-deprecation-policy",
+      "title": "Framework change governance / deprecation policy",
+      "status": "done",
+      "depends_on": [
+        "template-harmonization-pass",
+        "automation-bundles-by-profile"
+      ],
+      "why_now": "Define safe retirement and change management as framework surface area grows.",
+      "suggested_prompt": "Define framework change governance and deprecation policy for docs/templates/scripts/workflows, including required notice, replacement path, and writeback expectations.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/governance-checklist.md",
+        "docs/framework-reporting-and-review-cadence.md"
+      ]
+    },
+    {
+      "id": "framework-release-versioning-guidance",
+      "title": "Framework release/versioning guidance",
+      "status": "done",
+      "depends_on": [
+        "framework-change-governance-deprecation-policy"
+      ],
+      "why_now": "Enable predictable release snapshots after governance semantics are defined.",
+      "suggested_prompt": "Add framework release/versioning guidance for this repository, including version increment rules, release note expectations, and consumer upgrade communication paths.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-release-versioning-and-deprecation.md",
+        "docs/governance-checklist.md",
+        "docs/framework-health.md"
+      ]
+    },
+    {
+      "id": "setup-intent-schema-and-application-model",
+      "title": "Setup intent schema and application model",
+      "status": "done",
+      "depends_on": [
+        "framework-release-versioning-guidance"
+      ],
+      "why_now": "Define the durable setup contract before building the executable apply-setup engine.",
+      "suggested_prompt": "Add a durable setup intent schema and application model that defines required/optional setup inputs, profile/default mapping rules, expected artifact mutations, and ready-to-work success criteria.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-setup-intent-schema-and-application-model.md",
+        "docs/framework-profile-packs.md",
+        "docs/framework-automation-bundles-by-profile.md"
+      ]
+    },
+    {
+      "id": "setup-profiles-and-intent-examples",
+      "title": "Setup profiles and intent examples",
+      "status": "done",
+      "depends_on": [
+        "setup-intent-schema-and-application-model"
+      ],
+      "why_now": "Provide concrete reusable setup profiles and example intents before the apply-setup engine is built.",
+      "suggested_prompt": "Add a bounded setup profile catalog with concrete reusable profiles and machine-readable setup-intent examples that make the setup contract immediately understandable and testable.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-setup-profiles-and-intent-examples.md",
+        "examples/setup-intent/solo-prototype.intent.json",
+        "examples/setup-intent/small-saas-team.intent.json"
+      ]
+    },
+    {
+      "id": "apply-setup-and-readiness-flow",
+      "title": "Apply-setup and readiness flow",
+      "status": "done",
+      "depends_on": [
+        "setup-profiles-and-intent-examples"
+      ],
+      "why_now": "Move from documented setup modeling to an executable apply-setup and readiness validation flow.",
+      "suggested_prompt": "Add a first executable apply-setup flow (scripts/apply-setup.sh), a readiness validator (scripts/check-setup-readiness.sh), and a bootstrap runbook (docs/runbooks/apply-setup.md) that connects setup intent to apply flow to readiness result.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "scripts/apply-setup.sh",
+        "scripts/check-setup-readiness.sh",
+        "docs/runbooks/apply-setup.md",
+        "docs/framework-setup-intent-schema-and-application-model.md"
+      ]
+    },
+    {
+      "id": "brain-factory-foundation",
+      "title": "Brain factory foundation",
+      "status": "done",
+      "depends_on": [],
+      "why_now": "Generalize the hub into an executable brain factory: architecture, manifest contract, core command catalog, registry, onboarding spec, and the cross-platform adapter seam.",
+      "suggested_prompt": "Establish the brain-factory foundation under brain-factory/: architecture doc + ADR, brain.manifest schema, core-commands catalog, registry (version/releases/learnings-inbox/propagation), onboarding engine spec (inspect-first), and the adapters seam.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "docs/framework-brain-factory-architecture.md",
+        "docs/adr/0019-project-brain-factory-and-improvement-loop.md",
+        "brain-factory/README.md"
+      ]
+    },
+    {
+      "id": "brain-factory-core-commands",
+      "title": "Brain factory core command set",
+      "status": "done",
+      "depends_on": [
+        "brain-factory-foundation"
+      ],
+      "why_now": "Author the core commands (stable base names, prefixed per brain via command_prefix) in both Claude Code skill and Copilot prompt forms so every brain inherits a working, portable operating layer.",
+      "suggested_prompt": "Author each core command in brain-factory/brain-template/03-templates/agent-commands/core/ as a SKILL.md plus a matching .prompt.md, baking the open/close ritual and the declared model/effort tier per the core-commands catalog.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "brain-factory/core-commands/CATALOG.md",
+        "brain-factory/brain-template/03-templates/agent-commands/README.md"
+      ]
+    },
+    {
+      "id": "brain-factory-onboarding-engine",
+      "title": "Inspect-first onboarding engine",
+      "status": "done",
+      "depends_on": [
+        "brain-factory-foundation"
+      ],
+      "why_now": "Build the executable inspector and applier so the hub can provision a new brain or adopt an existing repo without clobbering working artifacts.",
+      "suggested_prompt": "Implement the onboarding engine under brain-factory/adapters/ (python source + bash/powershell wrappers): a read-only inspector that emits a gap report, and an applier that instantiates the brain template or augments an existing repo per operator decisions, writing brain.manifest.json.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "brain-factory/onboard/README.md",
+        "brain-factory/adapters/README.md"
+      ]
+    },
+    {
+      "id": "brain-factory-capabilities-and-docs-mesh",
+      "title": "Capabilities generator, docs-mesh, and CI intent gate",
+      "status": "done",
+      "depends_on": [
+        "brain-factory-core-commands"
+      ],
+      "why_now": "Make the brain self-extending and drift-proof: generate the capabilities map from code, validate the docs mesh, and gate features that ship without a capability entry.",
+      "suggested_prompt": "Implement the capabilities generator, docs-mesh checks (links/diagrams/freshness), and the CI intent gate as cross-platform tasks, plus the brain-side workflow templates that run them.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "brain-factory/brain-template/01-docs/CAPABILITIES.md.tmpl",
+        "docs/framework-brain-factory-architecture.md"
+      ]
+    },
+    {
+      "id": "brain-factory-manifest-ci-validation",
+      "title": "Manifest and catalog CI validation",
+      "status": "done",
+      "depends_on": [
+        "brain-factory-foundation"
+      ],
+      "why_now": "Protect the core/extension contract: validate brain.manifest.json against its schema and keep the core-commands catalog in parity with shipped commands.",
+      "suggested_prompt": "Add a hub CI check (scripts/check-brain-manifest.sh) that validates brain.manifest.example.json against the schema and verifies the core-commands catalog matches the shipped core command directories.",
+      "continuity_writeback_expected": "likely",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "brain-factory/brain-template/brain.manifest.schema.json",
+        "brain-factory/core-commands/CATALOG.md"
+      ]
+    },
+    {
+      "id": "onboard-acme-first-brain",
+      "title": "Onboard Acme (first managed brain)",
+      "status": "pending",
+      "depends_on": [
+        "brain-factory-onboarding-engine",
+        "brain-factory-core-commands"
+      ],
+      "why_now": "Validate the factory end-to-end by onboarding the renamed Legacy (Acme) as the first brain, retiring its Drive-as-source-of-truth model and fixing known drift.",
+      "suggested_prompt": "Run inspect-first onboarding on the Acme project: create acme-autonomy-system from the brain template, migrate the Drive-only context into GitHub, retire Drive-as-truth, resolve the Postgres 16/17 drift, and rename Legacy to Acme across the repo as work proceeds.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "brain-factory/onboard/README.md",
+        "docs/framework-brain-factory-architecture.md"
+      ]
+    },
+    {
+      "id": "retrofit-northwind-managed-brain",
+      "title": "Retrofit Northwind into a managed brain",
+      "status": "blocked",
+      "depends_on": [
+        "onboard-acme-first-brain"
+      ],
+      "why_now": "Bring the donor system under hub management once the loop is proven, so it also receives framework improvements (donor now, managed brain later).",
+      "suggested_prompt": "Retrofit northwind-autonomy-system to the brain template: add brain.manifest.json, map its existing assets to core modules vs extensions inspect-first, and enable xs-upgrade/xs-learn against the hub registry.",
+      "continuity_writeback_expected": "yes",
+      "labels": [
+        "agent-task",
+        "framework-change"
+      ],
+      "related_docs": [
+        "brain-factory/onboard/README.md",
+        "brain-factory/registry/README.md"
+      ]
+    }
+  ]
+}

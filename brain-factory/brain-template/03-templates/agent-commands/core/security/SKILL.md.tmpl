@@ -1,0 +1,27 @@
+---
+name: {{CMD_PREFIX}}-security
+description: Run a security sweep for {{PROJECT_NAME}} — scanners, then triage findings into issues and bounded patches. Use for a periodic or pre-release security pass.
+---
+
+# {{CMD_PREFIX}}-security
+
+Model/effort: Sonnet / high.
+
+A full security sweep: run scanners across the coordinated repos, triage the findings,
+and land bounded patches for what is in scope. Follows the brain's security policy.
+
+## Steps
+1. OPEN-lite: read the operating contract §8 and the security policy in `04-policies/`;
+   state the sweep scope.
+2. Run the security scanners the project uses (dependency, secret, and code scanning) across
+   the manifest repos.
+3. Triage findings by severity and exploitability; deduplicate and discard false positives
+   with reasons.
+4. File issues for confirmed findings; for in-scope, low-risk fixes, patch on a branch.
+5. Verify patches don't regress: run the test suite the way the project runs it.
+6. CLOSE-lite: append a continuity entry; ensure no secret ever entered the brain or a
+   public repo; open PRs and push. Escalate high-severity items per policy.
+
+## Done when
+Scanners have run, findings are triaged into issues, in-scope fixes are in PRs with passing
+tests, and high-severity items are escalated.

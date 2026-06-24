@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "setup_id": "setup-2026-05-26-small-saas-team",
+  "setup_mode": "new_adoption",
+  "project": {
+    "name": "small-saas-core",
+    "primary_work_types": ["enhancement", "defect", "docs", "support_intake"],
+    "repo_shape": "product_delivery"
+  },
+  "team": {
+    "primary_profile": "product_delivery_team",
+    "owners": ["@saas-team-leads"],
+    "maturity_level": "2"
+  },
+  "deployment": {
+    "model": "cloud_hosted",
+    "targets": ["github_actions", "kubernetes"]
+  },
+  "governance": {
+    "evidence_level": "standard"
+  },
+  "automation": {
+    "bundle": "B",
+    "stage": "recommended"
+  },
+  "execution_surfaces": [
+    "vscode_local",
+    "github_cloud_agent",
+    "gh_cli",
+    "github_mobile"
+  ],
+  "security": {
+    "posture": "standard"
+  },
+  "preferences": {
+    "setup_profile": "small_saas_team",
+    "projects_enabled": true,
+    "mobile_surface": true
+  },
+  "deferred": [
+    {
+      "item": "prepare-next-task workflow",
+      "reason": "queue-backed planning is not yet routine",
+      "enablement_criteria": "queue discipline is stable across two monthly cycles",
+      "owner": "@saas-team-leads"
+    }
+  ]
+}

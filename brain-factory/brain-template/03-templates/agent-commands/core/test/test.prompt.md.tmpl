@@ -1,0 +1,22 @@
+---
+mode: agent
+description: Run {{PROJECT_NAME}}'s test suite the way the project runs it and report results.
+---
+
+You are running `{{CMD_PREFIX}}-test` for {{PROJECT_NAME}}. Model/effort: Sonnet / medium.
+
+Run the project's tests as the project defines them, surface failures, and report a
+clear pass/fail with evidence.
+
+1. OPEN-lite: read the operating contract and the latest `05-logs/` entry for context;
+   state which repo(s)/suite you are testing.
+2. Discover how the project runs its tests (its declared test task) — do not assume a
+   specific runner or shell.
+3. Run the test suite the way the project runs it.
+4. Report results: pass/fail counts, the first actionable failures, and any flakes.
+5. If failures are in scope, fix them on a branch and re-run until green; otherwise file
+   issues for out-of-scope failures.
+6. If brain state changed (e.g. fixes landed), append a continuity entry and push.
+
+Done when the suite has been run as the project defines it and results are reported
+clearly, with in-scope failures fixed or out-of-scope ones filed.

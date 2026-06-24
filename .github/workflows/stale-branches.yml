@@ -1,0 +1,37 @@
+name: Stale Branches
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run in dry-run mode (report only, no deletions). Default true for safe first-run."
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete merged copilot/* and dependabot/* branches
+        uses: phpdocker-io/github-actions-delete-abandoned-branches@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ignore_branches: "main"
+          allowed_prefixes: "copilot/,dependabot/"
+          last_commit_age_days: 7
+          dry_run: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run == true) && 'yes' || 'no' }}
+
+      - name: Report long-lived non-tracked branches
+        uses: phpdocker-io/github-actions-delete-abandoned-branches@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ignore_branches: "main"
+          last_commit_age_days: 60
+          dry_run: "yes"

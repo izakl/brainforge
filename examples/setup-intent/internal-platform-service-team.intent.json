@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "setup_id": "setup-2026-05-26-internal-platform-service-team",
+  "setup_mode": "new_adoption",
+  "project": {
+    "name": "internal-platform-service",
+    "primary_work_types": ["automation", "operations", "security"],
+    "repo_shape": "platform_infra"
+  },
+  "team": {
+    "primary_profile": "platform_infra_team",
+    "owners": ["@platform-team"],
+    "maturity_level": "3"
+  },
+  "deployment": {
+    "model": "platform_shared",
+    "targets": ["github_actions", "internal_runner", "kubernetes"]
+  },
+  "governance": {
+    "evidence_level": "strict"
+  },
+  "automation": {
+    "bundle": "C",
+    "stage": "recommended"
+  },
+  "execution_surfaces": ["vscode_local", "github_cloud_agent", "gh_cli"],
+  "security": {
+    "posture": "elevated"
+  },
+  "preferences": {
+    "setup_profile": "internal_platform_service_team",
+    "projects_enabled": true,
+    "mobile_surface": false
+  },
+  "deferred": [
+    {
+      "item": "stale branch automation",
+      "reason": "current branch volume does not justify weekly stale triage",
+      "enablement_criteria": "branch churn trends show repeated stale branch findings",
+      "owner": "@platform-team"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+name: Check handoff packet
+
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "scripts/check-handoff-packet.sh"
+      - ".github/workflows/check-handoff-packet.yml"
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  check-handoff-packet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check handoff packet convention coverage
+        run: bash scripts/check-handoff-packet.sh

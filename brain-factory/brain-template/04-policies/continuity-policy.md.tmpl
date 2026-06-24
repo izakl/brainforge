@@ -1,0 +1,30 @@
+<!-- Template. How memory and continuity stay in sync for {{PROJECT_NAME}}. -->
+
+# {{PROJECT_NAME}} — Continuity policy
+
+Channels that must stay in sync:
+
+1. **GitHub** — issues and the project board own the live backlog; PRs and commit
+   history are the execution record. **Source of truth.**
+2. **This brain** — `05-logs/` is the canonical continuity record; governance and
+   policies live here.
+3. **Agent memory** — the recall layer; it references the brain, it does not
+   replace it.
+
+## Rules
+
+- **Repo-first write rule:** author in the repo; `git push` is the durable sync.
+  No external mirror is the source of truth.
+- **Naming:** lowercase file/folder names (kebab-case or snake_case).
+- **Session open:** read this policy + the decision board + the latest `05-logs/`
+  entry; confirm the active branch.
+- **Session close:** update `05-logs/` and the decision board if changed; commit
+  and push.
+- **Automatic checkpoints:** a SessionEnd hook writes a continuity checkpoint so
+  nothing is lost if a session ends without an explicit close. After a crash, a
+  new session reads the latest checkpoint before resuming.
+
+## Framework continuity
+
+This brain's `framework_version` is recorded in `brain.manifest.json`. Drift from
+the hub's latest is reported by `{{CMD_PREFIX}}-status` and resolved with `{{CMD_PREFIX}}-upgrade`.

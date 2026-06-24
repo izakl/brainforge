@@ -1,0 +1,26 @@
+---
+name: {{CMD_PREFIX}}-sync
+description: Run the close ritual on demand — continuity writeback, decision board, capabilities + docs-mesh refresh, index update, and push. Use to checkpoint durable state.
+---
+
+# {{CMD_PREFIX}}-sync
+
+Model/effort: Sonnet / medium.
+
+The close ritual, invoked directly. Captures everything that changed this session
+into the brain and pushes it, so GitHub holds the durable state.
+
+## Steps
+1. Fetch and prune; review what changed this session (commits, decisions, new
+   capabilities).
+2. CLOSE ritual — append a continuity entry to `05-logs/<date>-<topic>.md`: what
+   changed, why, and evidence (links to commits/PRs/issues).
+3. Update the decision board if any decision was made or changed.
+4. Run the anti-drift sweep: regenerate the capabilities map and validate the docs
+   mesh.
+5. Update the master index and any board/issue/PR state to match reality.
+6. Commit and push everything — pushing to GitHub is the durable sync.
+
+## Done when
+The continuity entry is written, the decision board and index are current, the
+capabilities map and docs mesh validate, and all work is pushed.

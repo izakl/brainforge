@@ -1,0 +1,102 @@
+name: Framework change
+description: Propose a change to Brain Factory (docs, runbooks, ADRs, automation, governance).
+title: "[framework] "
+labels: ["framework-change"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for changes to the framework itself — docs, runbooks, ADRs, automation, governance, or operating model.
+        For product bugs or support questions, use a different template.
+        Standard work-packet contract: Objective, Context, Constraints and non-goals, Acceptance criteria,
+        Validation expectations, and Related artifacts.
+        References: `docs/framework-continuity-and-memory.md`, `docs/work-type-matrix.md`,
+        `docs/runbooks/open-an-issue.md`.
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What must happen next in this bounded framework change?
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Context
+      description: What gap, drift, or current-state context triggered this proposal?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change details
+      description: What concrete change to the framework would you like? Reference specific files where possible.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Files expected to change
+      description: List files this change would touch. Keep scope bounded.
+    validations:
+      required: true
+  - type: textarea
+    id: external_context
+    attributes:
+      label: External context to normalize
+      description: If context came from outside GitHub (local notes, Drive, OneDrive, external AI output), summarize and link it here before implementation starts.
+      placeholder: Provide links, summaries, and provenance. Leave blank if context originates entirely from GitHub artifacts.
+    validations:
+      required: false
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints and non-goals
+      description: Hard limits, guardrails, exclusions, and required standards this change must preserve.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How will we know this change is done correctly?
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation expectations
+      description: Which checks, scripts, workflow outcomes, or review evidence are required before merge?
+    validations:
+      required: true
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts
+      description: Link supporting issues, PRs, ADRs, discussions, docs, or project items.
+    validations:
+      required: true
+  - type: dropdown
+    id: execution_mode
+    attributes:
+      label: Proposed execution mode
+      options:
+        - VS Code Copilot (local)
+        - GitHub Copilot Coding Agent (GitHub cloud)
+        - Human-led without agent
+        - Hybrid
+    validations:
+      required: true
+  - type: checkboxes
+    id: continuity
+    attributes:
+      label: Continuity check
+      options:
+        - label: I have read `docs/framework-continuity-and-memory.md`.
+          required: true
+        - label: This change preserves GitHub artifacts as the system of record.
+          required: true
+        - label: I will update continuity artifacts (`framework-health.md`, `runbooks/README.md`, `adr/README.md`, etc.) in the same PR where applicable.
+          required: true
+        - label: I evaluated security and secure-delivery implications (private/public routing, sensitive context handling, and validation expectations) for this change.
+          required: true

@@ -1,0 +1,97 @@
+name: Bug report
+description: Report a framework-repository defect with enough context to route, execute, and validate safely.
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for defects in this repository (broken links, failing CI, incorrect docs, automation misbehavior).
+        For suspected vulnerabilities, exploit paths, or secret exposure, use private reporting via `SECURITY.md` instead of a public issue.
+        Standard work-packet contract: Objective, Context, Constraints and non-goals, Acceptance criteria,
+        Validation expectations, and Related artifacts.
+        References: `docs/framework-continuity-and-memory.md`, `docs/work-type-matrix.md`,
+        `docs/runbooks/open-an-issue.md`.
+  - type: dropdown
+    id: origin_surface
+    attributes:
+      label: Origin surface
+      options:
+        - GitHub Mobile
+        - VS Code Copilot (local)
+        - GitHub Copilot Chat/Coding Agent (GitHub cloud)
+        - GH CLI
+        - External AI agent output
+        - Support channel
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What must happen next to resolve this framework defect?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Where/when was the defect observed and what framework behavior is affected?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Include exact steps, expected behavior, and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: external_context
+    attributes:
+      label: External context to normalize
+      description: If context came from local files, Drive, OneDrive, connectors, or external AI output, summarize/link it here before implementation.
+      placeholder: Provide links/summaries/provenance, or write N/A if all context is already in GitHub artifacts.
+    validations:
+      required: false
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints and non-goals
+      description: What must remain unchanged? Include governance/security constraints as needed.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Define testable outcomes for the fix.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation expectations
+      description: Which checks/tests/review evidence are required?
+    validations:
+      required: true
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts
+      description: Link supporting issues, PRs, ADRs, discussions, docs, workflows, or project items.
+    validations:
+      required: true
+  - type: dropdown
+    id: execution_mode
+    attributes:
+      label: Proposed execution mode
+      options:
+        - VS Code Copilot (local)
+        - GitHub Copilot Coding Agent (GitHub cloud)
+        - Human-led without agent
+        - Hybrid
+    validations:
+      required: true

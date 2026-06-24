@@ -1,0 +1,30 @@
+---
+name: {{CMD_PREFIX}}-upgrade
+description: Down-sync the framework — diff this brain's framework_version against the hub registry, plan, and apply core-layer deltas while preserving extensions. Use when status reports drift.
+---
+
+# {{CMD_PREFIX}}-upgrade
+
+Model/effort: Sonnet / high.
+
+The down-sync. Pulls approved framework improvements from the hub into this brain without
+disturbing project-owned work. Follows the propagation contract; lands via PR.
+
+## Steps
+1. OPEN-lite: read the operating contract §7 and the propagation contract; state the upgrade
+   objective.
+2. Resolve the gap: compare the hub registry `brain-factory/registry/framework-version.json`
+   against the brain manifest `framework_version`. If equal, report "up to date" and stop.
+3. Collect deltas: read each intervening release note from current (exclusive) to latest
+   (inclusive); note each changed core module and its change kind.
+4. Build the upgrade plan: skip disabled core modules; surface `adopted: false` artifacts as
+   manual-review; stage the rest from the hub brain template.
+5. Apply core-layer deltas. PRESERVE all extensions — never touch `extensions` paths; surface
+   any collision for operator review. Bump `synced_from` and set manifest
+   `framework_version = latest`.
+6. CLOSE ritual: append a continuity entry describing the upgrade; regenerate the capabilities
+   map; run the test suite the way the project runs it; open the change as a PR and push.
+
+## Done when
+The manifest is at the latest framework version, core deltas are applied with extensions
+intact, and the upgrade is in a PR with validation evidence.

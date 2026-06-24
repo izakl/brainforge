@@ -1,0 +1,27 @@
+---
+name: {{CMD_PREFIX}}-doctor
+description: Diagnose the running app and environment for {{PROJECT_NAME}} and apply only safe fixes. Use when something is misbehaving and you need a health check.
+---
+
+# {{CMD_PREFIX}}-doctor
+
+Model/effort: Sonnet / medium.
+
+Diagnoses the environment and running app, reports what is wrong, and applies only
+clearly-safe fixes — escalating anything risky rather than guessing.
+
+## Steps
+1. OPEN-lite: read the latest `05-logs/` entry for context; state the symptom or scope of
+   the health check.
+2. Check the environment: toolchain versions, required services, configuration presence
+   (not secret values), and dependency health.
+3. Try to run the app the way the project runs it; capture errors and logs.
+4. Diagnose root causes and rank them by impact.
+5. Apply only safe fixes (e.g. reinstalling deps, recreating local scaffolding). Leave
+   risky or ambiguous changes as recommendations; never touch secrets or live config.
+6. Report findings and actions. If a fix changed brain state, append a continuity entry
+   and push.
+
+## Done when
+The environment and app are diagnosed, safe fixes are applied, and remaining risks are
+reported as clear recommendations.

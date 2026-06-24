@@ -1,0 +1,56 @@
+# AGENTS.md — {{PROJECT_NAME}} brain
+
+This repository is the **{{PROJECT_NAME}} brain**: the autonomy and governance
+layer for the project, instantiated from Brain Factory. It coordinates the
+project's app repos and keeps decisions, continuity, and quality durable in
+GitHub. This file follows the cross-tool [AGENTS.md](https://agents.md) standard,
+so any coding agent can work here.
+
+## What this repo is (and is not)
+
+- **Is:** the brain — operating contract, continuity log, decision records,
+  capabilities map, and the `{{CMD_PREFIX}}-*` command set.
+- **Is not:** the application code. App code lives in the repos listed under
+  `app_repos` in `brain.manifest.json`; the brain coordinates them.
+
+## Operating contract (read first)
+
+`00-governance/OPERATING-CONTRACT.md` is authoritative. Non-negotiables:
+
+- GitHub artifacts (issues, PRs, ADRs) are the system of record — not chat memory.
+- Keep work bounded: one objective per PR, with acceptance criteria and validation.
+- Run the open/close session ritual; continuity is written back every session.
+
+## Commands
+
+Commands are invoked as `{{CMD_PREFIX}}-<base>`. Each ships as both a Claude Code
+skill and a GitHub Copilot prompt, so it runs under whichever agent you use:
+
+- `{{CMD_PREFIX}}-status` — read-only state of backlog, PRs, CI, and brain health.
+- `{{CMD_PREFIX}}-continue` — take the top backlog item through to a pull request.
+- `{{CMD_PREFIX}}-sync` — run the close ritual (continuity writeback, capabilities refresh, push).
+- `{{CMD_PREFIX}}-review` — pre-merge review of a branch or PR.
+
+See `03-templates/agent-commands/` for the full set and `01-docs/CAPABILITIES.md`
+for the generated capability map.
+
+## Runtime-agnostic by design
+
+This brain is not tied to any single AI vendor. The `agent_runtimes` field in
+`brain.manifest.json` declares which runtimes are supported, and **`none` is
+always supported**: the deterministic ops tasks (via the Brain Factory adapter
+seam) run with no LLM at all. Paid or enterprise runtimes are additive and never
+required to operate the brain.
+
+## Conventions and boundaries
+
+- Numbered structure (`00-governance` … `08-ops`) — keep files in their lane.
+- **Core vs extensions:** anything under a `core/` namespace is hub-owned and
+  upgraded by `{{CMD_PREFIX}}-upgrade` — do not hand-edit it. Project-specific
+  work goes under `extensions/`, declared in `brain.manifest.json`.
+- Markdown is the default; keep diagrams in `01-docs/diagrams/`.
+
+## Safety
+
+- Make changes through pull requests; do not push directly to the default branch.
+- Never commit secrets. Report vulnerabilities privately, not in public issues.

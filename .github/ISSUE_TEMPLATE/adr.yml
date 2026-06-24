@@ -1,0 +1,105 @@
+name: ADR Proposal
+summary: Capture an architecture/process/operating model decision and route follow-up work.
+description: Use when a durable decision record is required before or during implementation.
+title: "ADR: "
+labels:
+  - decision
+  - adr
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Standard decision/work-packet contract: Objective, Context, Constraints and non-goals,
+        Acceptance criteria, Validation expectations, and Related artifacts.
+        References: `docs/framework-continuity-and-memory.md`, `docs/work-type-matrix.md`,
+        `docs/runbooks/open-an-issue.md`.
+  - type: dropdown
+    id: origin_surface
+    attributes:
+      label: Origin surface
+      options:
+        - GitHub Mobile
+        - VS Code Copilot (local)
+        - GitHub Copilot Chat/Coding Agent (GitHub cloud)
+        - GH CLI
+        - External AI agent output
+        - Support channel
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options:
+        - Proposed
+        - Accepted
+        - Superseded
+        - Deprecated
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What decision outcome or implementation behavior must happen next?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What problem, force, or constraint requires this decision?
+    validations:
+      required: true
+  - type: textarea
+    id: external_context
+    attributes:
+      label: External context to normalize
+      description: Summarize external material and provenance before decision/implementation.
+      placeholder: Include source/provenance or write N/A if all context is already in GitHub artifacts.
+    validations:
+      required: false
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision proposal
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Consequences and follow-up obligations
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints to preserve in implementation
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria for decision adoption
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation expectations
+    validations:
+      required: true
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts
+      description: Link issues, PRs, discussions, project items, and docs.
+    validations:
+      required: true

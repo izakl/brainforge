@@ -1,0 +1,45 @@
+{
+  "manifest_version": "1.0.0",
+  "project": {
+    "name": "Acme",
+    "slug": "acme",
+    "brain_repo": "izakl/acme-autonomy-system",
+    "summary": "Civic intelligence platform for South Africa (renamed from Legacy ZA)."
+  },
+  "framework_version": "0.1.0",
+  "command_prefix": "wg",
+  "profile": "platform-team",
+  "platforms": ["bash", "powershell", "python"],
+  "agent_runtimes": ["none", "claude", "copilot"],
+  "core_modules": {
+    "operating-contract": { "enabled": true, "synced_from": "0.1.0", "adopted": true },
+    "session-ritual-hooks": { "enabled": true, "synced_from": "0.1.0", "adopted": true },
+    "continuity-log": { "enabled": true, "synced_from": "0.1.0", "adopted": true },
+    "capabilities-map": { "enabled": true, "synced_from": "0.1.0", "adopted": true },
+    "docs-mesh": { "enabled": true, "synced_from": "0.1.0", "adopted": true },
+    "decision-board": { "enabled": true, "synced_from": "0.1.0", "adopted": true },
+    "core-commands": { "enabled": true, "synced_from": "0.1.0", "adopted": true }
+  },
+  "extensions": [
+    {
+      "id": "connector",
+      "kind": "command",
+      "path": "03-templates/agent-commands/extensions/connector",
+      "summary": "Scaffold and validate a data-source ingestion connector (invoked wg-connector)."
+    },
+    {
+      "id": "correlate",
+      "kind": "command",
+      "path": "03-templates/agent-commands/extensions/correlate",
+      "summary": "Run an entity-correlation analysis across ingested sources (invoked wg-correlate)."
+    }
+  ],
+  "app_repos": [
+    { "name": "izakl/acme", "role": "runtime app", "default_branch": "main" }
+  ],
+  "onboarding": {
+    "mode": "adopt-existing",
+    "onboarded_at": "2026-06-17",
+    "gap_report": "05-logs/onboarding-gap-report-2026-06-17.md"
+  }
+}

@@ -1,0 +1,15 @@
+# CODEOWNERS — review routing for Brain Factory.
+# See docs/governance-checklist.md for the broader review/approval contract.
+
+# Default owner for everything in the repo.
+*                              @izakl
+
+# Framework docs and continuity anchor — owner must review changes that
+# affect the operating model, governance, or cross-link discipline.
+/docs/                         @izakl
+/docs/adr/                     @izakl
+/docs/framework-continuity-and-memory.md  @izakl
+
+# CI and repo automation.
+/.github/                      @izakl
+/.github/workflows/            @izakl

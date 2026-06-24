@@ -1,0 +1,22 @@
+---
+mode: agent
+description: Add or remove an app repo from {{PROJECT_NAME}}'s coordination set — update the manifest and bootstrap wiring.
+---
+
+You are running `{{CMD_PREFIX}}-new-repo` for {{PROJECT_NAME}}. Model/effort: Sonnet / medium.
+
+Maintain the coordination set: add a new app repo to the brain's control, or remove one,
+keeping the workspace manifest and bootstrap in sync.
+
+1. OPEN-lite: fetch and prune; read the operating contract and `brain.manifest.json`;
+   state whether you are adding or removing a repo, and which.
+2. On a branch, edit `brain.manifest.json` `app_repos`: add the repo (name, URL, role) or
+   remove it.
+3. Reconcile bootstrap wiring so a fresh machine clones and installs the new set correctly.
+4. For an added repo, drop in the thin pointer file (`CLAUDE.md` / `AGENTS.md` /
+   `.github/copilot-instructions.md`) pointing back to this operating contract.
+5. Regenerate the capabilities map so the new/removed repo is reflected.
+6. CLOSE-lite: append a continuity entry; open a PR with the manifest change; push.
+
+Done when the manifest reflects the new coordination set, bootstrap and pointers are
+consistent, the capabilities map is regenerated, and the change is in a PR.

@@ -1,0 +1,27 @@
+---
+name: {{CMD_PREFIX}}-status
+description: Report the read-only state of everything — backlog, PRs/issues, CI, brain health, and framework-version drift. Use for a fast situational snapshot.
+---
+
+# {{CMD_PREFIX}}-status
+
+Model/effort: Haiku / low.
+
+A read-only situational report. Makes no changes and opens no branches — it only
+observes and summarizes the two state planes plus framework drift.
+
+## Steps
+1. Fetch and prune; read the latest `05-logs/` entry and the master index for context
+   (read-only — this command performs no writeback).
+2. Report the backlog: open issues by priority and which are claimed vs unclaimed.
+3. Report open PRs and their CI status; flag anything red or stale.
+4. Report brain health: capabilities map freshness, docs-mesh validity, active-agents
+   registry.
+5. Report framework-version drift: compare the brain manifest `framework_version`
+   against the hub registry `brain-factory/registry/framework-version.json`; note if
+   `{{CMD_PREFIX}}-upgrade` is due.
+6. Summarize in a short status block. Make no commits.
+
+## Done when
+A concise status block covers backlog, PRs/issues, CI, brain health, and version
+drift, with nothing written.

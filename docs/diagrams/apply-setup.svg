@@ -1,0 +1,37 @@
+<svg id="my-svg" width="100%" xmlns="http://www.w3.org/2000/svg"
+  class="flowchart" style="max-width: 1050px; background-color: white;"
+  viewBox="0 0 1050 90"
+  role="graphics-document document" aria-roledescription="flowchart-v2">
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#555"/>
+  </marker>
+</defs>
+<style>text { font-family: "trebuchet ms", verdana, arial, sans-serif; font-size: 12px; fill: #333; }</style>
+<rect x="20" y="20" width="110" height="50" rx="6" ry="6" fill="#f5f5f5" stroke="#666" stroke-width="1.5"/>
+<text x="75.0" y="42.0" text-anchor="middle" dominant-baseline="auto">Setup intent</text>
+<text x="75.0" y="57.0" text-anchor="middle" dominant-baseline="auto">JSON</text>
+<line x1="130" y1="45.0" x2="162" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="170" y="20" width="110" height="50" rx="6" ry="6" fill="#e8f4f8" stroke="#666" stroke-width="1.5"/>
+<text x="225.0" y="49.5" text-anchor="middle" dominant-baseline="auto">apply-setup.sh</text>
+<line x1="280" y1="45.0" x2="312" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="320" y="20" width="110" height="50" rx="6" ry="6" fill="#e8f4f8" stroke="#666" stroke-width="1.5"/>
+<text x="375.0" y="42.0" text-anchor="middle" dominant-baseline="auto">Validate</text>
+<text x="375.0" y="57.0" text-anchor="middle" dominant-baseline="auto">schema</text>
+<line x1="430" y1="45.0" x2="462" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="470" y="20" width="110" height="50" rx="6" ry="6" fill="#e8f4f8" stroke="#666" stroke-width="1.5"/>
+<text x="525.0" y="42.0" text-anchor="middle" dominant-baseline="auto">Write canonical</text>
+<text x="525.0" y="57.0" text-anchor="middle" dominant-baseline="auto">intent</text>
+<line x1="580" y1="45.0" x2="612" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="620" y="20" width="110" height="50" rx="6" ry="6" fill="#e8f4f8" stroke="#666" stroke-width="1.5"/>
+<text x="675.0" y="42.0" text-anchor="middle" dominant-baseline="auto">Output</text>
+<text x="675.0" y="57.0" text-anchor="middle" dominant-baseline="auto">summary</text>
+<line x1="730" y1="45.0" x2="762" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="770" y="20" width="110" height="50" rx="6" ry="6" fill="#e8f4f8" stroke="#666" stroke-width="1.5"/>
+<text x="825.0" y="42.0" text-anchor="middle" dominant-baseline="auto">check-setup-</text>
+<text x="825.0" y="57.0" text-anchor="middle" dominant-baseline="auto">readiness.sh</text>
+<line x1="880" y1="45.0" x2="912" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="920" y="20" width="110" height="50" rx="6" ry="6" fill="#d4edda" stroke="#666" stroke-width="1.5"/>
+<text x="975.0" y="42.0" text-anchor="middle" dominant-baseline="auto">Ready</text>
+<text x="975.0" y="57.0" text-anchor="middle" dominant-baseline="auto">to work</text>
+</svg>

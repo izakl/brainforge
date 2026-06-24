@@ -1,0 +1,26 @@
+---
+mode: agent
+description: Open a session, claim the top unclaimed backlog item, deliver it via PR, and close cleanly.
+---
+
+You are running `{{CMD_PREFIX}}-continue` for {{PROJECT_NAME}}. Model/effort: Sonnet / medium.
+
+Drive forward progress: run the full open ritual, take the highest-priority
+unclaimed backlog item, do the work on a branch, and land it via PR with the close
+ritual.
+
+1. OPEN ritual: read the operating contract, the latest `05-logs/` entry, and the
+   master index; fetch and prune; check for overlap; set model + effort to fit the
+   work; state the objective.
+2. Pick the top unclaimed backlog item; self-assign the issue and set it in progress.
+3. Create and push a branch early (`feat/<issue>-slug` or `fix/<issue>-slug`) as a
+   visible claim; record it in the active-agents registry.
+4. Do the work. Commit and push after every commit. Run the test suite the way the
+   project runs it before opening the PR.
+5. Open a PR targeting `main`; ensure CI is green.
+6. CLOSE ritual: append a continuity entry to `05-logs/<date>-<topic>.md`; update the
+   decision board if anything changed; regenerate the capabilities map and validate
+   the docs mesh; update board/issue/PR state; push everything.
+
+Done when the PR is open with green CI, the continuity entry is written, the
+capabilities map is current, and the claim is cleared on merge.

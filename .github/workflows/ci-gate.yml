@@ -1,0 +1,43 @@
+name: CI gate
+
+# Single always-on aggregator. Branch protection can require just this one
+# check ("CI gate") instead of the individual path-filtered checks, which
+# block any PR that does not touch their trigger paths (a required check that
+# never runs is reported as "Expected" and wedges the merge).
+#
+# This job has no `paths:` filter, so it runs on every PR and reports a single
+# pass/fail. It runs the framework invariant scripts (which validate repo state,
+# independent of the PR diff) and markdownlint over all Markdown.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  ci-gate:
+    name: CI gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Framework guardrail scripts
+        run: |
+          bash scripts/check-brain-factory.sh
+          bash scripts/check-index-parity.sh
+          bash scripts/check-framework-task-queue.sh
+          bash scripts/check-queue-health.sh
+          bash scripts/check-security-guardrails.sh
+          bash scripts/check-handoff-packet.sh
+          bash scripts/check-svg-companions.sh
+          bash scripts/check-mobile-quick-action.sh
+
+      - name: Python unit tests
+        run: bash scripts/check-python-tests.sh
+
+      - name: markdownlint
+        run: npx -y markdownlint-cli2 "**/*.md"

@@ -1,0 +1,18 @@
+# Dependabot configuration for Brain Factory.
+# Keeps GitHub Actions used by .github/workflows/* current.
+# See docs/framework-continuity-and-memory.md for the broader continuous-improvement principle.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"

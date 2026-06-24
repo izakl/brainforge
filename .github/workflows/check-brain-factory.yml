@@ -1,0 +1,20 @@
+name: Check brain-factory
+
+on:
+  pull_request:
+    paths:
+      - "brain-factory/**"
+      - "scripts/check-brain-factory.sh"
+      - ".github/workflows/check-brain-factory.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check-brain-factory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Check brain-factory invariants
+        run: bash scripts/check-brain-factory.sh

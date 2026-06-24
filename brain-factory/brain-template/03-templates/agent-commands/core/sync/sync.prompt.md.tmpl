@@ -1,0 +1,22 @@
+---
+mode: agent
+description: Run the close ritual on demand — continuity writeback, decision board, capabilities + docs-mesh refresh, index update, and push.
+---
+
+You are running `{{CMD_PREFIX}}-sync` for {{PROJECT_NAME}}. Model/effort: Sonnet / medium.
+
+Run the close ritual directly: capture everything that changed this session into the
+brain and push it so GitHub holds the durable state.
+
+1. Fetch and prune; review what changed this session (commits, decisions, new
+   capabilities).
+2. CLOSE ritual — append a continuity entry to `05-logs/<date>-<topic>.md`: what
+   changed, why, and evidence (links to commits/PRs/issues).
+3. Update the decision board if any decision was made or changed.
+4. Run the anti-drift sweep: regenerate the capabilities map and validate the docs
+   mesh.
+5. Update the master index and any board/issue/PR state to match reality.
+6. Commit and push everything — pushing to GitHub is the durable sync.
+
+Done when the continuity entry is written, the decision board and index are current,
+the capabilities map and docs mesh validate, and all work is pushed.

@@ -1,0 +1,27 @@
+---
+name: {{CMD_PREFIX}}-roadmap
+description: Reconcile the roadmap and backlog against what actually shipped. Use to keep planning honest after a wave of merges.
+---
+
+# {{CMD_PREFIX}}-roadmap
+
+Model/effort: Sonnet / medium.
+
+Keeps the plan aligned with reality. Compares the stated roadmap and backlog against
+shipped work, then corrects the plan so it reflects what is done, in flight, and next.
+
+## Steps
+1. OPEN-lite: fetch and prune; read the latest `05-logs/` entry, the master index, and
+   the current roadmap; state the reconciliation objective.
+2. Survey what shipped: merged PRs, closed issues, and new capabilities since the last
+   reconciliation.
+3. Diff shipped work against the roadmap and backlog; identify done, drifted, stale, and
+   missing items.
+4. Update the roadmap and backlog: close completed items, re-prioritize, and add newly
+   discovered work as issues.
+5. CLOSE-lite: append a continuity entry summarizing the reconciliation; update the
+   decision board if priorities shifted; push.
+
+## Done when
+The roadmap and backlog match shipped reality, new work is captured as issues, and the
+reconciliation is logged and pushed.

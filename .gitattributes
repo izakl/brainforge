@@ -1,0 +1,38 @@
+# Default: let git auto-detect text vs binary, and normalize line endings to LF on commit.
+* text=auto eol=lf
+
+# Explicitly mark common text formats so diffs and merges behave predictably.
+*.md         text eol=lf
+*.markdown   text eol=lf
+*.yml        text eol=lf
+*.yaml       text eol=lf
+*.json       text eol=lf
+*.toml       text eol=lf
+*.ini        text eol=lf
+*.sh         text eol=lf
+*.txt        text eol=lf
+*.gitignore  text eol=lf
+*.gitattributes text eol=lf
+*.editorconfig text eol=lf
+
+# Language-aware diffs for markdown so hunks split on heading boundaries.
+*.md diff=markdown
+
+# Explicitly mark binary file types so git does not attempt line-ending conversion or text diffs.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.svg  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.tar  binary
+*.woff binary
+*.woff2 binary
+
+# GitHub linguist hints: do not let auto-generated content skew language stats.
+docs/**           linguist-documentation
+examples/**       linguist-documentation
+.github/**        linguist-vendored=false

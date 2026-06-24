@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "setup_id": "setup-2026-05-26-solo-production-app",
+  "setup_mode": "new_adoption",
+  "project": {
+    "name": "solo-production-service",
+    "primary_work_types": ["enhancement", "defect", "operations"],
+    "repo_shape": "product_delivery"
+  },
+  "team": {
+    "primary_profile": "small_repo_solo",
+    "owners": ["@owner"]
+  },
+  "deployment": {
+    "model": "cloud_hosted",
+    "targets": ["github_actions", "vercel"]
+  },
+  "governance": {
+    "evidence_level": "standard"
+  },
+  "automation": {
+    "bundle": "A",
+    "stage": "recommended"
+  },
+  "execution_surfaces": ["vscode_local", "github_cloud_agent", "gh_cli"],
+  "security": {
+    "posture": "elevated"
+  },
+  "preferences": {
+    "setup_profile": "solo_production_app",
+    "projects_enabled": false,
+    "mobile_surface": false
+  },
+  "deferred": [
+    {
+      "item": "queue health automation",
+      "reason": "queue-backed roadmap not yet part of routine operation",
+      "enablement_criteria": "queue file is actively maintained for two review cycles",
+      "owner": "@owner"
+    }
+  ]
+}

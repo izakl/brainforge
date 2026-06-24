@@ -1,0 +1,289 @@
+name: Prepare Next Framework Task
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prepare-next-task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Close open issues for done queue tasks
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require("fs");
+            const queuePath = ".github/framework-task-queue.json";
+
+            if (!fs.existsSync(queuePath)) {
+              core.info("Queue file not found; skipping done-task issue closure.");
+              return;
+            }
+
+            const queue = JSON.parse(fs.readFileSync(queuePath, "utf8"));
+            const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
+            const issueBackedModel =
+              queue.issue_backed_queue_model &&
+              typeof queue.issue_backed_queue_model === "object"
+                ? queue.issue_backed_queue_model
+                : {};
+
+            const markerPrefix =
+              typeof issueBackedModel.prepared_issue_marker_prefix === "string" &&
+              issueBackedModel.prepared_issue_marker_prefix.trim().length > 0
+                ? issueBackedModel.prepared_issue_marker_prefix.trim()
+                : "framework-task-queue-id:";
+            const preparedIssueLabel =
+              typeof issueBackedModel.prepared_issue_label === "string" &&
+              issueBackedModel.prepared_issue_label.trim().length > 0
+                ? issueBackedModel.prepared_issue_label.trim()
+                : "agent-task";
+
+            const doneTaskIds = new Set(
+              tasks
+                .filter((t) => typeof t === "object" && t !== null && t.status === "done")
+                .map((t) => t.id)
+            );
+
+            if (doneTaskIds.size === 0) {
+              core.info("No done tasks in queue; nothing to close.");
+              return;
+            }
+
+            const openIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: preparedIssueLabel,
+              per_page: 100,
+            });
+
+            const escapedPrefix = markerPrefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const markerRe = new RegExp(`<!--\\s*${escapedPrefix}([^>\\s]+)\\s*-->`);
+
+            let closedCount = 0;
+            for (const issue of openIssues) {
+              if (issue.pull_request) continue;
+              const body = issue.body || "";
+              const match = body.match(markerRe);
+              if (!match) continue;
+              const taskId = match[1];
+              if (!doneTaskIds.has(taskId)) continue;
+
+              core.info(
+                `Closing issue #${issue.number} ('${issue.title}') — queue task '${taskId}' is done.`
+              );
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body:
+                  `Closing automatically: queue task \`${taskId}\` is marked \`done\` in ` +
+                  `\`.github/framework-task-queue.json\`. This issue was prepared when the ` +
+                  `task was \`pending\`; the implementation work has since been completed ` +
+                  `and the queue state has been updated.`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: "closed",
+                state_reason: "completed",
+              });
+              closedCount++;
+            }
+
+            if (closedCount > 0) {
+              core.info(`Closed ${closedCount} queue-linked issue(s) for done tasks.`);
+            } else {
+              core.info("No open queue-linked issues found for done tasks; nothing to close.");
+            }
+
+      - name: Prepare next task issue from durable queue
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require("fs");
+            const path = ".github/framework-task-queue.json";
+
+            const raw = fs.readFileSync(path, "utf8");
+            const queue = JSON.parse(raw);
+            const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
+            const issueBackedModel =
+              queue.issue_backed_queue_model && typeof queue.issue_backed_queue_model === "object"
+                ? queue.issue_backed_queue_model
+                : {};
+            const getRequiredTrimmed = (value, key) => {
+              if (typeof value !== "string" || value.trim().length === 0) {
+                throw new Error(
+                  `Queue issue_backed_queue_model.${key} is required; ` +
+                    "run `bash scripts/check-framework-task-queue.sh` (or equivalent validator in your environment) and fix .github/framework-task-queue.json."
+                );
+              }
+              return value.trim();
+            };
+            const normalizedMarkerPrefix = getRequiredTrimmed(
+              issueBackedModel.prepared_issue_marker_prefix,
+              "prepared_issue_marker_prefix"
+            );
+            const normalizedPreparedIssueLabel = getRequiredTrimmed(
+              issueBackedModel.prepared_issue_label,
+              "prepared_issue_label"
+            );
+            const normalizedPreparedIssueTemplate = getRequiredTrimmed(
+              issueBackedModel.prepared_issue_template,
+              "prepared_issue_template"
+            );
+
+            const byId = new Map(tasks.map((task) => [task.id, task]));
+            const depsDone = (task) =>
+              (task.depends_on || []).every((depId) => byId.get(depId)?.status === "done");
+
+            const nextTask = tasks.find(
+              (task) => task.status === "pending" && depsDone(task)
+            );
+
+            if (!nextTask) {
+              core.summary
+                .addHeading("Framework task queue preparation")
+                .addRaw("No dependency-ready pending task found. No issue created.")
+                .write();
+              core.info("No dependency-ready pending task found.");
+              return;
+            }
+
+            const openIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: normalizedPreparedIssueLabel,
+              per_page: 100
+            });
+
+            const existingIssue = openIssues.find((issue) =>
+              issue.body && issue.body.includes(`<!-- ${normalizedMarkerPrefix}${nextTask.id} -->`)
+            );
+
+            if (existingIssue) {
+              core.summary
+                .addHeading("Framework task queue preparation")
+                .addRaw(
+                  `Existing prepared issue already open for next task: ${existingIssue.html_url}`
+                )
+                .write();
+              core.info(`Existing prepared issue found: ${existingIssue.html_url}`);
+              return;
+            }
+
+            const depsText =
+              (nextTask.depends_on || []).length > 0
+                ? nextTask.depends_on.map((dep) => `- ${dep}`).join("\n")
+                : "- none";
+            const relatedDocsText =
+              (nextTask.related_docs || []).length > 0
+                ? nextTask.related_docs.map((doc) => `- \`${doc}\``).join("\n")
+                : "- none";
+            const labels = Array.isArray(nextTask.labels) && nextTask.labels.length > 0
+              ? nextTask.labels
+              : [normalizedPreparedIssueLabel];
+
+            const body = [
+              `<!-- ${normalizedMarkerPrefix}${nextTask.id} -->`,
+              "",
+              "This issue was prepared automatically after a merge to `main` from the durable task queue in `.github/framework-task-queue.json`.",
+              "",
+              "> Human-in-the-loop boundary: review and refine this packet before assigning implementation. The workflow prepares work; it does not autonomously open a PR or merge code.",
+              "",
+              "## Issue-backed queue linkage",
+              "",
+              `- **Queue-id marker:** \`<!-- ${normalizedMarkerPrefix}${nextTask.id} -->\``,
+              `- **Prepared issue template:** \`${normalizedPreparedIssueTemplate}\``,
+              `- **Prepared issue label:** \`${normalizedPreparedIssueLabel}\``,
+              "- **State expectation:** `blocked`/`pending` may exist before an issue is opened; `in_progress`/`done`/`superseded` must stay backed by linked issue/PR artifacts.",
+              "",
+              `## Queue item`,
+              "",
+              `- **Task id:** \`${nextTask.id}\``,
+              `- **Status in queue:** \`${nextTask.status}\``,
+              `- **Continuity/health writeback expected:** \`${nextTask.continuity_writeback_expected}\``,
+              "",
+              "## Objective",
+              "",
+              nextTask.title,
+              "",
+              "## Context",
+              "",
+              nextTask.why_now || "See related artifacts for context.",
+              "",
+              "## Constraints and exclusions",
+              "",
+              "- Keep this task bounded to one objective and one PR.",
+              "- Preserve GitHub artifacts as the durable system of record.",
+              "- Do not bypass review or approval controls.",
+              "",
+              "## Acceptance criteria",
+              "",
+              "- The queue-selected task is delivered in a bounded PR.",
+              "- The implementation PR closes this canonical queue-linked issue using `Closes #<issue-number>`.",
+              "- Any supporting artifacts are linked with non-closing references (`Relates-to #...`, comments, or equivalent).",
+              "- Validation evidence is captured in the PR.",
+              "- Queue state is updated in a follow-up PR if status changes.",
+              "",
+              "## Validation",
+              "",
+              "- `npx -y markdownlint-cli2 \"**/*.md\"`",
+              "- `bash scripts/check-svg-companions.sh`",
+              "- `bash scripts/check-mobile-quick-action.sh`",
+              "- `bash scripts/check-handoff-packet.sh`",
+              "- `bash scripts/check-security-guardrails.sh`",
+              "- `bash scripts/check-index-parity.sh`",
+              "- `bash scripts/check-framework-task-queue.sh`",
+              "",
+              "## Dependencies",
+              "",
+              depsText,
+              "",
+              "## Suggested GitHub agent prompt",
+              "",
+              "```text",
+              nextTask.suggested_prompt,
+              "```",
+              "",
+              "## Related artifacts",
+              "",
+              relatedDocsText,
+              "- `docs/framework-roadmap-next-prompts.md`",
+              "- `docs/runbooks/operate-framework-task-queue.md`",
+              "",
+              "## Queue closeout hygiene",
+              "",
+              "- In the implementation PR, use `Closes #<this-issue-number>` for this canonical queue-linked issue.",
+              "- If you need additional linkage, use non-closing references such as `Relates-to #...`.",
+              "- If merge occurred without automatic closure, manually close this issue and leave a reconciliation comment linking the merged PR.",
+              "",
+              "## Proposed execution mode",
+              "",
+              "- GitHub Copilot Coding Agent (GitHub cloud)"
+            ].join("\n");
+
+            const created = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Agent Task]: ${nextTask.title}`,
+              body,
+              labels
+            });
+
+            core.summary
+              .addHeading("Framework task queue preparation")
+              .addRaw(`Prepared next task issue: ${created.data.html_url}`)
+              .write();

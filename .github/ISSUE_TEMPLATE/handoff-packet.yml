@@ -1,0 +1,90 @@
+name: Handoff Packet
+description: Structured handoff packet for transferring work between humans, agents, or execution surfaces
+title: "[Handoff]: "
+labels:
+  - handoff
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template enforces the canonical nine-field handoff contract from
+        `docs/handoff-packet-template.md` and `docs/multi-agent-handoff-playbook.md`.
+        Use `docs/work-type-matrix.md` and `docs/framework-continuity-and-memory.md` when preserving constraints.
+  - type: dropdown
+    id: handoff_direction
+    attributes:
+      label: Handoff direction
+      description: Which surfaces are involved in this handoff?
+      options:
+        - Human → GitHub Copilot Coding Agent
+        - GitHub Copilot Coding Agent → Human reviewer
+        - Human → Human
+        - External AI agent → GitHub (normalization)
+        - GitHub Mobile → Desktop
+        - Desktop → GitHub Mobile (review/approval)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What must happen next. Be specific.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Business, technical, or support background needed to act on this packet. Normalize any non-GitHub context here before implementation starts.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints and non-goals
+      description: Hard limits, guardrails, non-goals, and required standards.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: What makes the work complete. Use verifiable conditions.
+    validations:
+      required: true
+  - type: textarea
+    id: validation_expectations
+    attributes:
+      label: Validation expectations
+      description: Checks, evidence, or review expectations the next owner must satisfy.
+    validations:
+      required: true
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts
+      description: Links to issues, PRs, ADRs, discussions, or project items. Use relative repo paths where possible.
+    validations:
+      required: true
+  - type: input
+    id: next_owner
+    attributes:
+      label: Next owner
+      description: Who or what surface is expected to act next (e.g. @username, GitHub Copilot Coding Agent).
+    validations:
+      required: true
+  - type: textarea
+    id: status
+    attributes:
+      label: Status / current state
+      description: Where the work stopped and what is already done.
+    validations:
+      required: true
+  - type: textarea
+    id: unresolved_risks
+    attributes:
+      label: Unresolved risks / questions
+      description: Open decisions, ambiguities, or blockers the next owner must address.
+    validations:
+      required: true

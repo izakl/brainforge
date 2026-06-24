@@ -1,0 +1,64 @@
+name: Support intake
+description: Capture a support question, product signal, or user-reported issue for triage into the improvement loop.
+title: "[support] "
+labels: ["support-intake"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to record an inbound support or product signal so it can be triaged via `docs/product-support-and-improvement-loop.md`.
+        Follow the `docs/runbooks/respond-to-support-intake.md` runbook to process this issue after it is filed.
+        If this intake may describe a vulnerability, exploit path, or secret exposure, do **not** post sensitive detail here—use private reporting in `SECURITY.md`.
+        This intake template is intentionally triage-first and lighter than the full implementation work-packet contract.
+        Before implementation starts, route to an issue template aligned with `docs/issue-taxonomy.md` and
+        `docs/work-type-matrix.md`, and normalize context per `docs/framework-continuity-and-memory.md`.
+  - type: textarea
+    id: signal
+    attributes:
+      label: What was reported?
+      description: Paste the original message, transcript, or summary. Redact any sensitive information.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source / channel
+      description: Where did this come from? (e.g. Slack thread, customer email, internal chat, external AI transcript)
+    validations:
+      required: true
+  - type: dropdown
+    id: security_sensitivity
+    attributes:
+      label: Security sensitivity check
+      description: Route privately if this may involve a vulnerability or secret exposure.
+      options:
+        - "No known security sensitivity"
+        - "Unsure — needs security triage"
+        - "Yes — private advisory required (do not include sensitive detail)"
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Initial severity guess
+      options:
+        - "Sev-1 (broken / blocking)"
+        - "Sev-2 (degraded)"
+        - "Sev-3 (question / minor)"
+        - "Sev-4 (idea / feature request)"
+    validations:
+      required: true
+  - type: textarea
+    id: next
+    attributes:
+      label: Suggested next step
+      description: Triage owner, related doc, or follow-up issue. Leave blank if unsure.
+    validations:
+      required: false
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts (optional)
+      description: Link any existing issue, PR, ADR, discussion, incident note, or runbook relevant to this intake.
+    validations:
+      required: false

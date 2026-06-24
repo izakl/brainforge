@@ -1,0 +1,21 @@
+# EditorConfig: https://editorconfig.org
+# Keeps whitespace, line endings, and indentation consistent across editors
+# so PRs don't show noisy diffs caused by editor defaults.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+# Markdown is whitespace-sensitive (trailing two spaces = hard break).
+# Disable trailing-whitespace trimming for .md so intentional hard breaks survive.
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab

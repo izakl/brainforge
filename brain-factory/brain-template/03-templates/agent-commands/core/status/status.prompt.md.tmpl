@@ -1,0 +1,23 @@
+---
+mode: agent
+description: Report the read-only state of everything — backlog, PRs/issues, CI, brain health, and framework-version drift.
+---
+
+You are running `{{CMD_PREFIX}}-status` for {{PROJECT_NAME}}. Model/effort: Haiku / low.
+
+Produce a read-only situational report. Make no changes and open no branches — only
+observe and summarize.
+
+1. Fetch and prune; read the latest `05-logs/` entry and the master index for context
+   (read-only — perform no writeback).
+2. Report the backlog: open issues by priority and which are claimed vs unclaimed.
+3. Report open PRs and their CI status; flag anything red or stale.
+4. Report brain health: capabilities map freshness, docs-mesh validity, active-agents
+   registry.
+5. Report framework-version drift: compare the brain manifest `framework_version`
+   against the hub registry `brain-factory/registry/framework-version.json`; note if
+   `{{CMD_PREFIX}}-upgrade` is due.
+6. Summarize in a short status block. Make no commits.
+
+Done when a concise status block covers backlog, PRs/issues, CI, brain health, and
+version drift, with nothing written.

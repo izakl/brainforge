@@ -1,0 +1,114 @@
+name: Agent Execution Task
+description: Structured work packet for bounded implementation by approved execution surfaces
+title: "[Agent Task]: "
+labels:
+  - agent-task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Standard work-packet contract: Objective, Context, Constraints and non-goals, Acceptance criteria,
+        Validation expectations, and Related artifacts.
+        References: `docs/framework-continuity-and-memory.md`, `docs/work-type-matrix.md`,
+        `docs/runbooks/open-an-issue.md`.
+  - type: dropdown
+    id: origin_surface
+    attributes:
+      label: Origin surface
+      options:
+        - GitHub Mobile
+        - VS Code Copilot (local)
+        - GitHub Copilot Chat/Coding Agent (GitHub cloud)
+        - GH CLI
+        - External AI agent output
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What must happen next. Be specific — a well-formed objective enables any approved agent or human to pick up this task.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Business, technical, or support background needed to act on this task.
+    validations:
+      required: true
+  - type: textarea
+    id: external_context
+    attributes:
+      label: External context to normalize
+      description: Summarize any context from outside GitHub (local notes, Drive, OneDrive, external AI output) before implementation starts. Include provenance. Leave blank if none.
+      placeholder: Include source/provenance or write N/A if all context is already in GitHub artifacts.
+    validations:
+      required: false
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints and non-goals
+      description: Hard limits, guardrails, non-goals, and required standards. State what must not change.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Testable conditions confirming this task is complete.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation expectations
+      description: Which checks, tests, or review evidence are required to verify completion?
+    validations:
+      required: true
+  - type: textarea
+    id: related_artifacts
+    attributes:
+      label: Related artifacts
+      description: Link supporting issues, PRs, ADRs, discussions, docs, or project items that define scope, constraints, or dependencies.
+    validations:
+      required: true
+  - type: input
+    id: queue_task_id
+    attributes:
+      label: Queue task id (if queue-backed)
+      description: |
+        If this issue comes from `.github/framework-task-queue.json`, enter the queue task id.
+        Preserve marker `<!-- framework-task-queue-id:<id> -->` in the issue body/comment.
+        If not queue-backed, enter N/A.
+      placeholder: template-harmonization-pass or N/A
+    validations:
+      required: true
+  - type: textarea
+    id: queue_linkage_notes
+    attributes:
+      label: Queue linkage notes (if queue-backed)
+      description: Record queue-state intent and issue linkage notes (for example blocked reason, decomposition, supersession rationale, canonical parent issue) or write N/A when not queue-backed.
+    validations:
+      required: true
+  - type: textarea
+    id: queue_closeout_plan
+    attributes:
+      label: Queue closeout plan (if queue-backed)
+      description: |
+        If queue-backed, state how the implementation PR will close this issue (use `Closes #<issue-number>` for the canonical queue-linked issue), how additional artifacts will be linked (`Relates-to #...`), and who closes/reconciles manually if auto-close is missed.
+        If not queue-backed, write N/A.
+    validations:
+      required: true
+  - type: dropdown
+    id: execution_mode
+    attributes:
+      label: Proposed execution mode
+      options:
+        - GitHub Copilot Coding Agent (GitHub cloud)
+        - VS Code Copilot (local)
+        - Human-led without agent
+        - Hybrid
+    validations:
+      required: true

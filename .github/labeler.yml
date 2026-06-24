@@ -1,0 +1,57 @@
+# Path-based labels applied automatically by .github/workflows/labeler.yml.
+# Keep these rules aligned with .github/CODEOWNERS routing.
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**/*.md"
+          - "README.md"
+          - "AGENTS.md"
+          - "CONTRIBUTING.md"
+          - "SECURITY.md"
+
+adr:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/adr/**/*.md"
+
+runbooks:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/runbooks/**/*.md"
+
+examples:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "examples/**/*.md"
+
+governance:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/governance-checklist.md"
+          - "docs/framework-continuity-and-memory.md"
+          - "docs/framework-queued-execution-memory.md"
+          - "docs/framework-health.md"
+          - ".github/CODEOWNERS"
+          - "SECURITY.md"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".markdownlint.jsonc"
+          - ".github/markdown-link-check.json"
+
+automation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/dependabot.yml"
+          - ".github/labeler.yml"
+          - ".github/framework-task-queue.json"
+
+templates:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/pull_request_template.md"
+          - ".github/PULL_REQUEST_TEMPLATE/**"

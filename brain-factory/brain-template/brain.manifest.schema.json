@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/izakl/brainforge/brain-factory/brain.manifest.schema.json",
+  "title": "Brain manifest",
+  "description": "Per-project brain stamp. Records identity, the framework version the brain runs, enabled platforms and core modules, project-owned extensions, and the app repos the brain coordinates. The manifest is the boundary between hub-owned core (upgradeable via down-sync) and project-owned extensions (never overwritten).",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "project",
+    "framework_version",
+    "command_prefix",
+    "platforms",
+    "core_modules"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "manifest_version": {
+      "description": "Schema version of this manifest file, for migration across framework versions.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "project": {
+      "description": "Project identity.",
+      "type": "object",
+      "required": ["name", "brain_repo"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "Human project name (e.g. \"Acme\").",
+          "type": "string"
+        },
+        "slug": {
+          "description": "Lowercase identifier used in repo/db/service names (e.g. \"acme\").",
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]*$"
+        },
+        "brain_repo": {
+          "description": "owner/repo of this brain (e.g. \"izakl/acme-autonomy-system\").",
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "framework_version": {
+      "description": "The hub framework version this brain was last synced to. Compared against brain-factory/registry/framework-version.json during the down-sync (the upgrade command).",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "command_prefix": {
+      "description": "Per-brain command prefix. Commands are invoked as <command_prefix>-<base> (e.g. prefix 'wg' gives 'wg-sync'). The framework does not hardcode a prefix; the donor Northwind system uses 'xs', each project picks its own short prefix at provision time. The engine stamps this into core skill/prompt names ({{CMD_PREFIX}}).",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]{1,7}$"
+    },
+    "profile": {
+      "description": "Adoption profile (aligns with docs/framework-profile-packs.md).",
+      "type": "string",
+      "enum": ["small-repo", "product-team", "platform-team", "support-heavy", "governance-heavy"]
+    },
+    "platforms": {
+      "description": "Which adapter runtimes are installed for this brain. Extensible: additional runtimes may be added without changing callers.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["bash", "powershell", "python"]
+      }
+    },
+    "agent_runtimes": {
+      "description": "Which AI agent runtimes this brain emits command artifacts for and can operate under. Open and swappable: no single vendor is required. 'none' means the brain's deterministic adapter tasks run with no LLM at all, which every brain must support. Paid/enterprise runtimes (e.g. multi-agent orchestration) are additive and never required for core operation. Extensible: more runtimes may be added without changing callers.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["none", "claude", "copilot", "codex", "aider"]
+      }
+    },
+    "core_modules": {
+      "description": "Hub-owned modules enabled for this brain. Upgraded by the down-sync. Keys are core module ids; values record the enabled state and the framework version that last touched them.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["enabled"],
+        "additionalProperties": false,
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "synced_from": {
+            "description": "Framework version that last applied this module.",
+            "type": "string"
+          },
+          "adopted": {
+            "description": "true if installed by the hub; false if a pre-existing project artifact the inspect-first onboarding chose to keep.",
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "extensions": {
+      "description": "Project-owned capabilities. Never overwritten by the down-sync. Each entry names a project-specific command/skill or policy living under the brain's extensions namespace.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": ["command", "policy", "ops-script", "doc"]
+          },
+          "path": { "type": "string" },
+          "summary": { "type": "string" }
+        }
+      }
+    },
+    "app_repos": {
+      "description": "App/code repos this brain coordinates. A brain may coordinate one or many.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "description": "owner/repo", "type": "string" },
+          "role": { "type": "string" },
+          "default_branch": { "type": "string" }
+        }
+      }
+    },
+    "onboarding": {
+      "description": "How this brain was created, for audit.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "type": "string", "enum": ["provision-new", "adopt-existing"] },
+        "onboarded_at": { "type": "string" },
+        "gap_report": { "description": "Path to the inspect-first gap report, if adopt-existing.", "type": "string" }
+      }
+    }
+  }
+}
