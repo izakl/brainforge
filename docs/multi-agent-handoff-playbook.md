@@ -34,8 +34,8 @@ If the context started outside GitHub, *normalize* it first — distill it into 
 Use these reusable sources for the structure above:
 
 - Canonical template: [`docs/handoff-packet-template.md`](handoff-packet-template.md).
-- GitHub Issues form: [`.github/ISSUE_TEMPLATE/handoff-packet.yml`](../.github/ISSUE_TEMPLATE/handoff-packet.yml).
-- Completeness is enforced by [`scripts/check-handoff-packet.sh`](../scripts/check-handoff-packet.sh), per [ADR 0015](adr/0015-handoff-packet-enforcement.md).
+- GitHub Issues form: [`.github/ISSUE_TEMPLATE/handoff-packet.yml`](https://github.com/izakl/brainforge/blob/main/.github/ISSUE_TEMPLATE/handoff-packet.yml).
+- Completeness is enforced by [`scripts/check-handoff-packet.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-handoff-packet.sh), per [ADR 0015](adr/0015-handoff-packet-enforcement.md).
 
 For a handoff someone will later resume, also fill the resume fields in [`docs/handoff-packet-template.md`](handoff-packet-template.md): lifecycle stage, active work item, setup/readiness posture, blockers and deferred posture, the order to review artifacts in, the recommended next safe action, and resume verification steps.
 

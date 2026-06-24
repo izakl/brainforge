@@ -22,9 +22,9 @@ new, start with the
 
 ## Primary artifacts
 
-- Queue source of truth: [`.github/framework-task-queue.json`](../../.github/framework-task-queue.json)
-- Drift-detection script: [`scripts/check-queue-health.sh`](../../scripts/check-queue-health.sh)
-- Schema-validation script: [`scripts/check-framework-task-queue.sh`](../../scripts/check-framework-task-queue.sh)
+- Queue source of truth: [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json)
+- Drift-detection script: [`scripts/check-queue-health.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-queue-health.sh)
+- Schema-validation script: [`scripts/check-framework-task-queue.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-framework-task-queue.sh)
 - Canonical queue schema/governance model: [`../framework-queued-execution-memory.md`](../framework-queued-execution-memory.md)
 - Queue operations runbook: [`operate-framework-task-queue.md`](operate-framework-task-queue.md)
 
@@ -166,7 +166,7 @@ For each drift signal you correct:
    - leave a reconciliation comment with merged PR evidence
    - confirm queue state reflects the closeout result
 6. After merge, check the latest
-   [Prepare Next Framework Task](../../.github/workflows/prepare-next-framework-task.yml)
+   [Prepare Next Framework Task](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml)
    run to confirm next-task preparation is correct, or trigger it manually via
    `workflow_dispatch` if preparation needs recovery.
 

@@ -103,6 +103,6 @@ Follow-ups:
 
 - [`docs/multi-agent-handoff-playbook.md`](../multi-agent-handoff-playbook.md)
 - [`docs/handoff-packet-template.md`](../handoff-packet-template.md)
-- [`scripts/check-handoff-packet.sh`](../../scripts/check-handoff-packet.sh)
+- [`scripts/check-handoff-packet.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-handoff-packet.sh)
 - [ADR 0012: SVG companions for diagrams](./0012-svg-companions-for-diagrams.md)
 - [ADR 0013: Mobile quick action section convention](./0013-mobile-quick-action-convention.md)

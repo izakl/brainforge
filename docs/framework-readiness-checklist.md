@@ -38,10 +38,10 @@ Treat baseline readiness as met when all items below are true for current work.
 | Dimension | Minimum signal | Primary evidence | Canonical references |
 | --- | --- | --- | --- |
 | Durable artifacts | Work starts from issue/ADR/discussion, not chat-only context. | Active issues/PRs with complete packets | [`operating-model.md`](operating-model.md), [`issue-taxonomy.md`](issue-taxonomy.md), [`runbooks/open-an-issue.md`](runbooks/open-an-issue.md) |
-| Bounded issue → PR execution | PRs stay scoped to one objective with explicit constraints, acceptance, and validation evidence. | PR template usage + linked issue/PR history | [`../AGENTS.md`](../AGENTS.md), [`framework-continuity-and-memory.md`](framework-continuity-and-memory.md) |
+| Bounded issue → PR execution | PRs stay scoped to one objective with explicit constraints, acceptance, and validation evidence. | PR template usage + linked issue/PR history | [`../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md), [`framework-continuity-and-memory.md`](framework-continuity-and-memory.md) |
 | Normalized external context | External AI/local notes are promoted into GitHub artifacts before implementation. | Linked issue/discussion/ADR references | [`context-synchronization.md`](context-synchronization.md), [`framework-continuity-and-memory.md`](framework-continuity-and-memory.md) |
-| Validation baseline | Required markdown/docs checks are enabled and passing. | CI runs + local validation evidence | [`../AGENTS.md`](../AGENTS.md), [`framework-automation-bundles-by-profile.md`](framework-automation-bundles-by-profile.md) |
-| Security routing | Security-sensitive intake follows private/sanitized routing paths. | `SECURITY.md` + guardrail-check evidence | [`../SECURITY.md`](../SECURITY.md), [`security-and-secure-delivery.md`](security-and-secure-delivery.md) |
+| Validation baseline | Required markdown/docs checks are enabled and passing. | CI runs + local validation evidence | [`../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md), [`framework-automation-bundles-by-profile.md`](framework-automation-bundles-by-profile.md) |
+| Security routing | Security-sensitive intake follows private/sanitized routing paths. | `SECURITY.md` + guardrail-check evidence | [`../SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md), [`security-and-secure-delivery.md`](security-and-secure-delivery.md) |
 | Deferral discipline | Deferred scope is explicit and issue-tracked. | Linked follow-up issues | [`framework-starter-kit.md`](framework-starter-kit.md), [`framework-portability-and-adoption.md`](framework-portability-and-adoption.md) |
 
 ## Recommended readiness (right-sized reliability)

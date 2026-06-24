@@ -3,7 +3,7 @@
 Entry point for the framework's documentation. If you are a first-time maintainer/operator, start with the [Operator onboarding pack](operator-onboarding-pack.md), then continue to the [Operating model](operating-model.md) and branch out via the sections below.
 For issue-template selection and intake field expectations, treat [Issue taxonomy](issue-taxonomy.md) as canonical and use [Open an issue](runbooks/open-an-issue.md) as the procedural companion.
 
-For the minimum operating contract for agents and new contributors, see [`AGENTS.md`](../AGENTS.md) at the repository root.
+For the minimum operating contract for agents and new contributors, see [`AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) at the repository root.
 
 ## Bootstrap path
 
@@ -11,7 +11,7 @@ To go from "just discovered the framework" to a ready-to-work setup state:
 
 | Step | What to do | Key resource |
 | --- | --- | --- |
-| 1. Understand | Read `AGENTS.md` and the framework overview | [`../AGENTS.md`](../AGENTS.md) |
+| 1. Understand | Read `AGENTS.md` and the framework overview | [`../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) |
 | 2. Describe your needs | Write a natural-language setup description | [Prompt-to-setup bootstrap](runbooks/prompt-to-setup-bootstrap.md) |
 | 3. Choose or adapt setup | Pick the nearest setup profile and adapt an intent example | [`framework-setup-profiles-and-intent-examples.md`](framework-setup-profiles-and-intent-examples.md) |
 | 4. Apply setup | Run `apply-setup.sh` against your intent file | [`runbooks/apply-setup.md`](runbooks/apply-setup.md) |
@@ -49,7 +49,7 @@ The unified runbook covering all five steps:
 - [Prompt-to-setup bootstrap runbook](runbooks/prompt-to-setup-bootstrap.md) — end-to-end path from natural-language setup needs to setup-intent/profile selection, setup application, and readiness verification.
 - [Brain Factory: how it works](how-brain-factory-works.md) — a five-minute, plain-language overview of the hub, brains, the core/extension split, and the improvement loop.
 - [Brain Factory — design overview](brain-factory-design-overview.md) — the whole target architecture on one page, with diagrams and a built-vs-planned status.
-- [Framework brain factory architecture](framework-brain-factory-architecture.md) — the executable layer: how the hub provisions and continuously improves a per-project brain, with the core/extension split and the bidirectional improvement loop. See also [`brain-factory/`](../brain-factory/README.md) and [ADR 0019](adr/0019-project-brain-factory-and-improvement-loop.md).
+- [Framework brain factory architecture](framework-brain-factory-architecture.md) — the executable layer: how the hub provisions and continuously improves a per-project brain, with the core/extension split and the bidirectional improvement loop. See also [`brain-factory/`](https://github.com/izakl/brainforge/blob/main/brain-factory/README.md) and [ADR 0019](adr/0019-project-brain-factory-and-improvement-loop.md).
 - [Framework change governance and deprecation policy](framework-change-governance-and-deprecation-policy.md) — operational policy for introducing, changing, deprecating, and removing framework docs/templates/scripts/workflows.
 - [Framework release/versioning/deprecation model](framework-release-versioning-and-deprecation.md) — lightweight lifecycle semantics for major/minor/patch changes, compatibility signaling, migration burden, operator-action expectations, release communication, and deprecation handling.
 - [Framework release notes and upgrade summaries](framework-release-notes-and-upgrade-summaries.md) — lightweight model for when/how to publish high-signal change summaries with clear adopter impact.
@@ -99,14 +99,14 @@ The unified runbook covering all five steps:
 
 ## Examples
 
-- [Worked example: handle a Dependabot pull request](../examples/worked-example-dependabot-pr.md) — end-to-end walkthrough of triaging, validating, and merging a Dependabot PR.
-- [Worked Example: Issue to PR to ADR (Markdown CI Guardrail)](../examples/worked-example-issue-to-pr.md) — concrete walkthrough from issue intake through PR and ADR outcomes.
-- [Worked Example: External context normalization flow](../examples/worked-example-external-context-normalization.md) — end-to-end trace from local raw context through Tier 2 synthesis to normalized GitHub issue, implementation PR, and durable writeback.
-- [Adoption example: solo maintainer / small repository](../examples/adoption-example-solo-small-repo.md) — how a solo maintainer applies the essential baseline with Bundle A automation and explicit deferrals.
-- [Adoption example: product delivery team](../examples/adoption-example-product-delivery-team.md) — how a multi-contributor product team adopts the full issue/project/PR/handoff loop with Bundle B automation.
-- [Adoption example: platform and infrastructure team](../examples/adoption-example-platform-infra-team.md) — how a platform team adopts Bundle C automation, ADR discipline, and security-first controls from day one.
-- [Adoption example: starter-kit bootstrap in one bounded issue → PR flow](../examples/adoption-example-starter-kit-bootstrap-flow.md) — how a first-time adopter executes starter-kit onboarding in one bounded issue and one bounded PR.
-- [Adoption example: profile upgrade from small-repo baseline to product team](../examples/adoption-example-profile-upgrade-small-to-product.md) — how a repository scales profile/bundle through one bounded issue→PR transition.
+- [Worked example: handle a Dependabot pull request](https://github.com/izakl/brainforge/blob/main/examples/worked-example-dependabot-pr.md) — end-to-end walkthrough of triaging, validating, and merging a Dependabot PR.
+- [Worked Example: Issue to PR to ADR (Markdown CI Guardrail)](https://github.com/izakl/brainforge/blob/main/examples/worked-example-issue-to-pr.md) — concrete walkthrough from issue intake through PR and ADR outcomes.
+- [Worked Example: External context normalization flow](https://github.com/izakl/brainforge/blob/main/examples/worked-example-external-context-normalization.md) — end-to-end trace from local raw context through Tier 2 synthesis to normalized GitHub issue, implementation PR, and durable writeback.
+- [Adoption example: solo maintainer / small repository](https://github.com/izakl/brainforge/blob/main/examples/adoption-example-solo-small-repo.md) — how a solo maintainer applies the essential baseline with Bundle A automation and explicit deferrals.
+- [Adoption example: product delivery team](https://github.com/izakl/brainforge/blob/main/examples/adoption-example-product-delivery-team.md) — how a multi-contributor product team adopts the full issue/project/PR/handoff loop with Bundle B automation.
+- [Adoption example: platform and infrastructure team](https://github.com/izakl/brainforge/blob/main/examples/adoption-example-platform-infra-team.md) — how a platform team adopts Bundle C automation, ADR discipline, and security-first controls from day one.
+- [Adoption example: starter-kit bootstrap in one bounded issue → PR flow](https://github.com/izakl/brainforge/blob/main/examples/adoption-example-starter-kit-bootstrap-flow.md) — how a first-time adopter executes starter-kit onboarding in one bounded issue and one bounded PR.
+- [Adoption example: profile upgrade from small-repo baseline to product team](https://github.com/izakl/brainforge/blob/main/examples/adoption-example-profile-upgrade-small-to-product.md) — how a repository scales profile/bundle through one bounded issue→PR transition.
 
 ## Architecture decisions
 
@@ -129,6 +129,11 @@ The unified runbook covering all five steps:
 - [ADR 0016: Continuous checks and recurring framework audit layer](adr/0016-continuous-checks-layer.md)
 - [ADR 0017: Queue health check and drift-detection layer](adr/0017-queue-health-check-layer.md)
 - [ADR 0018: Framework change governance and deprecation policy](adr/0018-framework-change-governance-and-deprecation-policy.md)
+- [ADR 0019: Project Brain Factory and the improvement loop](adr/0019-project-brain-factory-and-improvement-loop.md)
+- [ADR 0020: Portable core, additive enterprise layer](adr/0020-portable-core-additive-enterprise.md)
+- [ADR 0021: Expose Brain Factory over MCP](adr/0021-expose-brain-factory-over-mcp.md)
+- [ADR 0022: Multi-target command emission](adr/0022-multi-target-command-emission.md)
+- [ADR 0023: Documentation site on GitHub Pages](adr/0023-docs-site-github-pages.md)
 
 ## Reference
 

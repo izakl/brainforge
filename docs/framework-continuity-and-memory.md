@@ -170,7 +170,7 @@ Before changing the framework, confirm:
   - Continuation must rely on durable queue + issue + PR artifacts, not chat ordering memory.
 - **Observed drift root cause was explicit queue writeback lag.**
   - Prepared issues were re-created because completed tasks were still marked non-terminal in
-    [`.github/framework-task-queue.json`](../.github/framework-task-queue.json) instead of `done`.
+    [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json) instead of `done`.
   - This caused repeated next-task preparation for already-completed work.
 - **Queue-state correction has already been merged.**
   - A bounded queue-fix PR was merged to reconcile stale queue task state and stop duplicate prepared-issue recreation.
@@ -182,7 +182,7 @@ Before changing the framework, confirm:
     [`docs/framework-queued-execution-memory.md`](framework-queued-execution-memory.md), and
     [`docs/runbooks/operate-framework-task-queue.md`](runbooks/operate-framework-task-queue.md).
 - **Next work should be resumed from durable artifacts, not this chat transcript.**
-  - Use [`.github/framework-task-queue.json`](../.github/framework-task-queue.json),
+  - Use [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json),
     [`docs/framework-roadmap-next-prompts.md`](framework-roadmap-next-prompts.md), open issues, and merged PR history as the source of truth.
   - Treat prior suggested next tasks as guidance only until confirmed against current queue state.
 
@@ -240,7 +240,7 @@ Before changing the framework, confirm:
       trigger, and owner.
     - Updated **Profile + maturity chooser** table column header from "Delay until"
       to "Defer until" for consistency.
-  - Updated [`.github/framework-task-queue.json`](../.github/framework-task-queue.json):
+  - Updated [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json):
     - `template-harmonization-pass` and `reporting-summary-templates` marked `done`.
     - `automation-bundles-by-profile` marked `in_progress`.
     - `adoption-examples-expansion` unblocked to `pending`.
@@ -259,10 +259,10 @@ Before changing the framework, confirm:
   - New canonical model: [`docs/framework-queued-execution-memory.md`](framework-queued-execution-memory.md) —
     queue entry schema, prompt-ready task expectations, issue/PR linkage model, state transitions
     (including `superseded`), governance rules, and drift-recovery workflow.
-  - Queue schema metadata updated in [`.github/framework-task-queue.json`](../.github/framework-task-queue.json)
+  - Queue schema metadata updated in [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json)
     (`schema_reference`, expanded `status_model`).
   - Queue validation guardrail updated in
-    [`scripts/check-framework-task-queue.sh`](../scripts/check-framework-task-queue.sh) —
+    [`scripts/check-framework-task-queue.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-framework-task-queue.sh) —
     validates richer required task fields and top-level queue schema metadata.
   - Queue and governance cross-links aligned in: `README.md`, `AGENTS.md`, `docs/README.md`,
     `docs/framework-roadmap-next-prompts.md`, `docs/runbooks/operate-framework-task-queue.md`,
@@ -295,15 +295,15 @@ Before changing the framework, confirm:
 ## Last session / resume point (2026-05-25, merge-driven task queue preparation layer)
 
 - **Durable merge-driven task queue layer added.** Next framework task preparation no longer depends on chat memory alone.
-  - New queue artifact: [`.github/framework-task-queue.json`](../.github/framework-task-queue.json) —
+  - New queue artifact: [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json) —
     ordered tasks with explicit state (`blocked`/`pending`/`in_progress`/`done`), dependencies,
     suggested prompts, and continuity/health writeback expectations.
   - New merge-triggered workflow:
-    [`.github/workflows/prepare-next-framework-task.yml`](../.github/workflows/prepare-next-framework-task.yml) —
+    [`.github/workflows/prepare-next-framework-task.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml) —
     after each merge to `main`, prepares one next-task issue from the dependency-ready `pending`
     queue item; skips creation if that queue task already has an open prepared issue.
   - New queue validation script:
-    [`scripts/check-framework-task-queue.sh`](../scripts/check-framework-task-queue.sh) —
+    [`scripts/check-framework-task-queue.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-framework-task-queue.sh) —
     validates queue schema, dependency references, and deterministic next-task readiness.
   - New operations runbook:
     [`docs/runbooks/operate-framework-task-queue.md`](runbooks/operate-framework-task-queue.md) —
@@ -382,10 +382,10 @@ Before changing the framework, confirm:
 
 - **Continuous-checks layer added.** Three recurring manual audit items are now CI-enforced,
   and a consolidated scheduled framework-audit workflow has been introduced.
-  - New script: [`scripts/check-index-parity.sh`](../scripts/check-index-parity.sh) — verifies
+  - New script: [`scripts/check-index-parity.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-index-parity.sh) — verifies
     that ADR index, runbooks index, and examples index stay in sync with their directories. Runs
     on PRs that touch the script/workflow and monthly via the scheduled workflow.
-  - New workflow: [`.github/workflows/framework-audit.yml`](../.github/workflows/framework-audit.yml)
+  - New workflow: [`.github/workflows/framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml)
     — runs all five framework check scripts as parallel jobs on a monthly schedule and on
     `workflow_dispatch`. Provides a one-click full-framework audit surface.
   - New ADR: [`docs/adr/0016-continuous-checks-layer.md`](adr/0016-continuous-checks-layer.md) —
@@ -412,7 +412,7 @@ Before changing the framework, confirm:
 
 - **AGENTS.md entrypoint added.** Root-level `AGENTS.md` created as the operational front door
   for coding agents and new contributors.
-  - New file: [`AGENTS.md`](../AGENTS.md) — minimum operating contract: non-negotiable rules,
+  - New file: [`AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) — minimum operating contract: non-negotiable rules,
     how to start work safely, durable artifact expectations, handoff packet expectations,
     validation commands, escalation routing, and key references.
   - Cross-links added in: `README.md` (Start here section), `docs/README.md` (entrypoint note).
@@ -431,7 +431,7 @@ Before changing the framework, confirm:
   - Re-open ADR 0014 only if a consumer team explicitly requires deployment/infrastructure governance coverage.
 - **Prior session (2026-05-25, external-context normalization example):** The gap between the three-tier
   context model description and a concrete end-to-end trace is now closed.
-  - New example: [`examples/worked-example-external-context-normalization.md`](../examples/worked-example-external-context-normalization.md)
+  - New example: [`examples/worked-example-external-context-normalization.md`](https://github.com/izakl/brainforge/blob/main/examples/worked-example-external-context-normalization.md)
     — traces a realistic session-timeout scenario from Tier 1 local notes through Tier 2
     synthesis to a normalized GitHub issue, implementation PR, and durable writeback.
   - SVG companion: [`docs/diagrams/worked-example-external-context-normalization.svg`](diagrams/worked-example-external-context-normalization.svg)
@@ -443,9 +443,9 @@ Before changing the framework, confirm:
 - **Prior session (2026-05-25, handoff packet enforcement):** Canonical template, issue
   template, enforcement script, CI workflow, and governance updates all merged.
   - Canonical template: [`docs/handoff-packet-template.md`](handoff-packet-template.md) — nine required fields.
-  - Issue template: [`.github/ISSUE_TEMPLATE/handoff-packet.yml`](../.github/ISSUE_TEMPLATE/handoff-packet.yml).
-  - Enforcement script: [`scripts/check-handoff-packet.sh`](../scripts/check-handoff-packet.sh) — reads inventory from playbook and verifies all required fields in Expected files.
-  - CI workflow: [`.github/workflows/check-handoff-packet.yml`](../.github/workflows/check-handoff-packet.yml).
+  - Issue template: [`.github/ISSUE_TEMPLATE/handoff-packet.yml`](https://github.com/izakl/brainforge/blob/main/.github/ISSUE_TEMPLATE/handoff-packet.yml).
+  - Enforcement script: [`scripts/check-handoff-packet.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-handoff-packet.sh) — reads inventory from playbook and verifies all required fields in Expected files.
+  - CI workflow: [`.github/workflows/check-handoff-packet.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/check-handoff-packet.yml).
   - ADR: [`docs/adr/0015-handoff-packet-enforcement.md`](adr/0015-handoff-packet-enforcement.md).
   - Inventory: `## Handoff packet coverage` table in [`docs/multi-agent-handoff-playbook.md`](multi-agent-handoff-playbook.md).
   - Handoff completeness is now CI-enforced, not purely advisory.

@@ -12,7 +12,7 @@ you operate inside a brain.
 
 ## What to read first (in order)
 
-1. [`../AGENTS.md`](../AGENTS.md) — minimum contract and non-negotiable rules.
+1. [`../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) — minimum contract and non-negotiable rules.
 2. [`framework-continuity-and-memory.md`](framework-continuity-and-memory.md) —
    continuity model and durable principles.
 3. [`operating-model.md`](operating-model.md) — execution surfaces and work packet model.
@@ -46,7 +46,7 @@ If one of these is missing, pause and fix the artifact before coding.
 | Fast artifact lookup conventions for continuity/handoff/readiness/queue posture | [`framework-continuity-artifact-indexing.md`](framework-continuity-artifact-indexing.md) |
 | Structured continuity status for handoff/resume | [`framework-continuity-snapshot-template.md`](framework-continuity-snapshot-template.md) + [`runbooks/create-continuity-snapshot.md`](runbooks/create-continuity-snapshot.md) |
 | Ordered resume procedure from handoff packet to next safe action | [`runbooks/resume-from-handoff-packet.md`](runbooks/resume-from-handoff-packet.md) |
-| Operating contract | [`../AGENTS.md`](../AGENTS.md) |
+| Operating contract | [`../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) |
 | First-use continuity and guardrails | [`framework-continuity-and-memory.md`](framework-continuity-and-memory.md) |
 | Surface and mode selection | [`operating-model.md`](operating-model.md) |
 | Work-type routing and rigor | [`work-type-matrix.md`](work-type-matrix.md) |
@@ -60,11 +60,11 @@ If one of these is missing, pause and fix the artifact before coding.
 | Issue packet quality | [`issue-taxonomy.md`](issue-taxonomy.md) + [`runbooks/open-an-issue.md`](runbooks/open-an-issue.md) |
 | Handoff quality | [`multi-agent-handoff-playbook.md`](multi-agent-handoff-playbook.md) + [`handoff-packet-template.md`](handoff-packet-template.md) |
 | Queue-aware continuation | [`framework-queued-execution-memory.md`](framework-queued-execution-memory.md) + [`runbooks/operate-framework-task-queue.md`](runbooks/operate-framework-task-queue.md) |
-| Validation and governance checks | [`governance-checklist.md`](governance-checklist.md) + validation commands in [`../AGENTS.md`](../AGENTS.md) |
+| Validation and governance checks | [`governance-checklist.md`](governance-checklist.md) + validation commands in [`../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) |
 
 ## Day-0 setup path (before first implementation)
 
-1. Read the minimum contract in [`../AGENTS.md`](../AGENTS.md).
+1. Read the minimum contract in [`../AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md).
 2. Read continuity and durable writeback expectations in
    [`framework-continuity-and-memory.md`](framework-continuity-and-memory.md).
 3. Choose the startup surface path that matches how you will operate:

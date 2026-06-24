@@ -1,8 +1,7 @@
 # MkDocs configuration for the Brain Factory documentation site.
 # Build:   pip install mkdocs-material && mkdocs build
 # Preview: mkdocs serve
-# Published to GitHub Pages by .github/workflows/docs-site.yml (manual until
-# Pages is enabled — see ADR 0023).
+# Published to GitHub Pages by .github/workflows/docs-site.yml.
 site_name: Brain Factory
 site_description: A hub that gives every project an upgradeable, runtime-agnostic brain for AI-assisted delivery.
 site_url: https://izakl.github.io/brainforge/
@@ -12,30 +11,47 @@ docs_dir: docs
 
 theme:
   name: material
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
+    - navigation.sections
     - navigation.indexes
     - navigation.top
     - navigation.tracking
-    - content.code.copy
+    - navigation.footer
     - toc.follow
+    - content.code.copy
+    - content.tabs.link
     - search.suggest
+    - search.highlight
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: indigo
-      accent: indigo
+      accent: cyan
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: indigo
-      accent: indigo
+      accent: cyan
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
 
+extra_css:
+  - stylesheets/extra.css
+
 markdown_extensions:
   - admonition
   - attr_list
+  - md_in_html
   - toc:
       permalink: true
   - pymdownx.highlight
@@ -49,7 +65,7 @@ plugins:
   - search
 
 # The site builds from docs/. Files outside docs/ (AGENTS.md, brain-factory/,
-# examples/) are linked out to GitHub; do not fail the build on those links.
+# examples/) are linked to GitHub as absolute URLs; do not fail on those.
 validation:
   nav:
     omitted_files: ignore
@@ -62,3 +78,120 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/izakl/brainforge
+
+nav:
+  - Home: README.md
+  - Get started:
+      - how-brain-factory-works.md
+      - brain-factory-design-overview.md
+      - framework-brain-factory-architecture.md
+      - operator-onboarding-pack.md
+      - contributor-environment-guide.md
+      - framework-starter-kit.md
+  - Operating model:
+      - operating-model.md
+      - gh-agents-and-automation.md
+      - multi-agent-handoff-playbook.md
+      - handoff-packet-template.md
+      - context-synchronization.md
+      - product-support-and-improvement-loop.md
+      - issue-taxonomy.md
+      - work-type-matrix.md
+      - github-projects-setup.md
+      - github-mobile-guide.md
+      - example-issue-to-pr-flow.md
+      - prompt-cookbook.md
+  - Adoption & profiles:
+      - framework-portability-and-adoption.md
+      - framework-adoption-maturity-model.md
+      - framework-readiness-checklist.md
+      - framework-profile-packs.md
+      - framework-automation-bundles-by-profile.md
+      - framework-setup-intent-schema-and-application-model.md
+      - framework-setup-profiles-and-intent-examples.md
+      - framework-repo-transplant-checklist.md
+      - redevelopment-playbook.md
+  - Continuity & memory:
+      - framework-continuity-and-memory.md
+      - framework-continuity-artifact-indexing.md
+      - framework-continuity-snapshot-template.md
+      - framework-state-milestones.md
+      - framework-queued-execution-memory.md
+  - Governance & policy:
+      - framework-change-governance-and-deprecation-policy.md
+      - framework-release-versioning-and-deprecation.md
+      - framework-change-summary-template.md
+      - governance-checklist.md
+      - security-and-secure-delivery.md
+      - framework-upgrade-and-maintenance.md
+  - Planning & roadmap:
+      - framework-roadmap-next-prompts.md
+      - framework-prompt-library.md
+      - framework-next-monster-prompts.md
+      - framework-health.md
+  - Metrics & reporting:
+      - framework-metrics-and-feedback.md
+      - framework-reporting-and-review-cadence.md
+      - framework-review-cadence-template.md
+      - framework-weekly-hygiene-summary-template.md
+      - framework-quarterly-adoption-portability-summary-template.md
+      - framework-effectiveness-scorecard-template.md
+  - Release notes:
+      - framework-release-notes.md
+      - framework-release-notes-and-upgrade-summaries.md
+      - release-notes/README.md
+      - release-notes/2026-05-25-automation-bundles-hardened.md
+      - release-notes/2026-05-25-release-notes-upgrade-summary-model.md
+  - Runbooks:
+      - runbooks/README.md
+      - runbooks/framework-lifecycle-map.md
+      - runbooks/local-first-quickstart.md
+      - runbooks/prompt-to-setup-bootstrap.md
+      - runbooks/apply-framework-setup.md
+      - runbooks/apply-setup.md
+      - runbooks/create-continuity-snapshot.md
+      - runbooks/resume-from-handoff-packet.md
+      - runbooks/surface-specific-startup-guides.md
+      - runbooks/open-an-issue.md
+      - runbooks/respond-to-support-intake.md
+      - runbooks/handle-a-dependabot-pr.md
+      - runbooks/handle-security-sensitive-intake.md
+      - runbooks/promote-external-ai-artifact.md
+      - runbooks/close-out-a-multi-agent-handoff.md
+      - runbooks/start-a-framework-change.md
+      - runbooks/operate-framework-task-queue.md
+      - runbooks/run-queue-health-check.md
+      - runbooks/run-the-framework-health-audit.md
+      - runbooks/maintain-framework-alignment.md
+      - runbooks/triage-stale-branch-report.md
+  - Reference:
+      - glossary.md
+      - adr-template-guide.md
+      - branching-and-cleanup.md
+      - visual-diagrams-plan.md
+      - diagrams/README.md
+  - Architecture decisions:
+      - adr/README.md
+      - adr/0001-github-as-durable-control-plane.md
+      - adr/0002-multi-surface-hybrid-execution-model.md
+      - adr/0003-pull-requests-as-primary-control-gate.md
+      - adr/0004-markdown-ci-guardrail.md
+      - adr/0005-dependabot-for-github-actions.md
+      - adr/0006-codeowners-for-review-routing.md
+      - adr/0007-path-based-pr-auto-labeler.md
+      - adr/0008-stale-branch-cleanup-automation.md
+      - adr/0009-mermaid-as-primary-diagram-format.md
+      - adr/0010-diagrams-convention.md
+      - adr/0011-documentation-navigation.md
+      - adr/0012-svg-companions-for-diagrams.md
+      - adr/0013-mobile-quick-action-convention.md
+      - adr/0014-deployment-infrastructure-scope.md
+      - adr/0015-handoff-packet-enforcement.md
+      - adr/0016-continuous-checks-layer.md
+      - adr/0017-queue-health-check-layer.md
+      - adr/0018-framework-change-governance-and-deprecation-policy.md
+      - adr/0019-project-brain-factory-and-improvement-loop.md
+      - adr/0020-portable-core-additive-enterprise.md
+      - adr/0021-expose-brain-factory-over-mcp.md
+      - adr/0022-multi-target-command-emission.md
+      - adr/0023-docs-site-github-pages.md

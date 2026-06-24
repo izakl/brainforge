@@ -18,7 +18,7 @@ keeps its branch list clean.
 
 ## Inputs
 
-- The most recent run of the [`Stale Branches` workflow](../../.github/workflows/stale-branches.yml).
+- The most recent run of the [`Stale Branches` workflow](https://github.com/izakl/brainforge/blob/main/.github/workflows/stale-branches.yml).
 - Its second step ("Report long-lived non-tracked branches"), which lists branches with no open PR and no activity in 60 days.
 - Its first step's output, which lists the `copilot/*` branches that would be (or were) deleted.
 
@@ -98,7 +98,7 @@ Review the Step 2 dry-run report at least monthly. If the same non-`copilot/*` b
 
 ## Cross-links
 
-- [`../../.github/workflows/stale-branches.yml`](../../.github/workflows/stale-branches.yml)
+- [`../../.github/workflows/stale-branches.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/stale-branches.yml)
 - [`../branching-and-cleanup.md`](../branching-and-cleanup.md)
 - [`../adr/0008-stale-branch-cleanup-automation.md`](../adr/0008-stale-branch-cleanup-automation.md)
 - [`run-the-framework-health-audit.md`](run-the-framework-health-audit.md)

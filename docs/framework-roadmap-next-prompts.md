@@ -1,7 +1,7 @@
 # Framework Roadmap: Next GitHub Agent Prompts
 
 This roadmap lists the next bounded tasks for building out Brain Factory's shared framework, each with a ready-to-paste prompt for a GitHub coding agent. It is the human-readable companion to the machine-readable task queue at
-[`.github/framework-task-queue.json`](../.github/framework-task-queue.json); read both to choose the next piece of work without relying on chat history or private notes. New to the project? Start with [Brain Factory: how it works](how-brain-factory-works.md).
+[`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json); read both to choose the next piece of work without relying on chat history or private notes. New to the project? Start with [Brain Factory: how it works](how-brain-factory-works.md).
 
 ## How to use this roadmap
 
@@ -15,7 +15,7 @@ This roadmap lists the next bounded tasks for building out Brain Factory's share
 
 ## Queue schema and status model (durable source)
 
-Queue file: [`.github/framework-task-queue.json`](../.github/framework-task-queue.json)
+Queue file: [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json)
 Canonical schema/governance reference:
 [`docs/framework-queued-execution-memory.md`](framework-queued-execution-memory.md)
 
@@ -42,7 +42,7 @@ Canonical schema/governance reference:
 
 ## Merge-triggered next-task preparation
 
-- Workflow: [`.github/workflows/prepare-next-framework-task.yml`](../.github/workflows/prepare-next-framework-task.yml)
+- Workflow: [`.github/workflows/prepare-next-framework-task.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml)
 - Trigger: push to `main` (including merges) and manual `workflow_dispatch`.
 - Behavior:
   - identify the next dependency-ready `pending` task

@@ -202,7 +202,7 @@ This preserves framework invariants while avoiding over-configuration.
 ## Related docs
 
 - [Framework upgrade and adoption maintenance](framework-upgrade-and-maintenance.md)
-- [AGENTS entrypoint](../AGENTS.md)
+- [AGENTS entrypoint](https://github.com/izakl/brainforge/blob/main/AGENTS.md)
 - [Operator onboarding pack](operator-onboarding-pack.md)
 - [Framework continuity and memory](framework-continuity-and-memory.md)
 - [Framework starter kit / bootstrap pack](framework-starter-kit.md)

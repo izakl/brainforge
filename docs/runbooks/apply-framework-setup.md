@@ -10,8 +10,8 @@ confirming a coherent "ready to work" state. The full steps live in
 It exists to make the setup flow easy to discover, and links to:
 
 - [`apply-setup.md`](apply-setup.md) — the full apply-and-verify procedure
-- [`../../scripts/apply-setup.sh`](../../scripts/apply-setup.sh) — applies a setup intent
-- [`../../scripts/check-setup-readiness.sh`](../../scripts/check-setup-readiness.sh) — validates readiness
+- [`../../scripts/apply-setup.sh`](https://github.com/izakl/brainforge/blob/main/scripts/apply-setup.sh) — applies a setup intent
+- [`../../scripts/check-setup-readiness.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-setup-readiness.sh) — validates readiness
 
 ## Procedure
 

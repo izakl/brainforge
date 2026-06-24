@@ -62,6 +62,6 @@ Trade-offs:
 ## References
 
 - [ADR 0020: Portable core, additive enterprise](./0020-portable-core-additive-enterprise.md)
-- [`brain-factory/adapters/python/brainfactory/emit.py`](../../brain-factory/adapters/python/brainfactory/emit.py)
-- [`brain-factory/adapters/README.md`](../../brain-factory/adapters/README.md)
+- [`brain-factory/adapters/python/brainfactory/emit.py`](https://github.com/izakl/brainforge/blob/main/brain-factory/adapters/python/brainfactory/emit.py)
+- [`brain-factory/adapters/README.md`](https://github.com/izakl/brainforge/blob/main/brain-factory/adapters/README.md)
 - [AGENTS.md standard](https://agents.md)

@@ -114,7 +114,7 @@ Direct commits to `main` should remain rare and low-risk (typically docs/admin o
 
 ## Automated cleanup
 
-A weekly workflow at [`.github/workflows/stale-branches.yml`](../.github/workflows/stale-branches.yml)
+A weekly workflow at [`.github/workflows/stale-branches.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/stale-branches.yml)
 deletes merged `copilot/*` and `dependabot/*` branches whose last commit is older
 than 7 days, and lists any other branch with no open PR and no activity in 60 days
 for the maintainer to review. The workflow can also be triggered manually from the

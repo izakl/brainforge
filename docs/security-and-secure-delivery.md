@@ -4,7 +4,7 @@ This guide defines lightweight, reusable guardrails for handling security-sensit
 
 Use it with:
 
-- [`SECURITY.md`](../SECURITY.md) for the private vulnerability reporting path
+- [`SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md) for the private vulnerability reporting path
 - [Context synchronization](context-synchronization.md) for Tier 1/2/3 context handling
 - [Operating model](operating-model.md) for execution-surface decisions
 - [Governance checklist](governance-checklist.md) for review/audit expectations
@@ -123,7 +123,7 @@ After merge:
 
 ## Related docs
 
-- [SECURITY.md](../SECURITY.md) — private vulnerability reporting path.
+- [SECURITY.md](https://github.com/izakl/brainforge/blob/main/SECURITY.md) — private vulnerability reporting path.
 - [Context synchronization](context-synchronization.md) — Tier 1/2/3 context normalization model.
 - [Operating model](operating-model.md) — execution-surface routing and work packet baseline.
 - [Prompt cookbook](prompt-cookbook.md) — prompt patterns and anti-patterns for safe agent use.

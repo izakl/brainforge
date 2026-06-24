@@ -15,7 +15,7 @@
   [`../framework-release-notes.md`](../framework-release-notes.md).
 - Added PR-template prompts for lifecycle impact, adopter action level,
   applicability, and summary linkage:
-  [`../../.github/pull_request_template.md`](../../.github/pull_request_template.md).
+  [`../../.github/pull_request_template.md`](https://github.com/izakl/brainforge/blob/main/.github/pull_request_template.md).
 
 ## Why this matters
 

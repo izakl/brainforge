@@ -101,7 +101,7 @@ Context often starts outside GitHub. Move it through three tiers:
 
 Rule: implementation and review depend on Tier 3 artifacts, not private notes or chat memory alone. See [`docs/context-synchronization.md`](context-synchronization.md) for the detailed rules.
 
-For security-sensitive context and reporting paths, see [`docs/security-and-secure-delivery.md`](security-and-secure-delivery.md) and [`SECURITY.md`](../SECURITY.md).
+For security-sensitive context and reporting paths, see [`docs/security-and-secure-delivery.md`](security-and-secure-delivery.md) and [`SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md).
 
 ## Product and Support Flow
 

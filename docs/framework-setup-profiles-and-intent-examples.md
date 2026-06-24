@@ -75,11 +75,11 @@ fields and existing schema precedence rules.
 
 Use these machine-readable examples:
 
-- [`../examples/setup-intent/solo-prototype.intent.json`](../examples/setup-intent/solo-prototype.intent.json)
-- [`../examples/setup-intent/solo-production-app.intent.json`](../examples/setup-intent/solo-production-app.intent.json)
-- [`../examples/setup-intent/small-saas-team.intent.json`](../examples/setup-intent/small-saas-team.intent.json)
-- [`../examples/setup-intent/internal-platform-service-team.intent.json`](../examples/setup-intent/internal-platform-service-team.intent.json)
-- [`../examples/setup-intent/regulated-high-governance-service.intent.json`](../examples/setup-intent/regulated-high-governance-service.intent.json)
+- [`../examples/setup-intent/solo-prototype.intent.json`](https://github.com/izakl/brainforge/blob/main/examples/setup-intent/solo-prototype.intent.json)
+- [`../examples/setup-intent/solo-production-app.intent.json`](https://github.com/izakl/brainforge/blob/main/examples/setup-intent/solo-production-app.intent.json)
+- [`../examples/setup-intent/small-saas-team.intent.json`](https://github.com/izakl/brainforge/blob/main/examples/setup-intent/small-saas-team.intent.json)
+- [`../examples/setup-intent/internal-platform-service-team.intent.json`](https://github.com/izakl/brainforge/blob/main/examples/setup-intent/internal-platform-service-team.intent.json)
+- [`../examples/setup-intent/regulated-high-governance-service.intent.json`](https://github.com/izakl/brainforge/blob/main/examples/setup-intent/regulated-high-governance-service.intent.json)
 
 These examples are bounded artifacts for understanding/testing setup-intent
 shape and profile-default mapping only.

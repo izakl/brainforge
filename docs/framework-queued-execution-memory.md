@@ -34,9 +34,9 @@ semantics, and drift-recovery expectations. This document now does.
 
 ## Canonical artifacts
 
-- **Machine-readable queue:** [`.github/framework-task-queue.json`](../.github/framework-task-queue.json)
-- **Queue validator:** [`scripts/check-framework-task-queue.sh`](../scripts/check-framework-task-queue.sh)
-- **Merge-triggered preparation:** [`.github/workflows/prepare-next-framework-task.yml`](../.github/workflows/prepare-next-framework-task.yml)
+- **Machine-readable queue:** [`.github/framework-task-queue.json`](https://github.com/izakl/brainforge/blob/main/.github/framework-task-queue.json)
+- **Queue validator:** [`scripts/check-framework-task-queue.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-framework-task-queue.sh)
+- **Merge-triggered preparation:** [`.github/workflows/prepare-next-framework-task.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml)
 - **Queue operations runbook:** [`docs/runbooks/operate-framework-task-queue.md`](runbooks/operate-framework-task-queue.md)
 - **Human-readable roadmap companion:** [`docs/framework-roadmap-next-prompts.md`](framework-roadmap-next-prompts.md)
 

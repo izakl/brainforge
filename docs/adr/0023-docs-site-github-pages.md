@@ -64,7 +64,7 @@ Trade-offs:
 
 ## References
 
-- [`mkdocs.yml`](../../mkdocs.yml)
-- [`.github/workflows/docs-site.yml`](../../.github/workflows/docs-site.yml)
+- [`mkdocs.yml`](https://github.com/izakl/brainforge/blob/main/mkdocs.yml)
+- [`.github/workflows/docs-site.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/docs-site.yml)
 - [`docs/visual-diagrams-plan.md`](../visual-diagrams-plan.md)
 - [ADR 0009: Mermaid as primary diagram format](./0009-mermaid-as-primary-diagram-format.md)

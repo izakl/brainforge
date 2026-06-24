@@ -133,25 +133,25 @@ would help.
 ## Operational hygiene checks
 
 - [ ] CI on `main` is green — check the latest runs of
-  [`.github/workflows/markdown.yml`](../.github/workflows/markdown.yml) from the repository's
+  [`.github/workflows/markdown.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/markdown.yml) from the repository's
   Actions tab.
 - [ ] No stale `copilot/*` branches without an open PR — see
   [`docs/branching-and-cleanup.md`](branching-and-cleanup.md).
 - [ ] No open PRs older than 14 days without status updates.
 - [ ] ADR index parity, runbooks index, and examples index are green — automated by
-  [`scripts/check-index-parity.sh`](../scripts/check-index-parity.sh) (runs monthly via
-  [`framework-audit.yml`](../.github/workflows/framework-audit.yml) and on relevant PRs).
+  [`scripts/check-index-parity.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-index-parity.sh) (runs monthly via
+  [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml) and on relevant PRs).
 - [ ] Framework task queue integrity check is green — automated by
-  [`scripts/check-framework-task-queue.sh`](../scripts/check-framework-task-queue.sh) (runs in
-  [`framework-audit.yml`](../.github/workflows/framework-audit.yml)).
+  [`scripts/check-framework-task-queue.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-framework-task-queue.sh) (runs in
+  [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml)).
 - [ ] Queue health and drift detection check is green — automated by
-  [`scripts/check-queue-health.sh`](../scripts/check-queue-health.sh) (runs in
-  [`framework-audit.yml`](../.github/workflows/framework-audit.yml)); see
+  [`scripts/check-queue-health.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-queue-health.sh) (runs in
+  [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml)); see
   [`docs/runbooks/run-queue-health-check.md`](runbooks/run-queue-health-check.md)
   for bounded queue audit/reconciliation checks and recovery steps.
 - [ ] Copilot coding agent firewall/API-access guidance remains current and cross-linked (`api.github.com` allowlist guidance, pre-firewall setup-step guidance, deterministic/manual fallback expectations) — see [`docs/gh-agents-and-automation.md`](gh-agents-and-automation.md), [`docs/framework-queued-execution-memory.md`](framework-queued-execution-memory.md), and [`docs/runbooks/operate-framework-task-queue.md`](runbooks/operate-framework-task-queue.md).
 - [ ] After recent merges that touched queue state, the latest
-  [`prepare-next-framework-task.yml`](../.github/workflows/prepare-next-framework-task.yml)
+  [`prepare-next-framework-task.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/prepare-next-framework-task.yml)
   run prepared (or intentionally skipped) the correct next queue item.
 - [ ] Queue schema, issue-marker linkage, and state transitions remain aligned with
   [`docs/framework-queued-execution-memory.md`](framework-queued-execution-memory.md).
@@ -174,7 +174,7 @@ would help.
 - [ ] GitHub Projects state model remains coherent: minimum viable fields are in use and status transitions align with issue/PR/handoff artifact state — see [`docs/github-projects-setup.md`](github-projects-setup.md).
 - [ ] Dependabot PRs are being reviewed/merged (not piling up).
 - [ ] Security guardrail check is green on latest relevant PRs — see
-  [`.github/workflows/check-security-guardrails.yml`](../.github/workflows/check-security-guardrails.yml).
+  [`.github/workflows/check-security-guardrails.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/check-security-guardrails.yml).
 
 ## Governance and review routing
 
@@ -191,7 +191,7 @@ would help.
 - [ ] Every doc in `docs/` is reachable from at least one of: `README.md`,
   `docs/framework-continuity-and-memory.md`, or another doc that itself is reachable.
 - [ ] Markdown link-check job has been passing on the latest `main` runs of
-  [`.github/workflows/markdown.yml`](../.github/workflows/markdown.yml).
+  [`.github/workflows/markdown.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/markdown.yml).
 
 ## Snapshot (as of 2026-05-26, Copilot coding agent firewall/API guidance and queue-reconciliation writeback hardened)
 
@@ -309,20 +309,20 @@ Security guardrails now have a dedicated framework guide
   - Branch inventory at pass start: **92 pre-existing `copilot/*` branches** with no open PRs (plus the current hygiene PR branch `copilot/bounded-stale-branch-hygiene`).
   - Workflow fix applied: `dry_run` values corrected from non-documented booleans to `"yes"`/`"no"` as required by the action; a `workflow_dispatch` input (`dry_run: boolean`, default `true`) added for safe first-run mode.
   - Decision rule for all 92 branches: all are historical Copilot agent branches whose work is integrated into `main`; none have open PRs; all meet the ≥7-day age criterion; all are safe for automated deletion via the first scheduled or manual workflow run.
-  - The [`Stale Branches` workflow](../.github/workflows/stale-branches.yml) is now ready for first execution. Trigger via `workflow_dispatch` with `dry_run: true` to verify the list, then with `dry_run: false` to execute cleanup.
+  - The [`Stale Branches` workflow](https://github.com/izakl/brainforge/blob/main/.github/workflows/stale-branches.yml) is now ready for first execution. Trigger via `workflow_dispatch` with `dry_run: true` to verify the list, then with `dry_run: false` to execute cleanup.
   - Next automated deletion cycle: next Monday 06:00 UTC (weekly cron), or earlier via manual dispatch.
   - Runbook updated: [`docs/runbooks/triage-stale-branch-report.md`](runbooks/triage-stale-branch-report.md) now includes `copilot/*`-specific decision rules, a first-run procedure, and a cadence table.
   - Branching guidance updated: [`docs/branching-and-cleanup.md`](branching-and-cleanup.md) now documents the `copilot/*` cleanup criteria and the dry-run dispatch mode.
 - **Handoff packet enforcement landed (2026-05-25):**
   - Canonical template: [`docs/handoff-packet-template.md`](handoff-packet-template.md) — nine required fields, reusable by humans and agents.
-  - Issue template: [`.github/ISSUE_TEMPLATE/handoff-packet.yml`](../.github/ISSUE_TEMPLATE/handoff-packet.yml) — GitHub-native form with all nine required fields.
-  - Enforcement script: [`scripts/check-handoff-packet.sh`](../scripts/check-handoff-packet.sh) — reads inventory from playbook, verifies all required fields in Expected files.
-  - CI workflow: [`.github/workflows/check-handoff-packet.yml`](../.github/workflows/check-handoff-packet.yml) — runs on PRs and push to main.
+  - Issue template: [`.github/ISSUE_TEMPLATE/handoff-packet.yml`](https://github.com/izakl/brainforge/blob/main/.github/ISSUE_TEMPLATE/handoff-packet.yml) — GitHub-native form with all nine required fields.
+  - Enforcement script: [`scripts/check-handoff-packet.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-handoff-packet.sh) — reads inventory from playbook, verifies all required fields in Expected files.
+  - CI workflow: [`.github/workflows/check-handoff-packet.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/check-handoff-packet.yml) — runs on PRs and push to main.
   - Governance: [`docs/governance-checklist.md`](governance-checklist.md) and [`docs/adr/0015-handoff-packet-enforcement.md`](adr/0015-handoff-packet-enforcement.md) updated.
   - Handoff completeness is no longer purely advisory.
 - **Continuous-checks layer added (2026-05-25):**
-  - New script: [`scripts/check-index-parity.sh`](../scripts/check-index-parity.sh) — CI-enforces that ADR index, runbooks index, and examples index stay in sync with their respective directories.
-  - New workflow: [`.github/workflows/framework-audit.yml`](../.github/workflows/framework-audit.yml) — monthly scheduled + `workflow_dispatch` consolidation of all framework check scripts; a one-click full-framework audit.
+  - New script: [`scripts/check-index-parity.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-index-parity.sh) — CI-enforces that ADR index, runbooks index, and examples index stay in sync with their respective directories.
+  - New workflow: [`.github/workflows/framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml) — monthly scheduled + `workflow_dispatch` consolidation of all framework check scripts; a one-click full-framework audit.
   - ADR: [`docs/adr/0016-continuous-checks-layer.md`](adr/0016-continuous-checks-layer.md) — decision record documenting the continuous-checks model.
   - Automated vs manual check table added to this document (see [Automated vs manual checks](#automated-vs-manual-checks)).
   - Index parity is no longer purely a manual health-audit item.
@@ -362,7 +362,7 @@ Security guardrails now have a dedicated framework guide
 | Runbook index complete | ✅ All runbook files indexed in docs/runbooks/README.md |
 
 **Next audit due:** approximately 2026-06-25 or after the next large framework change.
-Monthly scheduled audit: [`framework-audit.yml`](../.github/workflows/framework-audit.yml) runs on the first of each month; trigger on demand via `workflow_dispatch`.
+Monthly scheduled audit: [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml) runs on the first of each month; trigger on demand via `workflow_dispatch`.
 
 ## Mobile quick action
 

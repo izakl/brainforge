@@ -238,7 +238,7 @@ See: [Operating Model](./operating-model.md), [Prompt Cookbook](./prompt-cookboo
 
 A worked example is an end-to-end walkthrough in the `examples/` directory that shows a runbook applied to a realistic scenario. Worked examples are indexed in `examples/README.md` so contributors can quickly find concrete patterns.
 
-See: [Examples Index](../examples/README.md)
+See: [Examples Index](https://github.com/izakl/brainforge/blob/main/examples/README.md)
 
 ## Maintaining this glossary
 

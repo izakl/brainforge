@@ -132,10 +132,10 @@ Follow-ups:
 
 ## References
 
-- [`scripts/check-queue-health.sh`](../../scripts/check-queue-health.sh)
-- [`scripts/check-framework-task-queue.sh`](../../scripts/check-framework-task-queue.sh)
+- [`scripts/check-queue-health.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-queue-health.sh)
+- [`scripts/check-framework-task-queue.sh`](https://github.com/izakl/brainforge/blob/main/scripts/check-framework-task-queue.sh)
 - [`docs/runbooks/run-queue-health-check.md`](../runbooks/run-queue-health-check.md)
-- [`.github/workflows/framework-audit.yml`](../../.github/workflows/framework-audit.yml)
+- [`.github/workflows/framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml)
 - [`docs/framework-queued-execution-memory.md`](../framework-queued-execution-memory.md)
 - [ADR 0015: Handoff packet enforcement](./0015-handoff-packet-enforcement.md)
 - [ADR 0016: Continuous checks and recurring framework audit layer](./0016-continuous-checks-layer.md)

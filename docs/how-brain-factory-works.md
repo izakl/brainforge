@@ -61,10 +61,10 @@ Every brain holds two kinds of content, separated by `brain.manifest.json`:
 
 | You want to… | Start here |
 | --- | --- |
-| Understand the operating rules first | [`AGENTS.md`](../AGENTS.md) |
-| Stand up a brain for a brand-new project | [Onboarding engine](../brain-factory/onboard/README.md) (provision) |
-| Add a brain to an existing project safely | [Onboarding engine](../brain-factory/onboard/README.md) (inspect-first adopt) |
-| See the commands a brain inherits | [Core command catalog](../brain-factory/core-commands/CATALOG.md) |
+| Understand the operating rules first | [`AGENTS.md`](https://github.com/izakl/brainforge/blob/main/AGENTS.md) |
+| Stand up a brain for a brand-new project | [Onboarding engine](https://github.com/izakl/brainforge/blob/main/brain-factory/onboard/README.md) (provision) |
+| Add a brain to an existing project safely | [Onboarding engine](https://github.com/izakl/brainforge/blob/main/brain-factory/onboard/README.md) (inspect-first adopt) |
+| See the commands a brain inherits | [Core command catalog](https://github.com/izakl/brainforge/blob/main/brain-factory/core-commands/CATALOG.md) |
 | Apply a lightweight setup to *this* repo | [Apply setup runbook](runbooks/apply-setup.md) |
 | Go deeper on the architecture | [Brain Factory architecture](framework-brain-factory-architecture.md) |
 
@@ -79,6 +79,6 @@ onboarding engine make it *executable* and repeatable across projects. The
 ## Related docs
 
 - [Brain Factory architecture](framework-brain-factory-architecture.md) — the formal model and contracts.
-- [`brain-factory/` README](../brain-factory/README.md) — the executable layer.
+- [`brain-factory/` README](https://github.com/izakl/brainforge/blob/main/brain-factory/README.md) — the executable layer.
 - [Operating model](operating-model.md) — how work flows day to day.
 - [Framework portability and adoption](framework-portability-and-adoption.md) — reusing the framework across repos and teams.
