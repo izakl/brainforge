@@ -1,7 +1,12 @@
 # ADR 0012: SVG companions for diagrams
 
-- Status: Accepted
+- Status: Superseded by [ADR 0024](./0024-retire-svg-companions.md)
 - Date: 2026-05-24
+
+> **Superseded (2026-06-24):** the SVG-companion convention has been retired —
+> GitHub and the docs site now render Mermaid live, so the companions were
+> redundant maintenance. See [ADR 0024](./0024-retire-svg-companions.md). The
+> record below is kept for history.
 
 ## Context
 
@@ -14,8 +19,6 @@ This ADR formalizes that pattern so the behavior is consistent for all current a
 ## Decision
 
 Every doc that contains a `## Diagram` Mermaid block also has a matching SVG companion under `docs/diagrams/<slug>.svg`, where `<slug>` is the source doc filename minus extension.
-
-Beneath the Mermaid fenced block, the doc carries a single line: `> 📐 Hi-res view: [SVG](<relative-path>/<slug>.svg)`.
 
 SVG companions must be self-contained (no external fonts, scripts, or `<foreignObject>`), use default Mermaid theme colors, and faithfully mirror the source Mermaid block's nodes, edges, and labels.
 

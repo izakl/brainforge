@@ -1,0 +1,26 @@
+name: Framework metrics
+
+# On-demand / monthly read-only snapshot of the framework's structural baseline,
+# written to the run summary to support the health audit and the effectiveness
+# review cadence (docs/framework-metrics-and-feedback.md). It mutates nothing and
+# is not a gate. Hub-internal: runs only on the private source repo (like
+# prepare-next-framework-task.yml), so it is skipped on the public mirror.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 1 * *"
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    name: Framework metrics snapshot
+    if: github.event.repository.name == 'brain-factory'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Write the metrics snapshot to the run summary
+        run: bash scripts/framework-metrics.sh >> "$GITHUB_STEP_SUMMARY"

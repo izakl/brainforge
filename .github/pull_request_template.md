@@ -78,7 +78,7 @@
 ## CI expectations
 
 - [ ] Markdown lint/link checks are expected to pass (`markdown.yml`).
-- [ ] Any applicable framework check scripts (handoff, mobile quick action, security guardrails, index parity, SVG companions) are expected to pass.
+- [ ] Any applicable framework check scripts (handoff, mobile quick action, security guardrails, index parity) are expected to pass.
 - [ ] Any new workflow file uses least-privilege `permissions:`.
 - [ ] Security-sensitive context (if any) is sanitized and routed per [`SECURITY.md`](../SECURITY.md).
 

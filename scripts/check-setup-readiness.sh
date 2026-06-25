@@ -235,7 +235,6 @@ if not errors:
     print("   bash scripts/check-queue-health.sh")
     print("   bash scripts/check-security-guardrails.sh")
     print("   bash scripts/check-handoff-packet.sh")
-    print("   bash scripts/check-svg-companions.sh")
     print("   bash scripts/check-mobile-quick-action.sh")
     print("   bash scripts/check-index-parity.sh")
     print()

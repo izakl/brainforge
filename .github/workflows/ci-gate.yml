@@ -34,7 +34,6 @@ jobs:
           bash scripts/check-queue-health.sh
           bash scripts/check-security-guardrails.sh
           bash scripts/check-handoff-packet.sh
-          bash scripts/check-svg-companions.sh
           bash scripts/check-mobile-quick-action.sh
 
       - name: Python unit tests

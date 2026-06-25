@@ -32,8 +32,6 @@ flowchart TB
     APP -->|signals| BRAIN
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/brain-factory-design-overview.svg)
-
 ## The big idea
 
 Brain Factory is a **hub**. From it you create a small companion repository — a
@@ -264,6 +262,7 @@ flowchart LR
 | `tools`/`model` frontmatter on emitted agents | ✅ Built | [ADR 0022](adr/0022-multi-target-command-emission.md) |
 | Installer (pipx/npx) + published docs site | ✅ Built | [`adapters/python`](https://github.com/izakl/brainforge/blob/main/brain-factory/adapters/python/README.md) |
 | Security scanning (CodeQL / secret scan / dep review) | ✅ Built | [`SECURITY.md`](https://github.com/izakl/brainforge/blob/main/SECURITY.md) |
+| Framework metrics snapshot (read-only) | ✅ Built | [metrics & feedback](framework-metrics-and-feedback.md) |
 | Spec Kit adapter; pluggable self-hosted memory | ◻️ Optional | this page |
 | GitHub Agent HQ / Mission Control integration | ◻️ Optional (paid) | this page |
 

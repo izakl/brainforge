@@ -24,8 +24,6 @@ flowchart LR
     APP -->|signals| BRAIN
 ```
 
-> 📐 Hi-res view: [SVG](docs/diagrams/README.svg)
-
 New here? Read **[Brain Factory: how it works](docs/how-brain-factory-works.md)** for a five-minute tour.
 
 ## Why use it
@@ -71,7 +69,7 @@ bash brain-factory/adapters/run.sh inspect-repo --repo .
 
 # 3. Run the framework's own quality gates
 npx -y markdownlint-cli2 "**/*.md"
-bash scripts/check-svg-companions.sh
+bash scripts/check-brain-factory.sh
 ```
 
 Step 2 prints a gap report (which governance, CI, commands, continuity, and docs

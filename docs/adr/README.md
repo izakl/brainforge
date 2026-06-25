@@ -21,7 +21,7 @@ Authoring guide:
 - [ADR 0009: Mermaid as primary diagram format](./0009-mermaid-as-primary-diagram-format.md) — Accepted
 - [ADR 0010: Diagrams convention](./0010-diagrams-convention.md) — Accepted
 - [ADR 0011: Documentation navigation](./0011-documentation-navigation.md) — Accepted
-- [ADR 0012: SVG companions for diagrams](./0012-svg-companions-for-diagrams.md) — Accepted
+- [ADR 0012: SVG companions for diagrams](./0012-svg-companions-for-diagrams.md) — Superseded by ADR 0024
 - [ADR 0013: Mobile quick action section convention](./0013-mobile-quick-action-convention.md) — Accepted
 - [ADR 0014: Deployment and infrastructure scope](./0014-deployment-infrastructure-scope.md) — Deferred
 - [ADR 0015: Handoff packet enforcement](./0015-handoff-packet-enforcement.md) — Accepted
@@ -33,6 +33,7 @@ Authoring guide:
 - [ADR 0021: Expose Brain Factory over MCP (standard-library stdio server)](./0021-expose-brain-factory-over-mcp.md) — Accepted
 - [ADR 0022: Multi-target command emission to standard agent discovery locations](./0022-multi-target-command-emission.md) — Accepted
 - [ADR 0023: Documentation site on GitHub Pages (MkDocs Material)](./0023-docs-site-github-pages.md) — Accepted
+- [ADR 0024: Retire SVG companions for diagrams](./0024-retire-svg-companions.md) — Accepted
 
 ## Numbering convention
 

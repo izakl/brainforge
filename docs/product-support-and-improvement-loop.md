@@ -20,8 +20,6 @@ flowchart TD
     I --> J[Continuity artifacts updated<br>framework-health · runbooks · ADRs]
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/product-support-and-improvement-loop.svg)
-
 ## 1) Intake
 
 Common intake channels:

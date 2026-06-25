@@ -42,14 +42,16 @@ flowchart TD
     H --> I[Audit complete]
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/run-the-framework-health-audit.svg)
-
 ## Walk the charter-to-artifact map and refresh the snapshot
 
 Use [`docs/framework-health.md`](../framework-health.md) as the source checklist.
+Capture a read-only structural baseline first with
+[`scripts/framework-metrics.sh`](https://github.com/izakl/brainforge/blob/main/scripts/framework-metrics.sh)
+(or the **Framework metrics** workflow via `workflow_dispatch`) — framework
+version and artifact counts at a glance, written to the run summary.
 
 1. Open `framework-health.md` and walk each section in order.
-2. Trigger the [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml) workflow via `workflow_dispatch` to run all automated framework checks (index parity, security guardrails, handoff packet, SVG companions, mobile quick action). Review any failures before continuing.
+2. Trigger the [`framework-audit.yml`](https://github.com/izakl/brainforge/blob/main/.github/workflows/framework-audit.yml) workflow via `workflow_dispatch` to run all automated framework checks (index parity, security guardrails, handoff packet, mobile quick action). Review any failures before continuing.
 3. Re-verify each charter-to-artifact row against the current repository state.
 4. Re-run the operational hygiene checks: CI status, stale branches, ADR index, `docs/README.md` index parity, link paths, and security guardrail checks.
 5. Confirm governance and routing references still point to valid files.

@@ -25,8 +25,6 @@ flowchart LR
     E --> F[Route deferred follow-up work]
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/close-out-a-multi-agent-handoff.svg)
-
 ## Confirm acknowledgment from next owner
 
 Before closing the handoff, confirm the receiving human or agent has accepted

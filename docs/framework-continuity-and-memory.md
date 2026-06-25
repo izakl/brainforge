@@ -32,8 +32,6 @@ sequenceDiagram
     User->GH: Update continuity artifacts
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/framework-continuity-and-memory.svg)
-
 ## Repository purpose and continuity intent
 
 This is a practical framework for AI-assisted software delivery, redevelopment, governance, support routing, and mixed human/agent execution, with GitHub as the durable control plane — the coordination layer where issues, PRs, docs, and history hold execution authority.
@@ -434,7 +432,6 @@ Before changing the framework, confirm:
   - New example: [`examples/worked-example-external-context-normalization.md`](https://github.com/izakl/brainforge/blob/main/examples/worked-example-external-context-normalization.md)
     — traces a realistic session-timeout scenario from Tier 1 local notes through Tier 2
     synthesis to a normalized GitHub issue, implementation PR, and durable writeback.
-  - SVG companion: [`docs/diagrams/worked-example-external-context-normalization.svg`](diagrams/worked-example-external-context-normalization.svg)
   - Cross-links added in: `docs/context-synchronization.md`, `docs/README.md`,
     `examples/README.md`, `docs/github-mobile-guide.md` (mobile quick-action coverage),
     `docs/diagrams/README.md`.

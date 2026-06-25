@@ -41,8 +41,6 @@ flowchart TB
     BRAIN -->|operate · govern| APP
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/framework-brain-factory-architecture.svg)
-
 ## Vocabulary
 
 | Term | Meaning |

@@ -81,7 +81,6 @@ an audit, confirm each listed path still exists and remains current.
 | Code of conduct | CODE_OF_CONDUCT.md | ✅ Present |
 | Visual diagrams plan | docs/visual-diagrams-plan.md | ✅ Present |
 | Visual diagrams convention | [docs/visual-diagrams-plan.md](visual-diagrams-plan.md) | ✅ In sync — rollout completed and convention formalized in [ADR 0010](adr/0010-diagrams-convention.md) |
-| SVG companions in sync | [docs/diagrams/README.md](diagrams/README.md) | ✅ Governed by [ADR 0012](adr/0012-svg-companions-for-diagrams.md); verify companion parity during each health audit |
 | Mobile quick action coverage | core docs, runbooks, examples (see inventory) | ✅ Governed by [ADR 0013](adr/0013-mobile-quick-action-convention.md); CI-enforced via `scripts/check-mobile-quick-action.sh`; inventory in [docs/github-mobile-guide.md](github-mobile-guide.md) |
 | Mobile quick action CI + inventory | scripts/check-mobile-quick-action.* + docs/github-mobile-guide.md | ✅ CI enforcement + coverage inventory landed in PR #82 |
 | Handoff packet template | `docs/handoff-packet-template.md` | ✅ Canonical template — all nine required fields present |
@@ -111,7 +110,6 @@ would help.
 | --- | --- | --- |
 | Markdown linting | ✅ CI (PR + push) | `markdown.yml` → `markdownlint-cli2` |
 | Markdown link check | ✅ CI (PR + push) | `markdown.yml` → `markdown-link-check` |
-| SVG companion parity | ✅ CI (PR) | `check-svg-companions.yml` / `check-svg-companions.sh` |
 | Mobile quick-action coverage | ✅ CI (PR + push) | `markdown.yml` / `check-mobile-quick-action.sh` |
 | Handoff packet completeness | ✅ CI (PR + push) | `check-handoff-packet.yml` / `check-handoff-packet.sh` |
 | Security guardrail anchors | ✅ CI (PR + push) | `check-security-guardrails.yml` / `check-security-guardrails.sh` |
@@ -200,14 +198,11 @@ is covered by:
 
 - [ADR 0009](adr/0009-mermaid-as-primary-diagram-format.md) (Mermaid as primary format)
 - [ADR 0010](adr/0010-diagrams-convention.md) (diagram section convention)
-- [ADR 0012](adr/0012-svg-companions-for-diagrams.md) (SVG companion convention)
+- [ADR 0012](adr/0012-svg-companions-for-diagrams.md) (SVG companion convention) — superseded by [ADR 0024](adr/0024-retire-svg-companions.md) (SVG companion layer retired)
 - [ADR 0013](adr/0013-mobile-quick-action-convention.md) (mobile quick action section convention)
 - [ADR 0015](adr/0015-handoff-packet-enforcement.md) (handoff packet enforcement)
 - [ADR 0016](adr/0016-continuous-checks-layer.md) (continuous checks and recurring audit layer)
 - [ADR 0017](adr/0017-queue-health-check-layer.md) (queue health check and drift-detection layer)
-
-Companion parity should be re-validated as part of each health audit, with
-`docs/diagrams/README.md` treated as the companion inventory.
 
 Mobile quick-action coverage now also has a tracked inventory in
 `docs/github-mobile-guide.md` and CI enforcement via `scripts/check-mobile-quick-action.sh`.
@@ -352,7 +347,7 @@ Security guardrails now have a dedicated framework guide
 
 | Check | Status |
 | --- | --- |
-| CI on `main` green | ✅ Passing (latest `Markdown` run on `main` completed successfully; latest PR-branch `Check SVG companions` run also successful) |
+| CI on `main` green | ✅ Passing (latest `Markdown` run on `main` completed successfully) |
 | Stale `copilot/*` branches | ✅ First hygiene pass completed (2026-05-25): 92 pre-existing `copilot/*` branches inventoried, all with no open PRs, all safe for deletion. Workflow fixed and ready for first execution via `workflow_dispatch`. See [triage runbook](runbooks/triage-stale-branch-report.md) for first-run steps. |
 | Open PRs > 14 days without update | ✅ None (no open PRs at review time) |
 | ADR index complete | ✅ All 16 ADR files indexed (parity now CI-enforced via `check-index-parity.sh`) |

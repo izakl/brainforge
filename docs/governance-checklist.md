@@ -25,8 +25,6 @@ flowchart LR
     H --> A
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/governance-checklist.svg)
-
 ## 1) Human-in-the-loop checkpoints
 
 - [ ] A human owner is assigned before implementation starts
@@ -42,7 +40,6 @@ flowchart LR
 - [ ] For framework adoption/transplant work, core invariants vs customizable elements are explicitly documented (see [`framework-portability-and-adoption.md`](framework-portability-and-adoption.md))
 - [ ] Relevant links are preserved (issue ↔ PR ↔ ADR ↔ discussion ↔ project)
 - [ ] Diagrams — Every priority doc listed in [`docs/visual-diagrams-plan.md`](visual-diagrams-plan.md) still carries a current `## Diagram` section per [ADR 0010](adr/0010-diagrams-convention.md); update or remove diagrams whose underlying flow has changed and record the result in the "Diagrams in sync" row of [`docs/framework-health.md`](framework-health.md)
-- [ ] SVG companions — Every doc listed in [`docs/diagrams/README.md`](diagrams/README.md) still has a `## Diagram` Mermaid block and a matching SVG that mirrors it, per [ADR 0012](adr/0012-svg-companions-for-diagrams.md). Regenerate any SVG whose source Mermaid block has changed; record the result in the "SVG companions in sync" row of [`docs/framework-health.md`](framework-health.md)
 - [ ] Mobile quick action — New or changed operator-facing docs include a `## Mobile quick action` section when applicable, per [ADR 0013](adr/0013-mobile-quick-action-convention.md)
 - [ ] Handoff packet — Handoff-facing canonical docs include all nine required fields (Objective, Context, Constraints, Acceptance criteria, Validation expectations, Related artifacts, Next owner, Status, Unresolved risks), per [ADR 0015](adr/0015-handoff-packet-enforcement.md); enforce via `scripts/check-handoff-packet.sh`
 - [ ] Index parity — ADR index, runbooks index, and examples index are in sync with their directories, per [ADR 0016](adr/0016-continuous-checks-layer.md); enforce via `scripts/check-index-parity.sh` (also runs monthly via `framework-audit.yml`)

@@ -29,7 +29,7 @@ This guide provides that bundle model.
 | Baseline | Markdown quality gate | `../.github/workflows/markdown.yml`, `../.markdownlint.jsonc`, `../.github/markdown-link-check.json` |
 | Baseline | Security routing anchor check | `../scripts/check-security-guardrails.sh`, `../.github/workflows/check-security-guardrails.yml` |
 | Recommended | Handoff packet completeness | `../scripts/check-handoff-packet.sh`, `../.github/workflows/check-handoff-packet.yml` |
-| Recommended | Documentation/nav consistency and diagram coverage | `../scripts/check-index-parity.sh`, `../scripts/check-svg-companions.sh`, `../.github/workflows/framework-audit.yml`, `../.github/workflows/check-svg-companions.yml` |
+| Recommended | Documentation/nav consistency | `../scripts/check-index-parity.sh`, `../.github/workflows/framework-audit.yml` |
 | Recommended | Queue integrity and drift detection | `../scripts/check-framework-task-queue.sh`, `../scripts/check-queue-health.sh`, `../.github/workflows/framework-audit.yml`, `../.github/workflows/prepare-next-framework-task.yml` |
 | Situational | Mobile convention enforcement | `../scripts/check-mobile-quick-action.sh`, `../docs/github-mobile-guide.md`, `../.github/workflows/markdown.yml` |
 | Situational | PR routing labels | `../.github/workflows/labeler.yml`, `../.github/labeler.yml` |
@@ -68,7 +68,7 @@ when needed.
 ### Bundle B — Product delivery team
 
 - **Minimum:** Bundle A recommended set + handoff packet check.
-- **Recommended:** add index parity + SVG companion checks + monthly framework audit.
+- **Recommended:** add index parity + monthly framework audit.
 - **Deferred until later:** queue preparation/health automation until queue-backed
   roadmap operations become routine.
 - **Advance from minimum to recommended when:** handoff packet check is green for
@@ -164,7 +164,7 @@ when needed.
 ## Staged enablement path (recommended order)
 
 1. **Always first:** markdown workflow + security guardrail anchors.
-2. **Then continuity reliability:** handoff packet + index/SVG checks.
+2. **Then continuity reliability:** handoff packet + index checks.
 3. **Then operations depth:** queue integrity + queue health.
 4. **Then merge-time queue assist:** prepare-next-task workflow.
 5. **Then hygiene extras:** stale-branch automation and stricter recurring reviews.
@@ -175,7 +175,7 @@ Do not skip directly to later stages without stable behavior in earlier stages.
 
 - **Baseline (all profiles):** markdown + link checks, security guardrail anchors,
   path-based labeling.
-- **Recommended (most teams after MVP):** handoff packet enforcement, index/SVG
+- **Recommended (most teams after MVP):** handoff packet enforcement, index
   parity checks, recurring framework audit.
 - **Advanced/situational:** queue-preparation workflow, queue-health layer, stale
   branch cleanup, mobile quick-action enforcement (when mobile is an active surface).

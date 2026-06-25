@@ -39,7 +39,7 @@ Chosen because:
 
 - baseline checks (markdown + security) are non-negotiable for any profile
 - handoff packet enforcement is essential once work moves between contributors
-- index parity and SVG companion checks keep documentation coherent as the surface grows
+- index parity checks keep documentation coherent as the surface grows
 - queue and scheduled-audit automation are deferred until queue-backed planning is routine
 
 See [`docs/framework-automation-bundles-by-profile.md`](../docs/framework-automation-bundles-by-profile.md)
@@ -79,7 +79,6 @@ for the full bundle definition.
 | File | Why added |
 | --- | --- |
 | `scripts/check-index-parity.sh` + `.github/workflows/framework-audit.yml` | ADR/runbook/examples surface grew; index drift became a risk |
-| `scripts/check-svg-companions.sh` | Added with index parity; Mermaid diagrams in use |
 | `docs/framework-health.md` + `docs/governance-checklist.md` | Monthly health and governance reviews formalized |
 | `docs/framework-reporting-and-review-cadence.md` | Recurring weekly/monthly review cadence established |
 | `docs/framework-metrics-and-feedback.md` | Effectiveness review loop started |

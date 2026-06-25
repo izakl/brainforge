@@ -35,8 +35,6 @@ flowchart LR
     F --> G[Cross-link related guides]
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/promote-external-ai-artifact.svg)
-
 ## Capture verbatim source first
 
 Before summarizing, preserve the original output exactly as produced:

@@ -21,8 +21,6 @@ stateDiagram-v2
     Triaged --> [*]
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/branching-and-cleanup.svg)
-
 ## Branching principles
 
 - Use branches + PRs for implementation and automation changes.
