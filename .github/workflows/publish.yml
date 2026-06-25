@@ -1,0 +1,77 @@
+name: Publish packages
+
+# Publish the `brainfactory` CLI to PyPI and npm whenever a GitHub Release is
+# published. Triggered by the `release` event, so it fires for both release
+# paths — a vX.Y.Z tag (cut by release.yml) and a Release drafted in the GitHub
+# UI. Gated to the public repo (brainforge); the private source repo, which
+# never cuts releases, skips it.
+#
+# Package versions are independent of the framework version: PyPI publishes
+# `brainfactory.__version__` and npm publishes installers/npm/package.json's
+# `version`. Both publishes are idempotent — if that version is already on the
+# registry the step is a no-op — so cutting a framework release without bumping
+# the CLI, or re-running a release, never fails here. Bump those two versions to
+# ship a new CLI build. See RELEASING.md for the one-time registry setup.
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  pypi:
+    name: Publish to PyPI
+    if: github.event.repository.name == 'brainforge'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # OIDC for PyPI Trusted Publishing (no stored token)
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Build sdist + wheel
+        working-directory: brain-factory/adapters/python
+        run: |
+          python -m pip install --upgrade build
+          python -m build --outdir dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: brain-factory/adapters/python/dist
+          skip-existing: true
+
+  npm:
+    name: Publish to npm
+    if: github.event.repository.name == 'brainforge'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # provenance attestation
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish to npm (skip if version already published)
+        working-directory: installers/npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          name="$(node -p "require('./package.json').name")"
+          ver="$(node -p "require('./package.json').version")"
+          if npm view "${name}@${ver}" version >/dev/null 2>&1; then
+            echo "${name}@${ver} already published; skipping."
+          else
+            npm publish --provenance --access public
+          fi

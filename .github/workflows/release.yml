@@ -54,6 +54,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # Idempotent: if the Release already exists (e.g. it was drafted in the
+          # GitHub UI, which both creates the tag and publishes the release), skip
+          # rather than fail. A tag pushed on its own still lands here and creates it.
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            echo "Release ${GITHUB_REF_NAME} already exists; skipping creation."
+            exit 0
+          fi
           gh release create "${GITHUB_REF_NAME}" \
             --title "Brain Factory ${GITHUB_REF_NAME}" \
             --notes-file notes.md \
