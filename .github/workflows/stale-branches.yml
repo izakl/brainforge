@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete merged copilot/* and dependabot/* branches
-        uses: phpdocker-io/github-actions-delete-abandoned-branches@v2
+        uses: phpdocker-io/github-actions-delete-abandoned-branches@e04764c2f0f714dedb80c42d5174e756568a0452  # v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           ignore_branches: "main"
@@ -29,7 +29,7 @@ jobs:
           dry_run: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run == true) && 'yes' || 'no' }}
 
       - name: Report long-lived non-tracked branches
-        uses: phpdocker-io/github-actions-delete-abandoned-branches@v2
+        uses: phpdocker-io/github-actions-delete-abandoned-branches@e04764c2f0f714dedb80c42d5174e756568a0452  # v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           ignore_branches: "main"
