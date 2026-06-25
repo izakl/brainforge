@@ -1,0 +1,33 @@
+name: Secret scan
+
+# Scan for committed secrets (gitleaks) on every push and PR, in BOTH the private
+# source repo and the public mirror — the public repo is published as a clean
+# snapshot, so a credential must never reach it. Advisory: this is not a required
+# check, so a finding surfaces for review without wedging the merge.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  # gitleaks-action fetches the PR's commits via the API on pull_request events.
+  pull-requests: read
+
+jobs:
+  gitleaks:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Only required for GitHub *organization* repositories; unused on a
+          # personal account, where gitleaks-action runs free.
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}

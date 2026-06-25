@@ -42,6 +42,36 @@ class EmitTest(unittest.TestCase):
             self.assertFalse(
                 (dest / ".github" / "agents" / "ac-status.agent.md").exists())
 
+    def test_agent_md_omits_undeclared_tools_and_model(self):
+        front = e._agent_md("n", "desc", "the body").split("---")[1]
+        self.assertIn("name: n", front)
+        self.assertNotIn("tools:", front)
+        self.assertNotIn("model:", front)
+
+    def test_agent_md_carries_declared_tools_and_model(self):
+        with tempfile.TemporaryDirectory() as d:
+            dest = self._provision(d)
+            skill = (dest / "03-templates" / "agent-commands" / "core"
+                     / "status" / "SKILL.md")
+            lines = skill.read_text(encoding="utf-8").splitlines()
+            close = next(i for i in range(1, len(lines))
+                         if lines[i].strip() == "---")
+            lines[close:close] = ["tools: [read, edit]", "model: example-model"]
+            skill.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+            e.emit_targets(dest)
+            agents = dest / ".github" / "agents"
+            declared = (agents / "ac-status.agent.md").read_text(encoding="utf-8")
+            self.assertIn("tools: [read, edit]", declared)
+            self.assertIn("model: example-model", declared)
+
+            # An undeclared command keeps a clean frontmatter (no empty fields).
+            other = next(p for p in sorted(agents.glob("*.agent.md"))
+                         if p.name != "ac-status.agent.md")
+            other_front = other.read_text(encoding="utf-8").split("---")[1]
+            self.assertNotIn("tools:", other_front)
+            self.assertNotIn("model:", other_front)
+
 
 if __name__ == "__main__":
     unittest.main()

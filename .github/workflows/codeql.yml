@@ -1,0 +1,41 @@
+name: CodeQL
+
+# Static analysis (CodeQL). Code scanning is free on PUBLIC repositories, so this
+# runs only on the public `brainforge` mirror; on the private source repo the job
+# is skipped (personal private repos have no GitHub Advanced Security). The bare
+# repo-name gate survives the publish slug-rewrite, matching
+# prepare-next-framework-task.yml.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 7 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    if: github.event.repository.name == 'brainforge'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, javascript-typescript, actions]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"

@@ -14,6 +14,8 @@ on:
       - "scripts/check-svg-companions.sh"
       - "scripts/check-mobile-quick-action.sh"
       - "scripts/check-brain-factory.sh"
+      - "scripts/check-version-parity.sh"
+      - "CHANGELOG.md"
       - "brain-factory/**"
       - ".github/framework-task-queue.json"
       - ".github/workflows/framework-audit.yml"
@@ -109,3 +111,13 @@ jobs:
 
       - name: Check brain-factory invariants
         run: bash scripts/check-brain-factory.sh
+
+  version-parity:
+    name: Release version parity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Check version parity
+        run: bash scripts/check-version-parity.sh
