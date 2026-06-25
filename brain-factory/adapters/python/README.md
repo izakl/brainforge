@@ -18,7 +18,7 @@ pip install brainfactory
 pipx install "brainfactory[schema]"
 ```
 
-Until the package is published to PyPI, install straight from the repo:
+To install the latest unreleased build straight from the repository:
 
 ```bash
 pipx install "git+https://github.com/izakl/brainforge#subdirectory=brain-factory/adapters/python"

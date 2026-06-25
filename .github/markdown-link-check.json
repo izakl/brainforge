@@ -12,6 +12,10 @@
     {
       "comment": "Internal repo cross-references (bare repo URL or any path); validity is guaranteed by repo structure (and unauthenticated checks 404 on the private source repo).",
       "pattern": "^https://github\\.com/izakl/(brain-factory|brainforge)(/|$)"
+    },
+    {
+      "comment": "npmjs.com package pages return 403 to automated link checkers (bot protection); package liveness is verified out of band.",
+      "pattern": "^https://(www\\.)?npmjs\\.com/"
     }
   ],
   "retryOn429": true,

@@ -34,6 +34,7 @@ Authoring guide:
 - [ADR 0022: Multi-target command emission to standard agent discovery locations](./0022-multi-target-command-emission.md) — Accepted
 - [ADR 0023: Documentation site on GitHub Pages (MkDocs Material)](./0023-docs-site-github-pages.md) — Accepted
 - [ADR 0024: Retire SVG companions for diagrams](./0024-retire-svg-companions.md) — Accepted
+- [ADR 0025: CLI distribution via PyPI and npm](./0025-cli-distribution-via-pypi-and-npm.md) — Accepted
 
 ## Numbering convention
 

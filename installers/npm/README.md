@@ -25,8 +25,8 @@ for the engine and its install options.
 
 ## Publishing (maintainer)
 
-This package is not yet on npm. Before `npm publish` from this directory: confirm
-the `brainfactory` name is available (or scope it, e.g. `@izakl/brainfactory`)
-and keep its `version` in step with the Python package. `npx brainfactory` is
-fully functional once the Python package is on PyPI (so `pipx run brainfactory`
-can resolve it).
+This package is published to npm automatically when a GitHub Release is cut:
+`.github/workflows/publish.yml` builds and publishes it (with provenance). To ship
+a new launcher build, bump `version` here in step with the Python package, then
+cut a release — unchanged versions are skipped. `npx brainfactory` resolves the
+Python engine from PyPI (via `pipx run brainfactory`), so the two ship together.

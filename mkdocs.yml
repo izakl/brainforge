@@ -90,6 +90,7 @@ nav:
       - brain-factory-design-overview.md
       - framework-brain-factory-architecture.md
       - operator-onboarding-pack.md
+      - cli-distribution-and-releases.md
       - contributor-environment-guide.md
       - framework-starter-kit.md
   - Operating model:
@@ -198,3 +199,5 @@ nav:
           - adr/0021-expose-brain-factory-over-mcp.md
           - adr/0022-multi-target-command-emission.md
           - adr/0023-docs-site-github-pages.md
+          - adr/0024-retire-svg-companions.md
+          - adr/0025-cli-distribution-via-pypi-and-npm.md
