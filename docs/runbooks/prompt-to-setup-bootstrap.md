@@ -147,7 +147,6 @@ bash scripts/check-framework-task-queue.sh
 bash scripts/check-queue-health.sh
 bash scripts/check-security-guardrails.sh
 bash scripts/check-handoff-packet.sh
-bash scripts/check-svg-companions.sh
 bash scripts/check-mobile-quick-action.sh
 bash scripts/check-index-parity.sh
 ```

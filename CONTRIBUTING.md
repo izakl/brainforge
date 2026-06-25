@@ -22,8 +22,6 @@ flowchart LR
     G -->|Yes| I[Merge to main]
 ```
 
-> 📐 Hi-res view: [SVG](docs/diagrams/CONTRIBUTING.svg)
-
 ## How we work
 
 This framework operates across multiple surfaces, with GitHub as the control plane and durable system of record. Keep workflow decisions and execution aligned with:

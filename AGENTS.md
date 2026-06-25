@@ -90,9 +90,6 @@ npx -y markdownlint-cli2 "**/*.md"
 # Markdown link check (one file at a time)
 npx -y markdown-link-check -q -c .github/markdown-link-check.json <file>
 
-# SVG companion parity (ADR 0012)
-bash scripts/check-svg-companions.sh
-
 # Mobile quick-action coverage (ADR 0013)
 bash scripts/check-mobile-quick-action.sh
 

@@ -29,8 +29,6 @@ flowchart LR
     H --> I[Merge and close out follow-ups]
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/start-a-framework-change.svg)
-
 ## Decide the change type (doc / workflow / ADR-worthy)
 
 Classify the work before opening artifacts:

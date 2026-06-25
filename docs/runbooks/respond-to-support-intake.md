@@ -36,8 +36,6 @@ flowchart LR
     H --> I
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/respond-to-support-intake.svg)
-
 ## Acknowledge and classify
 
 When an intake arrives:

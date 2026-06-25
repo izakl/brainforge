@@ -52,8 +52,6 @@ flowchart TD
     M --> N
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/run-queue-health-check.svg)
-
 ## Procedure
 
 ### Step 1 — Run the drift-detection script

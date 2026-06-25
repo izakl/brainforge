@@ -33,8 +33,6 @@ sequenceDiagram
     P->>O: Merge after checks pass
 ```
 
-> 📐 Hi-res view: [SVG](../docs/diagrams/worked-example-issue-to-pr.svg)
-
 ## The trigger
 
 Documentation is a control surface in this project, so it needs a durable quality

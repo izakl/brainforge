@@ -41,8 +41,6 @@ flowchart TD
     H --> I
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/triage-stale-branch-report.svg)
-
 ## Triage steps
 
 For each flagged branch:

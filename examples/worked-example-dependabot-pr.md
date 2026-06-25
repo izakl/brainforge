@@ -32,8 +32,6 @@ flowchart TD
     H --> I[Stale-branch workflow<br>deletes branch in 7 days]
 ```
 
-> 📐 Hi-res view: [SVG](../docs/diagrams/worked-example-dependabot-pr.svg)
-
 ## Step-by-step
 
 1. Receive the Dependabot PR notification in Projects, email, or GitHub Mobile, then open the PR.

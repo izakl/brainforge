@@ -42,8 +42,6 @@ sequenceDiagram
     I->>I: Durable writeback — continuity artifacts updated
 ```
 
-> 📐 Hi-res view: [SVG](../docs/diagrams/worked-example-external-context-normalization.svg)
-
 ## The scenario
 
 During a weekly support call, a product manager hears repeated customer complaints

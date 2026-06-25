@@ -26,8 +26,6 @@ flowchart LR
     HUB -->|4 · improve-down| BRAIN
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/how-brain-factory-works.svg)
-
 ## The three things to understand
 
 ### 1. Hub vs. brain

@@ -34,8 +34,6 @@ flowchart LR
     F --> G[Ready to work]
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/apply-setup.svg)
-
 ## Step 1 — Choose or create a setup intent
 
 You have two options:
@@ -152,7 +150,6 @@ bash scripts/check-framework-task-queue.sh
 bash scripts/check-queue-health.sh
 bash scripts/check-security-guardrails.sh
 bash scripts/check-handoff-packet.sh
-bash scripts/check-svg-companions.sh
 bash scripts/check-mobile-quick-action.sh
 bash scripts/check-index-parity.sh
 ```

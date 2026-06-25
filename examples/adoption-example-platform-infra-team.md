@@ -43,7 +43,7 @@ Chosen because:
 
 - baseline checks are non-negotiable for any profile
 - handoff enforcement is essential with a small team operating across multiple surfaces
-- index parity and SVG checks keep documentation coherent as the ADR catalog grows
+- index parity checks keep documentation coherent as the ADR catalog grows
 - queue integrity check is appropriate because platform roadmap work benefits from
   structured queue operations
 - stale-branch automation is deferred until branch volume justifies the setup cost
@@ -85,7 +85,6 @@ for the full bundle definition.
 | File | Why added |
 | --- | --- |
 | `scripts/check-index-parity.sh` + `framework-audit.yml` | ADR index drift becomes a risk quickly in platform repos |
-| `scripts/check-svg-companions.sh` | Added with index parity; Mermaid diagrams appear in ADRs and architecture docs |
 | `docs/framework-health.md` | Monthly health audits formalized; platform team uses recurring check cadence |
 | `docs/governance-checklist.md` | Periodic governance review established |
 | `docs/framework-reporting-and-review-cadence.md` | Weekly hygiene and monthly health review cadence established |
@@ -128,7 +127,7 @@ for the full bundle definition.
 
 ### Day 4–5: Enable index parity and recurring audit
 
-- Added `scripts/check-index-parity.sh`, `scripts/check-svg-companions.sh`, and the
+- Added `scripts/check-index-parity.sh` and the
   monthly `framework-audit.yml` workflow
 - Confirmed checks ran in CI against the first ADR
 - Opened follow-up issue: "Enable queue operations once roadmap items are structured"

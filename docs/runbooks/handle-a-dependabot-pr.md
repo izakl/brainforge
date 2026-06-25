@@ -35,8 +35,6 @@ flowchart LR
     G -->|No| I[Defer or close with rationale]
 ```
 
-> 📐 Hi-res view: [SVG](../diagrams/handle-a-dependabot-pr.svg)
-
 ## Triage steps
 
 For each Dependabot PR:

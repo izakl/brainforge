@@ -93,10 +93,10 @@ The order is a starting point and can be re-prioritized as the rollout progresse
   - Leave concise review feedback on readability and mobile legibility.
   - Capture missing-diagram or drift findings as linked follow-up issues.
 - **Do not do from mobile:**
-  - Edit Mermaid/SVG content or companion-source artifacts.
+  - Edit Mermaid/SVG content.
   - Restructure rollout sequencing with broad plan rewrites.
 - **Escalate to desktop/cloud when:**
-  - Diagram source updates or SVG companion edits are required.
+  - Diagram source updates are required.
   - Convention or ADR-level diagram governance changes are being proposed.
 - **Primary artifact to update:**
   - The diagram-related issue or pull request comment with the review decision.

@@ -129,7 +129,10 @@ Use:
 ## How to start with low overhead
 
 1. Start with 6-10 signals from the matrix above.
-2. Reuse existing GitHub artifacts; do not build a new data collection system first.
+2. Reuse existing GitHub artifacts; do not build a new data collection system
+   first. (`scripts/framework-metrics.sh` prints a read-only structural baseline
+   — framework version and artifact counts — from committed artifacts; it is a
+   starting point, not a data system.)
 3. Review trends and exceptions, not raw totals.
 4. Open bounded improvement issues only for high-signal findings.
 5. Revisit the metric set quarterly and remove low-value signals.

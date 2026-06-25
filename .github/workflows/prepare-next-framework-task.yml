@@ -246,7 +246,6 @@ jobs:
               "## Validation",
               "",
               "- `npx -y markdownlint-cli2 \"**/*.md\"`",
-              "- `bash scripts/check-svg-companions.sh`",
               "- `bash scripts/check-mobile-quick-action.sh`",
               "- `bash scripts/check-handoff-packet.sh`",
               "- `bash scripts/check-security-guardrails.sh`",

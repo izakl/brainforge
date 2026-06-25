@@ -24,8 +24,6 @@ flowchart LR
     G --> H[Continuity<br>artifacts updated]
 ```
 
-> 📐 Hi-res view: [SVG](diagrams/operating-model.svg)
-
 ## Outcomes
 
 The operating model is designed to:
