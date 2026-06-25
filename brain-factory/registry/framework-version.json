@@ -1,7 +1,7 @@
 {
-  "framework_version": "0.2.0",
-  "released": "2026-06-24",
-  "summary": "Down-sync execution, an installable CLI (pipx/npx), release automation behind a version-parity guardrail, tools/model frontmatter on emitted agents, and cross-platform adapter parity tests.",
+  "framework_version": "0.3.0",
+  "released": "2026-06-25",
+  "summary": "Automated PyPI/npm publishing for the brainfactory CLI (Trusted Publishing, provenance), a read-only framework metrics snapshot, a modernized diagram convention (live Mermaid; SVG companions retired), and CLI distribution docs.",
   "core_modules": [
     "operating-contract",
     "session-ritual-hooks",

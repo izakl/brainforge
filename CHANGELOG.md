@@ -8,6 +8,32 @@ and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2
 The framework version that brains stamp and sync against is tracked separately in
 [`brain-factory/registry/framework-version.json`](brain-factory/registry/framework-version.json).
 
+## [0.3.0] - 2026-06-25
+
+Distribution and instrumentation: the `brainfactory` CLI now publishes itself to
+PyPI and npm on every release, the framework reports a read-only metrics snapshot,
+and the diagram convention moves to live-rendered Mermaid.
+
+### Added
+
+- **Automated CLI publishing.** `publish.yml` publishes the `brainfactory` CLI to
+  PyPI (OIDC Trusted Publishing) and npm (with build provenance) when a GitHub
+  Release is published. Publishes are idempotent, and the CLI version is
+  independent of the framework version (ADR 0025). `release.yml`'s release step is
+  now idempotent, so a Release drafted in the GitHub UI works too.
+- **Framework metrics.** A read-only metrics snapshot reporting counts and
+  coverage across the framework surface, without touching project extensions.
+- **CLI distribution docs.** `docs/cli-distribution-and-releases.md` — install via
+  pipx / pip / npx, and how a release reaches the registries.
+
+### Changed
+
+- **Diagram convention modernized.** Hand-committed SVG companions are retired in
+  favour of live-rendered Mermaid (ADR 0024 supersedes ADR 0012); the
+  SVG-companion guardrail is removed.
+- **`brainfactory` CLI republished as 0.1.1**, refreshing the PyPI and npm project
+  pages with the corrected install instructions.
+
 ## [0.2.0] - 2026-06-24
 
 A capability wave on the Phase 1 foundation: the down-sync now executes
@@ -75,5 +101,6 @@ project-owned extension layer, and a two-way improvement loop.
   deletion of merged head branches, and the consolidated `CI gate` required
   check.
 
+[0.3.0]: https://github.com/izakl/brainforge/releases/tag/v0.3.0
 [0.2.0]: https://github.com/izakl/brainforge/releases/tag/v0.2.0
 [0.1.0]: https://github.com/izakl/brainforge/releases/tag/v0.1.0

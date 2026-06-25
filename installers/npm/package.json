@@ -1,6 +1,6 @@
 {
   "name": "brainfactory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "npx launcher for Brain Factory's Python onboarding engine (provision, adopt, and upgrade project 'brain' repositories).",
   "bin": {
     "brainfactory": "bin/brainfactory.js"
