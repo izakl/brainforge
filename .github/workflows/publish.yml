@@ -51,7 +51,7 @@ jobs:
     if: github.event.repository.name == 'brainforge'
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # provenance attestation
+      id-token: write   # OIDC for npm Trusted Publishing (+ automatic provenance)
       contents: read
     steps:
       - name: Checkout repository
@@ -60,18 +60,18 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Publish to npm (skip if version already published)
+      - name: Publish to npm (Trusted Publishing / OIDC, skip if already published)
         working-directory: installers/npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          # Trusted Publishing needs npm >= 11.5.1; the runner's bundled npm is older.
+          npm install -g npm@latest
           name="$(node -p "require('./package.json').name")"
           ver="$(node -p "require('./package.json').version")"
           if npm view "${name}@${ver}" version >/dev/null 2>&1; then
             echo "${name}@${ver} already published; skipping."
           else
-            npm publish --provenance --access public
+            npm publish --access public
           fi
