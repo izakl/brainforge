@@ -45,15 +45,16 @@ Prerequisites: `git`, Python 3, and Node.js (for the markdown checks).
 ### Install the CLI (optional)
 
 The onboarding engine ships as a Python package with a `brainfactory` command —
-no clone needed to use it. Once published to PyPI:
+no clone needed to use it:
 
 ```bash
 pipx install brainfactory        # isolated CLI (or: pip install brainfactory)
 brainfactory inspect --repo .    # read-only gap report for any repo
 ```
 
-`npx brainfactory` forwards to the same engine. Until the PyPI release, install
-straight from the repo — see
+`npx brainfactory` forwards to the same engine. See
+**[CLI distribution & releases](docs/cli-distribution-and-releases.md)** for every
+install method and how versions are published, or the package READMEs under
 [`brain-factory/adapters/python/`](brain-factory/adapters/python/README.md) and
 [`installers/npm/`](installers/npm/README.md).
 
