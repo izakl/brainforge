@@ -65,6 +65,7 @@ Each task entry in `tasks[]` should follow this structure:
   "id": "kebab-case-stable-id",
   "title": "Human-readable bounded objective title",
   "status": "blocked|pending|in_progress|done|superseded",
+  "hold_reason": "Optional explicit operator hold rationale when status=blocked despite completed dependencies",
   "depends_on": ["upstream-task-id"],
   "why_now": "Why this item belongs in the ordered queue now",
   "suggested_prompt": "Prompt-ready task framing for issue/agent kickoff",
@@ -79,6 +80,9 @@ Each task entry in `tasks[]` should follow this structure:
 - `id`: immutable stable queue identifier used for issue marker linkage and dependency references.
 - `title`: bounded objective label used in prepared issues.
 - `status`: queue-level execution state.
+- `hold_reason`: optional explicit operator hold marker. Use only when `status`
+  remains `blocked` after dependencies are `done` and auto-flow must be paused
+  intentionally (for example, external merge windows).
 - `depends_on`: task ids that must be `done` before this item can be dependency-ready.
 - `why_now`: durable rationale for ordering and review context.
 - `suggested_prompt`: prompt-ready body for queue-driven issue/agent kickoff.
@@ -117,6 +121,8 @@ stays deterministic.
 ### State transition guidance
 
 - `blocked` → `pending`: all `depends_on` items are `done`.
+- `blocked` (with `hold_reason`) → `blocked`: dependencies may be `done`, but
+  operator intentionally pauses auto-flow until the hold is cleared.
 - `pending` → `in_progress`: prepared issue is accepted and execution starts.
 - `in_progress` → `done`: linked implementation PR is merged.
 - `pending|in_progress` → `superseded`: scope replaced, retired, or absorbed elsewhere with durable rationale.
@@ -209,6 +215,7 @@ Drift exists when queue state and repository reality differ. Common patterns:
 | --- | --- | --- |
 | Stale `related_docs` path | A referenced doc no longer exists at that path | ✅ `check-queue-health.sh` |
 | `blocked` with all deps `done` | Task should have been promoted to `pending` | ✅ `check-queue-health.sh` |
+| `blocked` with all deps `done` and `hold_reason` set | Intentional auto-flow pause with explicit rationale | ✅ `check-queue-health.sh` (warning) |
 | `pending` with unresolved deps | Task should be `blocked` until deps reach `done` | ✅ `check-queue-health.sh` |
 | Non-terminal task depending on `superseded` | Dependency can never be satisfied | ✅ `check-queue-health.sh` |
 | Multiple `in_progress` simultaneously | Possible missed state transition after merge | ✅ `check-queue-health.sh` (warning) |

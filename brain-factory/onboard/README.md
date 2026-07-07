@@ -34,7 +34,8 @@ Run the inspector against the target repo. It audits and reports, read-only:
 - **Commands/automation:** existing scripts, skills, Copilot prompts, hooks?
 - **CI:** workflows, guardrails, linting (blocking vs non-blocking)?
 - **Docs:** ADRs, diagrams, capability/inventory docs?
-- **Naming/drift:** obvious version/name drift across docs vs code.
+- **Naming/drift:** obvious version/name drift across docs vs code, including
+  runtime-vs-doc config drift checks.
 
 Output: a **gap report** (`05-logs/onboarding-gap-report-<date>.md`) listing,
 per core module: `present` | `partial` | `missing`, with the evidence and a
@@ -53,6 +54,27 @@ Apply only the agreed additions/augmentations. Migrate any external
 source-of-truth into the brain/GitHub. Write the manifest reflecting what is
 hub-owned vs pre-existing. Land it as a PR in the brain repo.
 
+## Codified no-loss migration rules
+
+When migrating non-text artifacts during onboarding (code, binaries, images):
+
+1. Move them through a **base64 transport path** (not a text/Markdown reader).
+2. Decode and **assert byte-exact size** against source metadata.
+3. Retry (chunked if needed) until byte size and representative content checks
+   match.
+4. Treat migration as incomplete until those checks pass.
+
+This is a hard no-loss rule for inspect-first onboarding.
+
+## Approval and boundary checkpoint
+
+Before apply, record an explicit approval checkpoint in the onboarding packet:
+
+- scope and objective for this onboarding pass,
+- `keep`/`augment`/`add` decisions per module,
+- boundary mapping (`adopted: false` for pre-existing project-owned assets),
+- acceptance and validation evidence expectations.
+
 ## Inspect-first is the default for any repo with prior history
 
 If the inspector finds substantial existing structure, the engine refuses to run
@@ -65,3 +87,15 @@ The inspector and applier are provided per platform under
 `brain-factory/adapters/` (see that directory's README). The logic is shared in
 `python/` where possible; `bash/` and `powershell/` wrap it for their
 environments.
+
+## Cross-lane onboarding contract
+
+Lane onboarding now uses one shared artifact so a proven pattern in one lane is
+codified once and inherited everywhere else:
+
+- [`lane-onboarding-contract.md`](lane-onboarding-contract.md) — reusable
+  contract packet, transfer loop, and approval/boundary/no-loss gates.
+
+This artifact keeps inspect-first discipline explicit and makes the autonomy
+transfer path concrete: **Northwind proves → Brain Factory codifies → Contoso and
+Acme inherit**.

@@ -28,6 +28,55 @@ Full context: [`docs/framework-continuity-and-memory.md`](docs/framework-continu
 6. **Branch cleanup is required.** Delete branches after PR merge. Stale branches are cleaned
    automatically by the weekly workflow; do not accumulate them.
 
+## Permanent framework operating standards
+
+### SYNC-LATEST-FIRST STANDARD (required)
+
+- Before starting any work in a repo or lane (state reads for decisions, session creation, or
+  changes), sync to the latest online default branch first (`git fetch`; base work on
+  `origin/<default>`). Local clones are stale until proven current.
+- Every new work session branches from an up-to-date default branch.
+- When working directly in a lane brain, re-sync that lane before touching it.
+- Before merge, verify the PR is mergeable against the current online default branch.
+- On session start/rehydration, refresh managed lanes from online before reporting or acting.
+
+### CLEANUP-NO-STALE-STATE STANDARD (required)
+
+- Cleanup triad: remote **BRANCH**, local **WORKTREE**, owning **SESSION**.
+- Tear down the full triad together after merge; do not leave stale branches, worktrees, or
+  sessions lingering.
+- Session definition by toolchain:
+  - GitHub Copilot: the app/project session and its worktree.
+  - Claude Code: the conversation/session workspace.
+- Apply a no-loss gate before deleting any triad element (branch/worktree/session): if unique
+  unmerged content exists, preserve/escalate instead of deleting.
+- Maintain periodic stale-state audits and flag:
+  - merged-but-undeleted branches
+  - branches with no open PR
+  - orphaned worktrees
+  - orphaned sessions (completed/abandoned sessions still lingering)
+- Target steady state: one active worktree and one active session per active task.
+
+### CONTINUITY-CAPTURE / BRAIN-MEMORY WRITEBACK STANDARD (required)
+
+- For any work executed in lane-owned repositories (product/runtime or governance),
+  the lane brain must record continuity/memory with:
+  - **WHAT** changed
+  - **WHY** it changed (trigger/feedback)
+  - **WHERE** it changed (repo + PR/commit)
+  - **OUTCOME** (validation + merge status)
+- This binds orchestrator behavior especially: after directing or executing lane work
+  (including runtime/product fixes), write back to the lane brain continuity ledger and
+  master session index.
+- A lane change with no corresponding brain continuity entry is a defect (memory loss).
+- Capture timing:
+  - at start / PR open: in-progress continuity entry
+  - at merge: finalized outcome entry
+- Cross-reference where practical: product/runtime PR links to brain entry, and brain entry
+  links back to the product/runtime PR.
+- No-loss continuity invariant: lane brain memory must reflect reality across all lane repos,
+  not only governance repos.
+
 ## How to start work safely
 
 1. **Check for an existing issue or ADR** that scopes the work. If none exists, open one using the canonical issue-type guidance in [`docs/issue-taxonomy.md`](docs/issue-taxonomy.md) and [`docs/runbooks/open-an-issue.md`](docs/runbooks/open-an-issue.md).

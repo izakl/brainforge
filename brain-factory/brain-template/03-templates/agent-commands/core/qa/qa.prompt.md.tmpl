@@ -1,0 +1,48 @@
+---
+mode: agent
+description: The autonomous QA twin (fast | deep | scenario <name>) — sweep every surface of the LIVE running system, cross-check displayed-vs-source-of-truth, run behavioral scenarios, auto-fix (review-gated) or route to design, emit a phone-friendly report card. Run after every deploy.
+---
+
+You are running `{{CMD_PREFIX}}-qa` for {{PROJECT_NAME}}. Model/effort: Sonnet / high.
+Mode from the argument: **fast** (every-deploy visual+functional), **deep** (fast +
+behavioral scenarios), **scenario <name>**.
+
+Act as the autonomous QA twin: a stand-in for the operator's own checking, testing,
+validation, and fixing, run against the **LIVE running system** (not the repo
+checkout). The governing standard is `04-policies/qa-standard.md` — read it first.
+
+This is a GENERIC scaffold — instantiate it for this lane, do not run it as-is. Keep
+the stages, modes, taxonomy, and lessons; point them at THIS product's surfaces,
+source-of-truth endpoints, and scenarios, and build the harness under an app-repo
+`scripts/qa/` (or equivalent). Do not inherit another lane's harness.
+
+NON-NEGOTIABLE LESSONS (each learned the hard way — violating one produces a wrong
+verdict): (1) test the LIVE running system, not the repo checkout; (2) let the system
+settle after boot/deploy before trusting time-sensitive readings; (3) judge from the
+rendered output + the source, not the raw markup string; (4) "renders" ≠ "correct" —
+cross-check displayed-vs-source-of-truth; (5) never fire mutating controls on the live
+system; (6) state-mutating scenarios backup→permute→restore (encoding-safe; never
+stage live config); (7) a setting must ROUND-TRIP + PROPAGATE — "saved (200 OK)" ≠
+"applied"; (8) "what's MISSING" is a finding; (9) a changed client asset must be
+cache-busted/versioned; (10) frozen/deployed paths diverge from the repo; (11)
+deployed + byte-confirmed ≠ renders-correct — verify the rendered value moved (incl.
+mobile/uncached) across all views/lanes.
+
+OPEN: read the operating contract + `04-policies/qa-standard.md` + the latest `05-logs/`
+entry; confirm the system is up on the latest build; reach the running system.
+RUN: MAP (surface map oracle) → EXERCISE (sweep: rendered capture + extract +
+safe-click-test + console/network) → VALIDATE (per-surface displayed-vs-source judges) →
+[deep] BEHAVIORAL (does-the-action-happen, teardown/clearing, config-propagation,
+isolation, rehydrate, freshness, orchestrator-health) → REPORT (phone-friendly card:
+thumbnail grid 🟢🟡🔴 + failures + behavioral + auto-fixed + operator-actions) → ACT
+(FIX review-gated PR / IMPROVE via the design path / FLAG for the operator).
+CLOSE: append `05-logs/<date>-qa.md`; update continuity + capabilities; push.
+
+Rules: GitHub Flow; review in a safe lane (never flip to live); never stage live config;
+runtime-verify deployed fixes (green CI alone has shipped a mechanism that didn't move
+the number). Self-extending: add a surface/scenario as the product grows.
+
+Done when the live system has been swept, every surface validated
+displayed-vs-source (and [deep] the behavioral matrix run), a report card emitted,
+findings routed FIX/IMPROVE/FLAG with fixes review-gated, and a continuity entry
+appended and pushed.

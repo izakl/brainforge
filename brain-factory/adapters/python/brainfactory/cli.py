@@ -104,12 +104,18 @@ def cmd_adopt(args: argparse.Namespace) -> int:
 
 def cmd_capabilities(args: argparse.Namespace) -> int:
     brain = args.brain or "."
-    if args.write:
-        path = capabilities_mod.write(brain)
-        print(f"Wrote capabilities map: {path}")
-        return 0
-    # Default (and --check): regenerate in-memory and diff.
-    result = capabilities_mod.check(brain)
+    try:
+        if args.write:
+            path = capabilities_mod.write(brain)
+            print(f"Wrote capabilities map: {path}")
+            return 0
+        # Default (and --check): regenerate in-memory and diff.
+        result = capabilities_mod.check(brain)
+    except capabilities_mod.CommandNamingError as exc:
+        print("capabilities: FAIL — command directory naming error (refusing to "
+              "emit a doubled invocation).\n")
+        print(exc)
+        return 1
     if args.json:
         Path(args.json).write_text(
             json.dumps(result.to_dict(), indent=2) + "\n", encoding="utf-8")
@@ -140,7 +146,13 @@ def cmd_docs_mesh(args: argparse.Namespace) -> int:
 
 def cmd_intent_gate(args: argparse.Namespace) -> int:
     brain = args.brain or "."
-    result = capabilities_mod.intent_gate(brain)
+    try:
+        result = capabilities_mod.intent_gate(brain)
+    except capabilities_mod.CommandNamingError as exc:
+        print("intent-gate: FAIL — command directory naming error (refusing to "
+              "emit a doubled invocation).\n")
+        print(exc)
+        return 1
     if args.json:
         Path(args.json).write_text(
             json.dumps(result.to_dict(), indent=2) + "\n", encoding="utf-8")

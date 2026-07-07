@@ -21,6 +21,15 @@ class ProvisionTest(unittest.TestCase):
             agents = (dest / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("Acme brain", agents)
             self.assertNotIn("{{", agents)
+            claude = (dest / "CLAUDE.md").read_text(encoding="utf-8")
+            copilot = (dest / ".github" / "copilot-instructions.md").read_text(
+                encoding="utf-8")
+            self.assertIn("SYNC-LATEST-FIRST STANDARD", agents)
+            self.assertIn("CLEANUP-NO-STALE-STATE STANDARD", agents)
+            self.assertIn("SYNC-LATEST-FIRST STANDARD", claude)
+            self.assertIn("CLEANUP-NO-STALE-STATE STANDARD", claude)
+            self.assertIn("SYNC-LATEST-FIRST STANDARD", copilot)
+            self.assertIn("CLEANUP-NO-STALE-STATE STANDARD", copilot)
 
     def test_provision_refuses_nonempty_dest(self):
         with tempfile.TemporaryDirectory() as d:

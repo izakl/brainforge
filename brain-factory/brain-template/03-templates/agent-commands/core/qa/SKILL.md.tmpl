@@ -1,0 +1,139 @@
+---
+name: {{CMD_PREFIX}}-qa
+description: "The autonomous QA twin — a per-lane scaffold each brain instantiates into its own harness. Sweeps every surface of the LIVE running system, cross-checks displayed-vs-source-of-truth, runs behavioral scenarios, auto-fixes (review-gated) or routes gaps to design, and emits a phone-friendly report card. Modes: fast | deep | scenario <name>. Run after every deploy."
+---
+
+# {{CMD_PREFIX}}-qa [fast | deep | scenario <name>]
+
+Model/effort: Sonnet / high.
+
+The autonomous **QA twin** — a digital stand-in for the operator's own checking,
+testing, validation, and fixing. It runs a proven pipeline against the **LIVE
+running system** (not the repo checkout), cross-checks every surface against its
+source of truth, runs behavioral scenarios, **fixes what it safely can**
+(review-gated) or routes gaps to design, and emits a **phone-friendly report
+card** so results reach the operator when they are away.
+
+Governing standard: `04-policies/qa-standard.md` (the QA discipline — stages,
+cadence, taxonomy, and the non-negotiable lessons). Read it before running.
+
+> **This is a generic scaffold — instantiate it, do not run it as-is.** The
+> pattern is portable; the *harness* is per-lane and product-scoped. Each brain
+> points `{{CMD_PREFIX}}-qa` at its own product surfaces and builds its own
+> harness under an app-repo `scripts/qa/` (or equivalent). Examples: a trading
+> app instantiates it as its `xs-qa` harness (pages/lanes/brokers); a civic or
+> guardian platform targets its assessment/guardian surfaces. Keep the stages,
+> modes, taxonomy, and lessons; swap in this lane's surfaces, source-of-truth
+> endpoints, and scenarios. Do **not** inherit another lane's harness — that
+> would be a false abstraction.
+
+## Modes
+
+- **fast** (default; run after EVERY deploy) — the visual/functional gear:
+  map → sweep → validate → report-card → fix-route. Minutes. No state mutation.
+- **deep** (nightly / on-demand) — fast + the behavioral scenario matrix
+  (state-mutating scenarios, observed over time).
+- **scenario `<name>`** — run one behavioral scenario (e.g.
+  `scenario config-propagation`, `scenario account-clearing`).
+
+## OPEN ritual
+
+1. Read the operating contract, this lane's `04-policies/qa-standard.md`, the
+   latest `05-logs/` entry, and any relevant memory.
+2. Confirm the target is the **LIVE running system** on the latest build (health
+   endpoint + build marker). If a deploy just happened, let the system settle
+   before trusting time-sensitive readings (lesson 2).
+3. Reach the running system the way this lane does (tunnel / local bypass /
+   staging). `git fetch --prune`; check for overlapping active agents.
+
+## Phases (the pipeline)
+
+### 1. MAP — the oracle
+
+Refresh the surface map by reading the product: every page/view/lane/route, its
+feeding source-of-truth (API/DB/queue), the expected content, and every control
+classified **MUTATING vs SAFE**. Cache it; refresh when the product changed.
+
+### 2. EXERCISE (sweep) — against the LIVE system
+
+For every surface: capture the rendered output (screenshot / response), extract
+displayed data, inventory controls (+ disabled state), click-test only the SAFE
+controls and confirm a real state change, capture console/network/log errors
+(≥400). Sweep at BOTH a desktop and a mobile/touch viewport — the operator often
+checks from a phone, and touch-only interactions and responsive layout are
+invisible to a desktop-only sweep.
+
+### 3. VALIDATE — displayed-vs-source-of-truth
+
+Capture the feeding source-of-truth, then judge each surface: read the rendered
+output (the truth the user sees) + the source data (ground truth) and confirm
+data-correct (numbers/counts/signs/units/labels match), render-ok (no
+NaN/undefined/overflow/missing), controls-ok (present + correctly enabled).
+Report only real issues, each with source-value-vs-displayed-value evidence.
+Judge from the rendered output, not the raw markup string (lesson 3).
+
+### 4. BEHAVIORAL (deep gear) — scenarios
+
+Run the scenario matrix (backup → permute → restore for state-mutating ones).
+A snapshot cannot prove behavior over time — assert *eligible + reachable +
+≥1 expected effect within N, else the precise blocker*. Core scenario classes to
+instantiate for this lane: end-to-end "does the core action happen" per
+actor/lane; teardown/clearing (disable/remove → data purged everywhere);
+config-propagation (a saved setting round-trips + reaches the engine + shows
+identically on every surface — lesson 7); isolation (each lane/tenant shows only
+its own data — no leaks); rehydrate (re-enter a flow → persisted state, not
+defaults); freshness (data is updating, not stale); orchestrator-health (the
+background workers are running and acting).
+
+### 5. REPORT (phone-friendly)
+
+Emit a visual report card: a grid of surface thumbnails (🟢/🟡/🔴), a one-liner
+per failure (with the source-vs-displayed evidence), the behavioral results,
+what was **auto-fixed + PR'd**, and the **1–2 things that need the operator**.
+Lead with a one-line summary and push it so it reaches the operator when away.
+
+### 6. ACT (fix-route) — max-autonomous, up to the one review-gate
+
+Each finding routes one of three ways (see the taxonomy in the standard):
+
+- **FIX** (a clear bug) — understand → implement on a branch (no live config) →
+  **adversarial review** (understand→fix→review→verify) → PR (CI-gated).
+  Auto-merge only the green, low-risk ones; **HOLD** judgment calls for the
+  operator. The review-gate is the one guardrail — never auto-merge what it flags.
+- **IMPROVE / EXTEND** (ugly / cramped / missing — not a bug) — route to the
+  lane's design/UX path with the design system.
+- **FLAG** — redesigns, behavioral judgment calls, anything risky → the report
+  card for the operator.
+
+## Cadence
+
+- **After every deploy** → `fast`, then push the report card (make it the final
+  deploy step).
+- **Nightly** → `deep` (the behavioral matrix); wire it into the scheduler.
+- Always **runtime-verify** deployed fixes — green CI alone has shipped a
+  mechanism that never moved the rendered value (lesson 11).
+
+## The non-negotiable lessons (summary)
+
+Each was learned the hard way; violating one produces a wrong verdict. Full text
+and rationale in `04-policies/qa-standard.md`:
+
+1. Test the **LIVE running system**, not the repo checkout.
+2. Let the system **settle** after boot/deploy before trusting time-sensitive readings.
+3. Judge from the **rendered output + the source**, not the raw markup string.
+4. **"Renders" ≠ "correct"** — always cross-check displayed-vs-source-of-truth.
+5. **Never fire mutating controls** on the live system; click-test only SAFE ones.
+6. State-mutating scenarios: **backup → permute → restore** (encoding-safe; never stage live config).
+7. A setting must **ROUND-TRIP + PROPAGATE** — "saved (200 OK)" ≠ "applied".
+8. **"What's MISSING" is a finding** — run a completeness pass vs an expected-feature checklist.
+9. A changed client asset must be **cache-busted/versioned** or the fix never reaches the user.
+10. **Frozen/deployed paths diverge** from the repo — verify where the running system resolves paths.
+11. **Deployed + byte-confirmed ≠ renders-correct** — verify the rendered value moved (incl. mobile/uncached) across all views/lanes.
+
+## Done when
+
+The live system has been swept, every surface validated displayed-vs-source (and
+[deep] the behavioral matrix run), a report card emitted, findings routed
+FIX/IMPROVE/FLAG with fixes review-gated, and a `05-logs/<date>-qa.md` continuity
+entry appended and pushed. Self-extending: add a surface/scenario as the product
+grows so coverage tracks the product instead of decaying.

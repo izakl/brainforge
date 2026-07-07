@@ -17,6 +17,12 @@ Three modes:
   no matching row in the committed ``CAPABILITIES.md`` — "a feature cannot land
   without the brain growing with it".
 
+Command discovery is guarded: :func:`build_model` raises
+:class:`CommandNamingError` if any command directory's base name already starts
+with ``<prefix>-`` (the ``ap-ap-*`` double-prefix bug), so ``--write``,
+``--check`` and the intent gate all fail rather than silently emitting a doubled
+invocation. :func:`find_prefixed_command_dirs` is the read-only companion.
+
 Standard library only. Typed. Same code style as ``inspect.py``.
 """
 
@@ -61,6 +67,45 @@ class CommandInfo:
             "description": self.description,
             "skill_path": self.skill_path,
         }
+
+
+class CommandNamingError(ValueError):
+    """A command directory base name redundantly starts with the command prefix.
+
+    The generator derives a command's invocation as ``<prefix>-<base>`` (see
+    :meth:`CommandInfo.invocation`). If the directory base *already* starts with
+    ``<prefix>-`` the invocation doubles the prefix — e.g. prefix ``ap`` and a
+    directory ``ap-foo`` yield ``ap-ap-foo``. Command directories must use BARE
+    names; this error stops such a map from ever being generated (it fails
+    ``--check``, ``--write`` and the intent gate) so the bug can never silently
+    ship.
+    """
+
+    def __init__(self, offenders: list[CommandInfo], prefix: str) -> None:
+        self.offenders = list(offenders)
+        self.prefix = prefix
+        super().__init__(self._render(self.offenders, prefix))
+
+    @staticmethod
+    def _render(offenders: list[CommandInfo], prefix: str) -> str:
+        n = len(offenders)
+        noun = "directory" if n == 1 else "directories"
+        verb = "is" if n == 1 else "are"
+        lines = [
+            f"{n} command {noun} {verb} mis-named with a redundant "
+            f"'{prefix}-' prefix.",
+            "The generator invokes a command as '<prefix>-<base>', so a "
+            f"directory whose name already starts with '{prefix}-' doubles the "
+            f"prefix (e.g. '{prefix}-{prefix}-...').",
+            "Rename each directory to a BARE name:",
+        ]
+        for c in sorted(offenders, key=lambda o: (o.layer, o.base)):
+            bare = c.base[len(prefix) + 1:] or "<name>"
+            lines.append(
+                f"  - {c.layer}/{c.base} -> {c.layer}/{bare} "
+                f"(now invokes '{prefix}-{c.base}'; should be '{prefix}-{bare}')"
+            )
+        return "\n".join(lines)
 
 
 @dataclass
@@ -176,6 +221,40 @@ def _discover_commands(brain: Path, layer_rel: str, layer: str) -> list[CommandI
     return found
 
 
+def _prefixed_offenders(
+    commands: list[CommandInfo], prefix: str,
+) -> list[CommandInfo]:
+    """Command dirs whose base name already starts with ``<prefix>-``.
+
+    These are the double-prefix bug: the generator would render their invocation
+    as ``<prefix>-<prefix>-...``. An empty prefix disables the check.
+    """
+    if not prefix:
+        return []
+    token = f"{prefix}-"
+    return [c for c in commands if c.base.startswith(token)]
+
+
+def find_prefixed_command_dirs(
+    brain: str | Path, prefix: str | None = None,
+) -> list[CommandInfo]:
+    """Return command dirs whose base redundantly starts with ``<prefix>-``.
+
+    Read-only companion to the guard baked into :func:`build_model`: it never
+    raises, so callers (e.g. the hub self-check) can report *all* offenders at
+    once. ``prefix`` defaults to the brain manifest's ``command_prefix`` (or
+    ``"cmd"`` when unset), matching :func:`build_model`.
+    """
+    root = Path(brain).resolve()
+    if prefix is None:
+        prefix = _read_manifest(root).get("command_prefix") or "cmd"
+    commands = [
+        *_discover_commands(root, _CORE_REL, "core"),
+        *_discover_commands(root, _EXT_REL, "extensions"),
+    ]
+    return _prefixed_offenders(commands, prefix)
+
+
 def build_model(brain: str | Path) -> CapabilitiesModel:
     """Scan a brain directory and assemble the capabilities model from code."""
     root = Path(brain).resolve()
@@ -194,13 +273,21 @@ def build_model(brain: str | Path) -> CapabilitiesModel:
         if isinstance(entry, dict) and entry.get("name"):
             app_repos.append(AppRepo(name=entry["name"], role=entry.get("role", "")))
 
+    core_commands = _discover_commands(root, _CORE_REL, "core")
+    extension_commands = _discover_commands(root, _EXT_REL, "extensions")
+
+    offenders = _prefixed_offenders(
+        [*core_commands, *extension_commands], command_prefix)
+    if offenders:
+        raise CommandNamingError(offenders, command_prefix)
+
     return CapabilitiesModel(
         project_name=project_name,
         command_prefix=command_prefix,
         framework_version=framework_version,
         platforms=platforms,
-        core_commands=_discover_commands(root, _CORE_REL, "core"),
-        extension_commands=_discover_commands(root, _EXT_REL, "extensions"),
+        core_commands=core_commands,
+        extension_commands=extension_commands,
         app_repos=app_repos,
     )
 

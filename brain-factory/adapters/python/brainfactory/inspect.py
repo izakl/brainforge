@@ -44,6 +44,21 @@ _EXTERNAL_SOT_SIGNALS = (
     "source of truth",
 )
 
+# Runtime/docs drift signals (inspect-first). The first codified check targets
+# PostgreSQL version mismatch between runtime config and docs.
+_PG_DOC_RE = re.compile(r"\bpostgres(?:ql)?(?:\s+version)?\s*(\d{1,2})\b",
+                        re.IGNORECASE)
+_PG_IMAGE_RE = re.compile(r"\bpostgres:(\d{1,2})(?:[.-][^\s\"']*)?\b",
+                          re.IGNORECASE)
+_RUNTIME_CONFIG_GLOBS = (
+    "docker-compose.yml",
+    "docker-compose.yaml",
+    "compose.yml",
+    "compose.yaml",
+    "docker/**/*.yml",
+    "docker/**/*.yaml",
+)
+
 
 @dataclass
 class ModuleFinding:
@@ -247,6 +262,12 @@ def inspect_repo(repo_path: str | Path) -> InspectionResult:
             f_cont.action = "augment"
     modules.append(f_cont)
 
+    # Runtime/docs drift risk scan (currently PostgreSQL-focused).
+    drift_hits = _scan_runtime_docs_drift(files, root)
+    if drift_hits:
+        for hit in drift_hits:
+            risks.append(hit)
+
     # --- capabilities-map -----------------------------------------------------
     # CAPABILITIES.md or an inventory doc.
     cap = _collect(files, root, name_globs=("CAPABILITIES.md", "CAPABILITIES*.md",
@@ -351,6 +372,59 @@ def _scan_external_sot(files: list[Path], root: Path) -> list[dict[str, str]]:
             if detail:
                 hits.append({"path": rel, "detail": detail[:300]})
     return hits
+
+
+def _scan_runtime_docs_drift(files: list[Path], root: Path) -> list[dict[str, str]]:
+    """Detect runtime-vs-doc version drift discovered during inspect-first audits."""
+    runtime_versions: dict[str, str] = {}
+    docs_versions: dict[str, str] = {}
+
+    for f in files:
+        rel = _rel(f, root).replace(os.sep, "/")
+        lower = rel.lower()
+        try:
+            text = f.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+
+        is_runtime_config = any(
+            _match_any(lower, f.name.lower(), (pat,)) for pat in _RUNTIME_CONFIG_GLOBS
+        )
+        if is_runtime_config:
+            for m in _PG_IMAGE_RE.finditer(text):
+                runtime_versions[m.group(1)] = rel
+
+        if f.suffix.lower() in (".md", ".txt", ".rst"):
+            for m in _PG_DOC_RE.finditer(text):
+                docs_versions[m.group(1)] = rel
+
+    if not runtime_versions or not docs_versions:
+        return []
+
+    runtime_set = set(runtime_versions.keys())
+    docs_set = set(docs_versions.keys())
+    if runtime_set == docs_set:
+        return []
+
+    runtime_text = ", ".join(sorted(runtime_set))
+    docs_text = ", ".join(sorted(docs_set))
+    evidence = (
+        f"runtime config: {', '.join(sorted(set(runtime_versions.values()))[:4])}; "
+        f"docs: {', '.join(sorted(set(docs_versions.values()))[:4])}"
+    )
+    detail = (
+        "Detected runtime/docs PostgreSQL version drift: "
+        f"runtime config indicates {runtime_text}, docs indicate {docs_text}."
+    )
+    return [{
+        "kind": "runtime-config-drift",
+        "severity": "high",
+        "evidence": evidence,
+        "detail": detail,
+        "recommended_action": (
+            "Reconcile docs and runtime config to one approved version before apply."
+        ),
+    }]
 
 
 def _detect_platforms(files: list[Path], root: Path) -> dict[str, Any]:

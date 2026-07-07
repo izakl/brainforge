@@ -16,11 +16,13 @@ provision time:
 brain.manifest.schema.json    # the manifest contract (validated in CI)
 brain.manifest.example.json   # a worked example
 AGENTS.md.tmpl                # standards-compliant agent entrypoint (becomes AGENTS.md)
+CLAUDE.md.tmpl                # Claude Code instruction entrypoint (becomes CLAUDE.md)
+.github/copilot-instructions.md.tmpl  # Copilot instruction entrypoint
 00-governance/                # OPERATING-CONTRACT + consensus/decision-board
 01-docs/                      # CAPABILITIES (generated) + diagrams
 02-plans/                     # roadmaps and plans
 03-templates/agent-commands/  # core/ + extensions/ + hooks/
-04-policies/                  # continuity, security, cloud-agent policies
+04-policies/                  # continuity, QA, CI checks, security, cloud-agent policies
 05-logs/                      # continuity record + master index
 06-archive/                   # retired material
 08-ops/                       # cross-platform ops via the adapters seam

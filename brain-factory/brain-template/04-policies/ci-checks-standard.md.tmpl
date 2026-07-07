@@ -1,0 +1,115 @@
+<!-- Template. The inherited CI-checks gate {{PROJECT_NAME}} runs and keeps in sync. -->
+
+# {{PROJECT_NAME}} — CI checks standard (the inherited brain-checks gate)
+
+Every brain runs an inherited **`brain-checks`** CI workflow — the self-extending
+brain's anti-drift, intent, and docs-mesh gate. It runs on every `pull_request`
+and on every `push` to `main`, and it is the mechanism that keeps a brain's map,
+commands, and docs honest as the brain grows.
+
+The workflow ships in the hub at
+`brain-template/.github/workflows/brain-checks.yml`; every provisioned brain
+inherits it and keeps it in sync.
+
+## The gates
+
+`brain-checks` runs three checks. Two are **always blocking**; the third is
+blocking by default with a narrow, documented escape hatch.
+
+### Blocking — `capabilities --check` (anti-drift)
+
+`python -m brainfactory capabilities --brain <dir> --check` regenerates the
+capability model from code (the command directories + the manifest) and fails if
+the committed `01-docs/CAPABILITIES.md` does not match what the generator
+derives. The map may not drift from the code: if you change what the brain can
+do, the committed map must change with it. There is **no** allowance to make this
+check non-blocking.
+
+### Blocking — `intent-gate` (no command without a capabilities row)
+
+`python -m brainfactory intent-gate --brain <dir>` fails if any command directory
+under `core/` or `extensions/` has no row in the committed `CAPABILITIES.md`. A
+feature cannot land without the brain growing with it — every command the brain
+gains must be reflected in its map. There is **no** allowance to make this check
+non-blocking.
+
+### Blocking by default — `docs-mesh` (links, wikilinks, mermaid, freshness)
+
+`python -m brainfactory docs-mesh --brain <dir>` fails if links, wikilinks, or
+mermaid blocks do not resolve and balance, or if a freshness stamp does not
+parse. It is **blocking by default**.
+
+#### The escape hatch (narrow, honest, temporary)
+
+A lane MAY mark **one** check `continue-on-error: true` **only** for a
+**pre-existing, unresolvable** finding it genuinely cannot fix within the scope
+of the current change. When it does, it MUST:
+
+- leave a `TODO(<lane>-docs-mesh)` at the exact site (or in the workflow step)
+  naming what is unresolved and why it is out of scope; and
+- emit a `::warning::` from the step so the soft-failed gate is loud in the CI
+  log, never silent.
+
+It MUST **never fake-pass**: do not repoint a link to something it does not mean,
+and do not edit an append-only log (continuity `05-logs/`, the decision board) to
+make the mesh resolve. Those defeat the gate instead of satisfying it. The escape
+hatch buys time to fix a real, scoped-out problem; it does not license hiding one.
+
+> **Precedent.** Contoso carries a `TODO(contoso-docs-mesh)` for exactly this case — a
+> pre-existing unresolvable it soft-failed with a `::warning::` and a tracked
+> TODO, rather than faking a green mesh. That is the reference shape for the
+> escape hatch: visible, attributed, and time-boxed.
+
+## Inheritance
+
+The gate is **inherited, not reinvented**. It ships in
+`brain-template/.github/workflows/brain-checks.yml`; every provisioned brain gets
+it and keeps it in sync with the hub. A lane MAY adjust the wiring it must
+(e.g. `BRAINFACTORY_PYTHONPATH` / `BRAIN_DIR` for where its adapters and brain
+root live), but it **documents any local deviation** rather than silently forking
+the gate. The three invariants above are the contract; the wiring is negotiable,
+the invariants are not.
+
+## The superset allowance
+
+A lane MAY ship a **richer, bespoke capabilities generator** in place of the
+standard `python -m brainfactory` generator — **provided its CI still enforces
+the same three invariants** (PR-time capabilities drift-check, intent parity, and
+docs-mesh). A generator that covers *more* than brain commands is a valid
+**superset**, not a violation.
+
+Concretely, a lane whose product is more than a brain (an app API, broker
+adapters, config keys, scheduled workflows) MAY generate a **system-wide
+capability map** — one that inventories app API routes, adapters, config keys, and
+workflows, not just the brain's command directories — and drift-check *that*
+richer map on every PR. As long as the brain-command invariants remain enforced
+(the map still fails on drift, every command still needs a row, the mesh still
+resolves), the superset **satisfies** this standard.
+
+> **Reference superset.** Northwind (`izakl/northwind-autonomy-system`) ships
+> `08-ops/generate-capabilities.ps1`, a system-wide generator that maps the whole
+> autonomy system — app API routes, broker adapters, config keys, and workflows —
+> not only brain commands. Its CI drift-checks that superset map and keeps the
+> intent + docs-mesh invariants, so it complies **via the superset allowance**
+> rather than by running the stock generator. This is a superset, not a fork:
+> the standard's three invariants are still enforced, over a broader surface.
+
+## Compliance snapshot
+
+| Lane | How it satisfies `brain-checks` |
+| --- | --- |
+| Acme | The standard gate (`python -m brainfactory` capabilities / intent / docs-mesh). |
+| Contoso | The standard gate, with a tracked `TODO(contoso-docs-mesh)` escape-hatch soft-fail for one pre-existing unresolvable. |
+| Northwind | The superset allowance — a system-wide `08-ops/generate-capabilities.ps1` that enforces the same three invariants over a broader surface. |
+
+## Rules (summary)
+
+- `brain-checks` runs on every `pull_request` and every `push` to `main`.
+- `capabilities --check` and `intent-gate` are **always blocking** — no escape hatch.
+- `docs-mesh` is **blocking by default**; a lane may soft-fail **one** check only
+  for a pre-existing unresolvable, with a `TODO(<lane>-docs-mesh)` and a
+  `::warning::`. Never fake-pass by repointing links or editing append-only logs.
+- Keep the inherited workflow in sync with the hub; document local deviations.
+- A richer, system-wide generator is a valid **superset** as long as it still
+  enforces the three invariants — Northwind's `08-ops/generate-capabilities.ps1`
+  is the reference.

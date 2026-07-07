@@ -54,3 +54,42 @@ required to operate the brain.
 
 - Make changes through pull requests; do not push directly to the default branch.
 - Never commit secrets. Report vulnerabilities privately, not in public issues.
+
+## Permanent framework operating standards
+
+### SYNC-LATEST-FIRST STANDARD (required)
+
+- Before starting work in this brain or its app repos, sync to the latest online
+  default branch first (`git fetch`; base on `origin/<default>`).
+- Start each new work session from an up-to-date default branch.
+- Re-sync lane/app repositories before touching them.
+- Before merge, verify the PR is mergeable against current online default branch.
+- On session start/rehydration, refresh managed lanes before reporting or acting.
+
+### CLEANUP-NO-STALE-STATE STANDARD (required)
+
+- Cleanup triad: remote **BRANCH**, local **WORKTREE**, owning **SESSION**.
+- Tear down the full triad together after merge.
+- Session definition by toolchain:
+  - GitHub Copilot: the app/project session and its worktree.
+  - Claude Code: the conversation/session workspace.
+- Apply a no-loss gate before deleting any triad element (branch/worktree/session):
+  preserve/escalate if unique unmerged content exists.
+- Run periodic stale-state audits and flag merged-but-undeleted branches,
+  branches with no open PR, orphaned worktrees, and orphaned sessions.
+- Target one active worktree and one active session per active task.
+
+### CONTINUITY-CAPTURE / BRAIN-MEMORY WRITEBACK STANDARD (required)
+
+- For work executed in lane repositories (product/runtime or governance), write
+  brain continuity entries that capture WHAT, WHY, WHERE (repo + PR/commit), and
+  OUTCOME.
+- Orchestrator-directed or orchestrator-executed work must be written back to
+  the continuity ledger and master session index.
+- A lane change with no brain continuity entry is a defect (memory loss).
+- Capture timing: in-progress entry at work start / PR open, then finalize on
+  merge with outcome.
+- Cross-reference product/runtime PRs and brain continuity entries in both
+  directions where practical.
+- No-loss continuity invariant: brain memory covers all lane repos, not only
+  governance.
