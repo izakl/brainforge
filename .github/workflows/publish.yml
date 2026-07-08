@@ -65,6 +65,11 @@ jobs:
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
           node-version: "22"
+          # registry-url MUST stay: setup-node writing registry.npmjs.org into .npmrc is what
+          # ENABLES npm's OIDC trusted-publishing path. Without it npm skips OIDC and dies with
+          # ENEEDAUTH. OIDC is tokenless — do NOT add NODE_AUTH_TOKEN here (that would force the
+          # legacy token path). Ref: docs.npmjs.com/trusted-publishers.
+          registry-url: "https://registry.npmjs.org"
 
       - name: Publish to npm (Trusted Publishing / OIDC, skip if already published)
         working-directory: installers/npm
