@@ -9,6 +9,13 @@ name: Publish packages
 # public repo (brainforge); the private source repo, which never cuts releases,
 # skips it.
 #
+# Both publish jobs run in the `release` GitHub Environment (required-reviewer
+# gate), so every publish waits for a manual approval in the brainforge repo.
+# IMPORTANT: the npm AND PyPI Trusted Publisher configs must each set
+# Environment = `release` to match the OIDC subject claim — otherwise the
+# tokenless exchange fails ("package not found" / no-matching-publisher). The
+# `release` environment must exist in brainforge with the reviewer configured.
+#
 # Package versions are independent of the framework version: PyPI publishes
 # `brainfactory.__version__` and npm publishes installers/npm/package.json's
 # `version`. Both publishes are idempotent — if that version is already on the
@@ -26,6 +33,7 @@ jobs:
     name: Publish to PyPI
     if: github.event.repository.name == 'brainforge'
     runs-on: ubuntu-latest
+    environment: release   # required-reviewer gate; PyPI Trusted Publisher must set Environment=release
     permissions:
       id-token: write   # OIDC for PyPI Trusted Publishing (no stored token)
       contents: read
@@ -54,6 +62,7 @@ jobs:
     name: Publish to npm
     if: github.event.repository.name == 'brainforge'
     runs-on: ubuntu-latest
+    environment: release   # required-reviewer gate; npm Trusted Publisher must set Environment=release
     permissions:
       id-token: write   # OIDC for npm Trusted Publishing (+ automatic provenance)
       contents: read
@@ -85,10 +94,7 @@ jobs:
           # SKIPPING OIDC (-> E404). Strip the token line so npm (>=11.5.1) falls through to
           # tokenless OIDC trusted publishing; the registry stays set via setup-node registry-url.
           usercfg="$(npm config get userconfig)"
-          echo "diag: userconfig=$usercfg ; registry=$(npm config get registry)"
-          echo "--- .npmrc (redacted) ---"
-          if [ -f "$usercfg" ]; then sed -E 's/(_authToken=).*/\1<REDACTED>/' "$usercfg"; else echo "(no userconfig file)"; fi
-          if [ -f "$usercfg" ]; then sed -i -E '/:_authToken=/d' "$usercfg" && echo "diag: stripped _authToken line(s)"; fi
+          if [ -f "$usercfg" ]; then sed -i -E '/:_authToken=/d' "$usercfg" && echo "diag: stripped setup-node _authToken line(s) for tokenless OIDC"; fi
           name="$(node -p "require('./package.json').name")"
           ver="$(node -p "require('./package.json').version")"
           if npm view "${name}@${ver}" version >/dev/null 2>&1; then
