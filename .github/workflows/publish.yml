@@ -80,10 +80,24 @@ jobs:
           npm install -g npm@latest
           hash -r
           echo "diag: npm $(npm --version) / node $(node --version) / OIDC-endpoint ${ACTIONS_ID_TOKEN_REQUEST_URL:+present}${ACTIONS_ID_TOKEN_REQUEST_URL:-MISSING}"
+          # setup-node writes `//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}` into the
+          # userconfig .npmrc. With NODE_AUTH_TOKEN unset, npm was sending that empty token and
+          # SKIPPING OIDC (-> E404). Strip the token line so npm (>=11.5.1) falls through to
+          # tokenless OIDC trusted publishing; the registry stays set via setup-node registry-url.
+          usercfg="$(npm config get userconfig)"
+          echo "diag: userconfig=$usercfg ; registry=$(npm config get registry)"
+          echo "--- .npmrc (redacted) ---"
+          if [ -f "$usercfg" ]; then sed -E 's/(_authToken=).*/\1<REDACTED>/' "$usercfg"; else echo "(no userconfig file)"; fi
+          if [ -f "$usercfg" ]; then sed -i -E '/:_authToken=/d' "$usercfg" && echo "diag: stripped _authToken line(s)"; fi
           name="$(node -p "require('./package.json').name")"
           ver="$(node -p "require('./package.json').version")"
           if npm view "${name}@${ver}" version >/dev/null 2>&1; then
             echo "${name}@${ver} already published; skipping."
           else
-            npm publish --access public
+            if ! npm publish --access public; then
+              echo "=== npm publish FAILED - newest npm debug log (redacted, tail) ==="
+              dbg="$(ls -t "$HOME"/.npm/_logs/*debug*.log 2>/dev/null | head -1)"
+              if [ -n "$dbg" ]; then sed -E 's/(_authToken=|Bearer )[^ ]*/\1<REDACTED>/g' "$dbg" | tail -120; fi
+              exit 1
+            fi
           fi
