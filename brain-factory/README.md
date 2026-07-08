@@ -48,7 +48,7 @@ bash and PowerShell entrypoints are thin wrappers that delegate to it.
 
 ## Status
 
-Phase 1 foundation, runnable today (framework version `0.1.0`):
+The engine and framework core, runnable today:
 
 - **Onboarding engine** — read-only inspector, plus provision (new) and
   inspect-first adopt (existing, dry-run by default).

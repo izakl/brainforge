@@ -1,0 +1,136 @@
+<!-- Template. The QA-twin discipline {{PROJECT_NAME}} inherits and instantiates per lane. -->
+
+# {{PROJECT_NAME}} — QA standard (the QA-twin discipline)
+
+The **QA twin** is an autonomous, per-lane quality discipline: a digital stand-in
+for the operator's own checking, testing, validation, and fixing. It runs against
+the **LIVE running system**, cross-checks every surface against its source of
+truth, runs behavioral scenarios, fixes what it safely can (review-gated) or
+routes gaps onward, and emits a phone-friendly report card.
+
+This standard is the **discipline**; `{{CMD_PREFIX}}-qa`
+(`03-templates/agent-commands/core/qa/`) is the **command scaffold** that runs it.
+The pattern is inherited by every brain from the hub; the **harness is
+per-lane** and product-scoped — each lane instantiates its own surfaces,
+source-of-truth endpoints, and scenarios and does **not** inherit another lane's
+harness.
+
+> **Provenance.** This discipline is the generalized form of the Northwind System
+> QA twin (`xs-qa`), promoted into the Brain Factory hub as a reusable primitive.
+> The Northwind `xs-qa` harness itself stays product-scoped in the Northwind brain;
+> only the pattern, stages, cadence, taxonomy, and lessons below are inherited.
+
+## Stages (the pipeline)
+
+Run in order. `fast` runs stages 1–3, 5, 6; `deep` adds stage 4.
+
+1. **MAP — the oracle.** Refresh the surface map: every page/view/lane/route, its
+   feeding source of truth, expected content, and every control classified
+   **MUTATING vs SAFE**. Cache it; refresh when the product changed.
+2. **EXERCISE (sweep).** For every surface, on the LIVE system: capture the
+   rendered output, extract displayed data, inventory controls (+ disabled
+   state), click-test only SAFE controls and confirm a real state change, capture
+   console/network/log errors. Sweep desktop **and** mobile/touch viewports.
+3. **VALIDATE (displayed-vs-source-of-truth).** Per surface: read the rendered
+   output (what the user sees) + the source data (ground truth) and judge
+   data-correct, render-ok, controls-ok. Report only real issues, each with
+   source-value-vs-displayed-value evidence.
+4. **BEHAVIORAL (deep gear).** Run the scenario matrix (backup → permute →
+   restore for state-mutating ones). Assert *eligible + reachable + ≥1 expected
+   effect within N, else the precise blocker* — a snapshot cannot prove behavior
+   over time. Instantiate for this lane: does-the-action-happen per actor/lane;
+   teardown/clearing; config-propagation; isolation/no-leak; rehydrate; freshness;
+   orchestrator-health.
+5. **REPORT (phone-friendly).** A visual report card: surface thumbnails
+   (🟢/🟡/🔴), a one-liner per failure with evidence, behavioral results, what was
+   auto-fixed + PR'd, and the 1–2 things that need the operator. Lead with a
+   one-line summary; push it so it reaches the operator when away.
+6. **ACT (fix-route).** Route every finding FIX / IMPROVE / FLAG (below),
+   max-autonomous up to the one review-gate.
+
+## Cadence
+
+- **After every deploy →** `fast`, then push the report card (the final deploy
+  step).
+- **Nightly →** `deep` (the behavioral matrix); wire into the scheduler.
+- Always **runtime-verify** deployed fixes — green CI alone has shipped a
+  mechanism that never moved the rendered value.
+
+## Fix-route taxonomy
+
+Every finding routes exactly one of three ways:
+
+- **FIX** — a clear bug. Understand → implement on a branch (no live config) →
+  **adversarial review** (understand→fix→review→verify) → PR (CI-gated).
+  Auto-merge only green, low-risk fixes; **HOLD** judgment calls for the operator.
+  The review-gate is the one guardrail — never auto-merge what it flags.
+- **IMPROVE / EXTEND** — ugly, cramped, or missing, but not a bug. Route to the
+  lane's design/UX path with the design system.
+- **FLAG** — redesigns, behavioral judgment calls, or anything risky. Surface on
+  the report card for the operator to decide.
+
+## Non-negotiable lessons
+
+Each was learned the hard way; violating one produces a **wrong verdict**. They
+are generalized from the donor `xs-qa` twin — the parentheticals name the
+original product-specific failure so the reasoning is preserved.
+
+1. **Test the LIVE running system, not the repo checkout.** Config, live data,
+   and derived state live on the running instance; a read of the repo *template*
+   yields wrong, config-dependent conclusions. Treat any config-dependent claim
+   from a repo read as unverified.
+2. **Let the system settle after boot/deploy before trusting time-sensitive
+   readings.** A fresh-boot loading flash misreads (e.g. a metric that
+   self-corrects once background fetches finish). Poll health UP, then wait a
+   cycle before trusting time/rate/aggregate values.
+3. **Judge from the rendered output + the source, not the raw markup string.**
+   Client source (e.g. a template/`text/babel` payload) can contain
+   bug-referencing comments and unrendered values → substring matches are false
+   positives. Read the rendered screenshot/response; cross-check against the
+   source data.
+4. **"Renders" ≠ "correct."** Always cross-check displayed-vs-source-of-truth:
+   numbers, counts, signs, units/currency, labels. A surface can render cleanly
+   and still show a stale or wrong value.
+5. **Never fire mutating/destructive controls on the live system**
+   (Stop/Pause/Close/Run/Save/Add/Remove/Enable). Inventory them and confirm
+   enabled/disabled state; click-test only SAFE controls (toggles, tab/view
+   switches, filters, popovers) and verify a real state change.
+6. **State-mutating scenarios: backup → permute → restore.** Back up config/state
+   before a permutation and restore after, with encoding-safe writes (e.g.
+   UTF-8-no-BOM). Never stage or commit live config.
+7. **A setting must ROUND-TRIP + PROPAGATE — "saved (200 OK)" ≠ "applied."** A
+   control can POST cleanly yet be silently dropped (a schema that ignores the
+   field → the engine keeps the default forever). For each setting, assert it
+   (a) round-trips via a read-back, (b) persists to storage, (c) reaches the
+   consumer/engine, and (d) shows identically on every surface. A key **absent**
+   from the read-back after a save is a FAILURE, not a pass.
+8. **"What's MISSING" is a finding — a correctness check cannot see an absent
+   feature.** Run a completeness pass against an expected-feature checklist and
+   flag anything present-in-spec but absent-in-UI.
+9. **A changed client asset must be cache-busted/versioned or the fix never
+   reaches the user.** A deployed asset served from cache with a stale version
+   marker is invisible. "Asset changed in the diff, no version/cache-bust bump"
+   is a blocking defect.
+10. **Frozen/installed/deployed paths diverge from the repo.** In a packaged app,
+    roots and log/config paths differ from the repo layout. A "reads/writes path
+    X" fix must be verified against where the RUNNING system actually resolves the
+    path (a box-probe), not the repo assumption.
+11. **Deployed + byte-confirmed ≠ renders-correct for the user.** A fix can be on
+    the box (right file, right version) and still be wrong on screen: (a) a stale
+    browser/PWA cache serves the old output — the operator's phone is the prime
+    stale-cache surface, so verify uncached/hard-reloaded and assert assets send
+    revalidation headers; (b) correct client gates fed a wrong server signal still
+    render wrong. Verify the fix moved the RENDERED value on the real surface and
+    on a mobile viewport, and re-verify across all views and lanes — a partially
+    ported fix is the recurring failure.
+
+## Instantiation checklist (per lane)
+
+- [ ] Point `{{CMD_PREFIX}}-qa` at this lane's live surfaces and source-of-truth
+      endpoints.
+- [ ] Build the harness under an app-repo `scripts/qa/` (map, sweep, validate,
+      scenarios, report-card) — do not reuse another lane's harness.
+- [ ] Enumerate this lane's MUTATING vs SAFE controls in the surface map.
+- [ ] Instantiate the behavioral scenarios that matter for this product.
+- [ ] Wire `fast` into every deploy and `deep` into the nightly scheduler.
+- [ ] Keep the surface map and scenario matrix living — extend as the product grows.

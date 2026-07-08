@@ -362,7 +362,8 @@
     {
       "id": "onboard-acme-first-brain",
       "title": "Onboard Acme (first managed brain)",
-      "status": "pending",
+      "status": "done",
+      "completion_mode": "out_of_band",
       "depends_on": [
         "brain-factory-onboarding-engine",
         "brain-factory-core-commands"
@@ -382,7 +383,8 @@
     {
       "id": "retrofit-northwind-managed-brain",
       "title": "Retrofit Northwind into a managed brain",
-      "status": "blocked",
+      "status": "done",
+      "completion_mode": "out_of_band",
       "depends_on": [
         "onboard-acme-first-brain"
       ],

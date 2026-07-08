@@ -28,6 +28,13 @@ without disturbing project-owned work.
    surface a conflict for operator review.
 5. **Apply.** Write staged core changes, update each touched module's
    `synced_from` to `latest`, and set the manifest `framework_version = latest`.
+   For operating-contract updates, propagate cross-tool instruction surfaces
+   (`AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`) so permanent
+   standards (including continuity-capture writeback) are inherited in every
+   lane.
+   For `operating-contract` updates, this includes the cross-tool instruction
+   surface (`AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`) so
+   permanent operating standards propagate to every lane.
 6. **Record.** Append a continuity entry to the brain's `05-logs/` describing the
    upgrade, and open the change as a PR in the brain repo (PR is the control gate).
 

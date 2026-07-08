@@ -1,7 +1,7 @@
 {
-  "framework_version": "0.3.0",
-  "released": "2026-06-25",
-  "summary": "Automated PyPI/npm publishing for the brainfactory CLI (Trusted Publishing, provenance), a read-only framework metrics snapshot, a modernized diagram convention (live Mermaid; SVG companions retired), and CLI distribution docs.",
+  "framework_version": "0.8.0",
+  "released": "2026-07-07",
+  "summary": "Codifies the inherited brain-checks CI gate as a governed standard: a new 04-policies/ci-checks-standard.md states that capabilities --check (anti-drift) and intent-gate are always blocking, docs-mesh is blocking by default with a narrow honest escape hatch (one continue-on-error only for a pre-existing unresolvable, plus a TODO and a ::warning::, never a fake-pass), and blesses a superset-generator allowance so a lane may ship a richer system-wide generator (e.g. Northwind's 08-ops/generate-capabilities.ps1) as long as CI still enforces the same three invariants. A hub guard keeps the template from silently dropping the gate.",
   "core_modules": [
     "operating-contract",
     "session-ritual-hooks",

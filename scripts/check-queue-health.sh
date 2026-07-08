@@ -56,13 +56,15 @@ for task in tasks:
 
 # ── Check 2: blocked tasks whose deps are all done (should be pending) ────────
 # A task that is still 'blocked' after all its dependencies reach 'done' has drifted
-# from the state model. It should have been promoted to 'pending'.
+# from the state model unless it carries an explicit operator hold marker
+# (`hold_reason`) that documents why auto-flow is intentionally paused.
 for task in tasks:
     if not isinstance(task, dict):
         continue
     task_id = task.get("id", "<unknown>")
     status = task.get("status")
     deps = task.get("depends_on", [])
+    hold_reason = task.get("hold_reason")
     if status != "blocked" or not isinstance(deps, list) or not deps:
         continue
     all_deps_done = all(
@@ -71,6 +73,12 @@ for task in tasks:
         if isinstance(dep, str)
     )
     if all_deps_done:
+        if isinstance(hold_reason, str) and hold_reason.strip():
+            warnings.append(
+                f"Task '{task_id}' is blocked with completed dependencies under an "
+                f"explicit hold_reason: {hold_reason.strip()}"
+            )
+            continue
         errors.append(
             f"Task '{task_id}' is 'blocked' but all its dependencies are 'done'. "
             f"Reconcile queue state: promote this task to 'pending'."

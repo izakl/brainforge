@@ -132,12 +132,12 @@ Full detail: [Brain Factory architecture](docs/framework-brain-factory-architect
 
 ## Project status
 
-Phase 1 foundation (framework version `0.1.0`). The architecture, manifest
-schema, command catalog, registry, onboarding engine, and cross-platform adapter
-seam are in place and runnable. Subsequent capabilities arrive through the hub's
-normal governance (ADR + task queue). See
+The framework foundation — architecture, manifest schema, command catalog,
+registry, onboarding engine, and cross-platform adapter seam — is in place and
+runnable, and has matured across successive releases through the hub's normal
+governance (ADR + task queue). See
 [`brain-factory/registry/`](brain-factory/registry/README.md) for the current
-version and releases.
+framework version and releases.
 
 ## Contributing and license
 

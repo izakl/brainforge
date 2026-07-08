@@ -100,6 +100,61 @@ PY
   fi
 fi
 
+# ── 4. Command dirs must use BARE names (no redundant prefix) ────────────────
+# Guard against the double-prefix bug: a command dir mis-named `<prefix>-foo`
+# renders its invocation as `<prefix>-<prefix>-foo`. The generator raises on it
+# (adapters/python/brainfactory/capabilities.py::build_model); here the hub
+# self-guards its own brain-template command dirs against the example manifest's
+# command_prefix, reusing the same discovery logic so the two never diverge.
+tmpl_root="$bf/brain-template"
+if [ ! -d "$tmpl_root" ]; then
+  errors+=("missing brain-template: $tmpl_root")
+else
+  naming_errs="$(python3 - "$tmpl_root" "$example" <<'PY' 2>&1 || true
+import sys, json
+from pathlib import Path
+from brainfactory import capabilities as cap
+brain = Path(sys.argv[1])
+prefix = None
+try:
+    prefix = json.load(open(sys.argv[2])).get("command_prefix")
+except (OSError, ValueError):
+    pass
+if not prefix:
+    prefix = "cmd"
+for c in cap.find_prefixed_command_dirs(brain, prefix):
+    bare = c.base[len(prefix) + 1:] or "<name>"
+    print(f"command dir '{c.layer}/{c.base}' redundantly starts with '{prefix}-' "
+          f"(would invoke '{c.invocation(prefix)}'); rename to bare '{bare}'")
+PY
+)"
+  if [ -n "$naming_errs" ]; then
+    while IFS= read -r line; do
+      [ -n "$line" ] && errors+=("command naming: $line")
+    done <<< "$naming_errs"
+  fi
+fi
+
+# ── 5. Brain-template ships the inherited brain-checks CI gate ───────────────
+# The brain-checks workflow is the inherited anti-drift + intent + docs-mesh gate
+# every provisioned brain runs on pull_request + push-to-main (codified by
+# 04-policies/ci-checks-standard.md and ADR 0027). Guard against silent removal:
+# the template must ship the workflow AND still wire its two BLOCKING invariants —
+# capabilities --check (no map drift) and intent-gate (no command without a
+# capabilities row). grep-only, matching the run invocations (not the descriptive
+# comments) so the hub and the standard cannot quietly diverge.
+brain_checks_wf="$tmpl_root/.github/workflows/brain-checks.yml"
+if [ ! -f "$brain_checks_wf" ]; then
+  errors+=("missing inherited CI gate workflow: $brain_checks_wf")
+else
+  if ! grep -Eq 'brainfactory[[:space:]]+capabilities[[:space:]].*--check' "$brain_checks_wf"; then
+    errors+=("$brain_checks_wf: missing blocking 'capabilities ... --check' invocation")
+  fi
+  if ! grep -Eq 'brainfactory[[:space:]]+intent-gate' "$brain_checks_wf"; then
+    errors+=("$brain_checks_wf: missing blocking 'intent-gate' invocation")
+  fi
+fi
+
 # ── Report ───────────────────────────────────────────────────────────────────
 if [ "${#errors[@]}" -gt 0 ]; then
   echo "Brain-factory check failed:"
@@ -107,4 +162,4 @@ if [ "${#errors[@]}" -gt 0 ]; then
   exit 1
 fi
 
-echo "OK: brain-factory check passed (manifest example valid; ${#catalog_bases[@]} core commands in sync with catalog; tasks.json valid)."
+echo "OK: brain-factory check passed (manifest example valid; ${#catalog_bases[@]} core commands in sync with catalog; tasks.json valid; command dirs use bare names; brain-template ships the brain-checks CI gate)."

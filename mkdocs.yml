@@ -201,3 +201,5 @@ nav:
           - adr/0023-docs-site-github-pages.md
           - adr/0024-retire-svg-companions.md
           - adr/0025-cli-distribution-via-pypi-and-npm.md
+          - adr/0026-promote-qa-twin-pattern-as-core-primitive.md
+          - adr/0027-brain-checks-ci-standard-and-superset-allowance.md

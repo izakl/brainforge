@@ -35,6 +35,8 @@ Authoring guide:
 - [ADR 0023: Documentation site on GitHub Pages (MkDocs Material)](./0023-docs-site-github-pages.md) — Accepted
 - [ADR 0024: Retire SVG companions for diagrams](./0024-retire-svg-companions.md) — Accepted
 - [ADR 0025: CLI distribution via PyPI and npm](./0025-cli-distribution-via-pypi-and-npm.md) — Accepted
+- [ADR 0026: Promote the QA-twin pattern as an inheritable core primitive](./0026-promote-qa-twin-pattern-as-core-primitive.md) — Accepted
+- [ADR 0027: Codify brain-checks as the inherited CI standard, with a superset-generator allowance](./0027-brain-checks-ci-standard-and-superset-allowance.md) — Accepted
 
 ## Numbering convention
 

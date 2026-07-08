@@ -31,6 +31,18 @@ Each command exists in two synchronized forms so it is portable across surfaces:
 Both forms bake the open/close session ritual so continuity happens
 automatically. Each command declares a default **model + effort** tier.
 
+## Twin taxonomy (orchestrator twin vs product QA twin)
+
+Two distinct "twins" operate in this ecosystem and must not be conflated. The
+**orchestrator twin** (e.g. *Atlas*) is the cross-lane **control plane** — it
+operates the hub, directs lanes, and coordinates work across brains; it is not a
+per-lane command. The **product QA twin** is the per-lane `<prefix>-qa` command
+(e.g. Northwind's `xs-qa`): an autonomous QA stand-in that each lane instantiates
+into its own harness to check, validate, and fix **that lane's product**. The hub
+ships the QA-twin *pattern* as the inheritable core `qa` command below; the
+harness stays per-lane and product-scoped (see
+`brain-template/04-policies/qa-standard.md`).
+
 ## Core commands
 
 Listed by base name. Invoke as `<prefix>-<base>` for your brain.
@@ -54,6 +66,7 @@ Listed by base name. Invoke as `<prefix>-<base>` for your brain.
 | --- | --- | --- |
 | `test` | Run the project's test suite the way the project runs it. | Sonnet / medium |
 | `verify` | Verify a change actually works by running the app/feature. | Sonnet / medium |
+| `qa` | Autonomous QA twin: sweep every surface of the live system, cross-check displayed-vs-source, run behavioral scenarios, and fix (review-gated) / route / flag. A per-lane scaffold. | Sonnet / high |
 | `doctor` | Diagnose the running app and environment; apply only safe fixes. | Sonnet / medium |
 | `security` | Security sweep: scanners → issues → triage → patch. | Sonnet / high |
 | `deps` | Dependency audit and bounded updates. | Sonnet / medium |

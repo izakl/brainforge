@@ -34,6 +34,8 @@ MODULE_TEMPLATE_PATHS: dict[str, tuple[str, ...]] = {
     "operating-contract": (
         "00-governance/OPERATING-CONTRACT.md.tmpl",
         "AGENTS.md.tmpl",
+        "CLAUDE.md.tmpl",
+        ".github/copilot-instructions.md.tmpl",
     ),
     "session-ritual-hooks": ("03-templates/agent-commands/hooks",),
     "continuity-log": (
