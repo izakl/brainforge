@@ -3,8 +3,11 @@ name: Publish packages
 # Publish the `brainfactory` CLI to PyPI and npm whenever a GitHub Release is
 # published. Triggered by the `release` event, so it fires for both release
 # paths — a vX.Y.Z tag (cut by release.yml) and a Release drafted in the GitHub
-# UI. Gated to the public repo (brainforge); the private source repo, which
-# never cuts releases, skips it.
+# UI. Also exposes `workflow_dispatch` so a maintainer can re-run the publish
+# directly (e.g. after a registry-side fix) without cutting a new Release —
+# both publishes are idempotent, so a manual run is always safe. Gated to the
+# public repo (brainforge); the private source repo, which never cuts releases,
+# skips it.
 #
 # Package versions are independent of the framework version: PyPI publishes
 # `brainfactory.__version__` and npm publishes installers/npm/package.json's
@@ -16,6 +19,7 @@ name: Publish packages
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   pypi:
@@ -65,8 +69,12 @@ jobs:
       - name: Publish to npm (Trusted Publishing / OIDC, skip if already published)
         working-directory: installers/npm
         run: |
-          # Trusted Publishing needs npm >= 11.5.1; the runner's bundled npm is older.
+          # Trusted Publishing needs npm >= 11.5.1; the runner's bundled npm is older,
+          # so self-upgrade, then `hash -r` to drop the shell's cached path to the old
+          # npm binary and guarantee the upgraded npm (with OIDC support) runs below.
           npm install -g npm@latest
+          hash -r
+          echo "diag: npm $(npm --version) / node $(node --version) / OIDC-endpoint ${ACTIONS_ID_TOKEN_REQUEST_URL:+present}${ACTIONS_ID_TOKEN_REQUEST_URL:-MISSING}"
           name="$(node -p "require('./package.json').name")"
           ver="$(node -p "require('./package.json').version")"
           if npm view "${name}@${ver}" version >/dev/null 2>&1; then
