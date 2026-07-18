@@ -388,15 +388,14 @@ def inspect_uses(node, file, path, anchors, codeql_uses, errors)
   end
 
   value = resolved.value
-  prefix = "github/codeql-action"
-  return unless value == prefix || value.start_with?("#{prefix}/")
+  return unless value.match?(%r{\Agithub/codeql-action(?:/|\z)}i)
 
   if value.include?("${{")
     errors << "#{file}:#{path}: dynamic CodeQL uses value is not allowed: #{value.inspect}"
     return
   end
 
-  match = value.match(%r{\Agithub/codeql-action/([A-Za-z0-9][A-Za-z0-9_-]*)@(\S+)\z})
+  match = value.match(%r{\Agithub/codeql-action/([A-Za-z0-9][A-Za-z0-9_-]*)@(\S+)\z}i)
   unless match
     errors << "#{file}:#{path}: malformed CodeQL uses value: #{value.inspect}"
     return

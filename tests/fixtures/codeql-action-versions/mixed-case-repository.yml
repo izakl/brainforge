@@ -1,0 +1,11 @@
+name: Mixed-case CodeQL repository
+on:
+  pull_request:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GitHub/CODEQL-ACTION/init@99df26d4f13ea111d4ec1a7dddef6063f76b97e9
+      - uses: github/codeql-action/analyze@99df26d4f13ea111d4ec1a7dddef6063f76b97e9
+      - uses: GITHUB/CodeQL-Action/upload-sarif@v4.36.2
