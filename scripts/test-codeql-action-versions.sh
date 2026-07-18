@@ -72,6 +72,125 @@ run_fail_case() {
   passed=$((passed + 1))
 }
 
+run_file_symlink_case() {
+  local case_root="$tmpdir/workflow-file-symlink"
+  local output
+
+  mkdir -p "$case_root/.github/workflows" "$case_root/outside"
+  cp "$fixtures/normal-block.yml" "$case_root/outside/codeql.yml"
+  ln -s "$case_root/outside/codeql.yml" "$case_root/.github/workflows/codeql.yml"
+
+  if output="$("$checker" "$case_root" 2>&1)"; then
+    echo "CodeQL action version test failed: workflow file symlink should fail"
+    exit 1
+  fi
+  [[ "$output" == *"workflow file must not be a symlink"* ]] || {
+    printf '%s\n' "$output"
+    exit 1
+  }
+  passed=$((passed + 1))
+}
+
+run_directory_symlink_case() {
+  local case_root="$tmpdir/workflow-directory-symlink"
+  local output
+
+  mkdir -p "$case_root/.github" "$case_root/real-workflows"
+  cp "$fixtures/normal-block.yml" "$case_root/real-workflows/codeql.yml"
+  ln -s "$case_root/real-workflows" "$case_root/.github/workflows"
+
+  if output="$("$checker" "$case_root" 2>&1)"; then
+    echo "CodeQL action version test failed: workflow directory symlink should fail"
+    exit 1
+  fi
+  [[ "$output" == *"workflow path component must not be a symlink"* ]] || {
+    printf '%s\n' "$output"
+    exit 1
+  }
+  passed=$((passed + 1))
+}
+
+run_nonregular_case() {
+  local kind="$1"
+  local case_root="$tmpdir/nonregular-${kind}"
+  local candidate="$case_root/.github/workflows/codeql.yml"
+  local output
+
+  mkdir -p "$case_root/.github/workflows"
+  if [ "$kind" = "fifo" ]; then
+    mkfifo "$candidate"
+  else
+    mkdir "$candidate"
+  fi
+
+  if output="$("$checker" "$case_root" 2>&1)"; then
+    echo "CodeQL action version test failed: ${kind} workflow entry should fail"
+    exit 1
+  fi
+  [[ "$output" == *"workflow file must be a regular file"* ]] || {
+    printf '%s\n' "$output"
+    exit 1
+  }
+  passed=$((passed + 1))
+}
+
+run_inode_swap_case() {
+  local case_root="$tmpdir/inode-swap"
+  local candidate="$case_root/.github/workflows/codeql.yml"
+  local replacement="$case_root/replacement.yml"
+  local marker="$case_root/after-lstat"
+  local output_file="$case_root/checker-output"
+  local checker_pid
+  local status
+  local attempt
+  local output
+
+  mkdir -p "$case_root/.github/workflows"
+  cp "$fixtures/normal-block.yml" "$candidate"
+  cp "$fixtures/normal-block.yml" "$replacement"
+
+  CODEQL_YAML_TEST_MODE=1 \
+    CODEQL_YAML_TEST_AFTER_LSTAT_MARKER="$marker" \
+    CODEQL_YAML_MAX_SECONDS=10 \
+    "$checker" "$case_root" >"$output_file" 2>&1 &
+  checker_pid=$!
+
+  for attempt in $(seq 1 500); do
+    [ -f "$marker" ] && break
+    if ! kill -0 "$checker_pid" 2>/dev/null; then
+      break
+    fi
+    sleep 0.01
+  done
+
+  if [ ! -f "$marker" ]; then
+    kill "$checker_pid" 2>/dev/null || true
+    wait "$checker_pid" 2>/dev/null || true
+    echo "CodeQL action version test failed: inode swap synchronization marker was not created"
+    cat "$output_file"
+    exit 1
+  fi
+
+  mv "$replacement" "$candidate"
+  : >"${marker}.continue"
+
+  set +e
+  wait "$checker_pid"
+  status=$?
+  set -e
+  output="$(cat "$output_file")"
+
+  if [ "$status" -eq 0 ]; then
+    echo "CodeQL action version test failed: inode swap should fail"
+    exit 1
+  fi
+  [[ "$output" == *"workflow file identity changed before descriptor open"* ]] || {
+    printf '%s\n' "$output"
+    exit 1
+  }
+  passed=$((passed + 1))
+}
+
 run_pass_case "normal-block.yml" "2 github/codeql-action components"
 run_pass_case "quoted-uses-key.yml" "2 github/codeql-action components"
 run_pass_case "flow-mapping.yml" "2 github/codeql-action components"
@@ -83,6 +202,9 @@ run_pass_case "explicit-string-tag.yml" "2 github/codeql-action components"
 run_pass_case "repeated-shared-alias.yml" "2 github/codeql-action components"
 run_pass_case "layered-alias-dag.yml" "2 github/codeql-action components" \
   "CODEQL_YAML_MAX_SECONDS=2"
+exact_bytes="$(wc -c <"$fixtures/exact-byte-boundary.yml" | tr -d '[:space:]')"
+run_pass_case "exact-byte-boundary.yml" "2 github/codeql-action components" \
+  "CODEQL_YAML_MAX_BYTES=${exact_bytes}"
 
 run_fail_case "malformed-yaml.yml" "could not parse YAML AST"
 run_fail_case "malformed-anchor.yml" "could not parse YAML AST"
@@ -116,5 +238,10 @@ run_fail_case "no-codeql-uses.yml" "missing required CodeQL component"
 run_fail_case "malformed-codeql-use.yml" "malformed CodeQL uses value"
 run_fail_case "non-string-uses.yml" "uses value must be a string scalar"
 run_fail_case "implicit-non-string-uses.yml" "uses value must resolve to a string scalar"
+run_file_symlink_case
+run_directory_symlink_case
+run_nonregular_case "fifo"
+run_nonregular_case "directory"
+run_inode_swap_case
 
 echo "OK: ${passed} adversarial CodeQL action version fixtures passed."

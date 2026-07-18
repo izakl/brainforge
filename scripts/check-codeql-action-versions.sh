@@ -64,6 +64,134 @@ def container_node?(node)
   node.is_a?(Psych::Nodes::Mapping) || node.is_a?(Psych::Nodes::Sequence)
 end
 
+def same_identity?(left, right)
+  left.dev == right.dev && left.ino == right.ino
+end
+
+def direct_child?(path, directory)
+  File.dirname(path) == directory
+end
+
+def validate_workflow_directory(repo_root, workflow_dir, errors)
+  canonical_repo = File.realpath(repo_root)
+  current = repo_root
+
+  [".github", "workflows"].each do |component|
+    current = File.join(current, component)
+    stat = File.lstat(current)
+    if stat.symlink?
+      errors << "#{current.delete_prefix("#{repo_root}/")}: workflow path component must not be a symlink"
+      return
+    end
+    unless stat.directory?
+      errors << "#{current.delete_prefix("#{repo_root}/")}: workflow path component must be a directory"
+      return
+    end
+  end
+
+  canonical_directory = File.realpath(workflow_dir)
+  unless canonical_directory.start_with?("#{canonical_repo}#{File::SEPARATOR}")
+    errors << ".github/workflows: canonical workflow directory escapes repository root"
+    return
+  end
+
+  before = File.lstat(workflow_dir)
+  entries = nil
+  Dir.open(workflow_dir) do |directory|
+    descriptor_stat = IO.new(directory.fileno, autoclose: false).stat
+    after = File.lstat(workflow_dir)
+    unless same_identity?(before, descriptor_stat) && same_identity?(descriptor_stat, after)
+      errors << ".github/workflows: workflow directory identity changed during enumeration"
+      return
+    end
+    entries = directory.children.select { |name| name.end_with?(".yml", ".yaml") }.sort
+  end
+
+  [canonical_directory, entries]
+rescue SystemCallError => error
+  errors << ".github/workflows: could not validate workflow directory: #{error.message}"
+  nil
+end
+
+def pause_after_lstat_for_test
+  return unless ENV["CODEQL_YAML_TEST_MODE"] == "1"
+
+  marker = ENV["CODEQL_YAML_TEST_AFTER_LSTAT_MARKER"]
+  return unless marker
+
+  File.open(marker, File::WRONLY | File::CREAT | File::EXCL, 0o600) { |file| file.write("ready\n") }
+  continue_marker = "#{marker}.continue"
+  sleep 0.01 until File.exist?(continue_marker)
+end
+
+def read_workflow_file(path, relative_file, canonical_directory, limits, errors)
+  unless File.const_defined?(:NOFOLLOW)
+    errors << "#{relative_file}: O_NOFOLLOW is unavailable on this platform"
+    return
+  end
+
+  before = File.lstat(path)
+  if before.symlink?
+    errors << "#{relative_file}: workflow file must not be a symlink"
+    return
+  end
+  unless before.file?
+    errors << "#{relative_file}: workflow file must be a regular file"
+    return
+  end
+
+  canonical_before = File.realpath(path)
+  unless direct_child?(canonical_before, canonical_directory)
+    errors << "#{relative_file}: canonical workflow file escapes .github/workflows"
+    return
+  end
+
+  pause_after_lstat_for_test
+
+  flags = File::RDONLY | File::NOFOLLOW
+  flags |= File::NONBLOCK if File.const_defined?(:NONBLOCK)
+  File.open(path, flags) do |file|
+    descriptor_stat = file.stat
+    unless descriptor_stat.file?
+      errors << "#{relative_file}: opened workflow descriptor is not a regular file"
+      return
+    end
+    unless same_identity?(before, descriptor_stat)
+      errors << "#{relative_file}: workflow file identity changed before descriptor open"
+      return
+    end
+
+    during = File.lstat(path)
+    canonical_during = File.realpath(path)
+    unless same_identity?(descriptor_stat, during)
+      errors << "#{relative_file}: workflow file identity changed after descriptor open"
+      return
+    end
+    unless direct_child?(canonical_during, canonical_directory)
+      errors << "#{relative_file}: canonical workflow file escaped .github/workflows after open"
+      return
+    end
+
+    content = file.read(limits[:bytes] + 1)
+
+    after = File.lstat(path)
+    canonical_after = File.realpath(path)
+    unless same_identity?(descriptor_stat, after)
+      errors << "#{relative_file}: workflow file identity changed during read"
+      return
+    end
+    unless direct_child?(canonical_after, canonical_directory)
+      errors << "#{relative_file}: canonical workflow file escaped .github/workflows during read"
+      return
+    end
+
+    content
+  end
+rescue SystemCallError => error
+  errors << "#{relative_file}: could not safely open workflow file: #{error.message}"
+  nil
+end
+
 def preflight_ast(root, file, limits, errors)
   anchors = {}
   node_count = 0
@@ -264,30 +392,39 @@ unless Dir.exist?(workflow_dir)
   exit 1
 end
 
-workflow_files = Dir.glob(File.join(workflow_dir, "*.{yml,yaml}")).sort
-errors << "no workflow YAML files found in .github/workflows" if workflow_files.empty?
+directory_result = validate_workflow_directory(repo_root, workflow_dir, errors)
+if directory_result
+  canonical_workflow_dir, workflow_entries = directory_result
+  errors << "no workflow YAML files found in .github/workflows" if workflow_entries.empty?
+else
+  workflow_entries = []
+end
 
-workflow_files.each do |absolute_file|
-  relative_file = absolute_file.delete_prefix("#{repo_root}/")
-  begin
-    content = File.open(absolute_file, "rb") { |file| file.read(limits[:bytes] + 1) }
-  rescue SystemCallError => error
-    errors << "#{relative_file}: could not read workflow YAML: #{error.message}"
-    next
-  end
-  if content.bytesize > limits[:bytes]
-    errors << "#{relative_file}: byte limit exceeded (limit #{limits[:bytes]})"
-    next
-  end
-
-  content.force_encoding(Encoding::UTF_8)
-  unless content.valid_encoding?
-    errors << "#{relative_file}: workflow YAML is not valid UTF-8"
-    next
-  end
-
+workflow_entries.each do |entry|
+  absolute_file = File.join(workflow_dir, entry)
+  relative_file = File.join(".github", "workflows", entry)
   begin
     Timeout.timeout(limits[:seconds]) do
+      content = read_workflow_file(
+        absolute_file,
+        relative_file,
+        canonical_workflow_dir,
+        limits,
+        errors,
+      )
+      next unless content
+
+      if content.bytesize > limits[:bytes]
+        errors << "#{relative_file}: byte limit exceeded (limit #{limits[:bytes]})"
+        next
+      end
+
+      content.force_encoding(Encoding::UTF_8)
+      unless content.valid_encoding?
+        errors << "#{relative_file}: workflow YAML is not valid UTF-8"
+        next
+      end
+
       stream = Psych.parse_stream(content, filename: relative_file)
       document_count = stream.children.length
       unless document_count == 1

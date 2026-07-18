@@ -35,6 +35,8 @@ jobs:
           bash scripts/check-security-guardrails.sh
           bash scripts/check-codeql-action-versions.sh
           bash scripts/test-codeql-action-versions.sh
+          bash scripts/check-dependabot-codeql-groups.sh
+          bash scripts/test-dependabot-codeql-groups.sh
           bash scripts/check-handoff-packet.sh
           bash scripts/check-mobile-quick-action.sh
 
