@@ -409,7 +409,7 @@ def inspect_uses(node, file, path, anchors, codeql_uses, errors)
   }
 end
 
-def scan_ast(node, file, path, depth, anchors, limits, state, codeql_uses, errors)
+def scan_ast(node, file, path, depth, anchors, limits, state, errors)
   return if state[:work_exceeded]
 
   state[:work] += 1
@@ -437,7 +437,6 @@ def scan_ast(node, file, path, depth, anchors, limits, state, codeql_uses, error
       anchors,
       limits,
       state,
-      codeql_uses,
       errors,
     )
     return
@@ -462,13 +461,168 @@ def scan_ast(node, file, path, depth, anchors, limits, state, codeql_uses, error
     node.children.each_slice(2) do |key_node, value_node|
       key = mapping_key_value(key_node, anchors)
       child_path = mapping_path(path, key)
-      inspect_uses(value_node, file, child_path, anchors, codeql_uses, errors) if key == "uses"
-      scan_ast(key_node, file, "#{child_path}<key>", depth + 1, anchors, limits, state, codeql_uses, errors)
-      scan_ast(value_node, file, child_path, depth + 1, anchors, limits, state, codeql_uses, errors)
+      scan_ast(key_node, file, "#{child_path}<key>", depth + 1, anchors, limits, state, errors)
+      scan_ast(value_node, file, child_path, depth + 1, anchors, limits, state, errors)
     end
   when Psych::Nodes::Sequence
     node.children.each_with_index do |child, index|
-      scan_ast(child, file, "#{path}[#{index}]", depth + 1, anchors, limits, state, codeql_uses, errors)
+      scan_ast(child, file, "#{path}[#{index}]", depth + 1, anchors, limits, state, errors)
+    end
+  end
+ensure
+  state[:active].delete(node.object_id) if added_active
+end
+
+def extract_workflow_uses(
+  node,
+  file,
+  path,
+  context,
+  depth,
+  anchors,
+  limits,
+  state,
+  codeql_uses,
+  errors
+)
+  return if state[:work_exceeded]
+
+  state[:work] += 1
+  if state[:work] > limits[:traversal_work]
+    errors << "#{file}:#{path}: uses extraction work limit exceeded (limit #{limits[:traversal_work]})"
+    state[:work_exceeded] = true
+    return
+  end
+  if depth > limits[:depth]
+    errors << "#{file}:#{path}: uses extraction depth limit exceeded (limit #{limits[:depth]})"
+    return
+  end
+
+  if node.is_a?(Psych::Nodes::Alias)
+    target = anchors[node.anchor]
+    unless target
+      errors << "#{file}:#{path}: undefined YAML alias '*#{node.anchor}'"
+      return
+    end
+    extract_workflow_uses(
+      target,
+      file,
+      "#{path}->*#{node.anchor}",
+      context,
+      depth + 1,
+      anchors,
+      limits,
+      state,
+      codeql_uses,
+      errors,
+    )
+    return
+  end
+
+  added_active = false
+  if container_node?(node)
+    object_id = node.object_id
+    if state[:active][object_id]
+      errors << "#{file}:#{path}: recursive YAML alias is not supported"
+      return
+    end
+    return if state[:visited][object_id]
+
+    state[:active][object_id] = true
+    state[:visited][object_id] = true
+    added_active = true
+  end
+
+  case context
+  when :root
+    return unless node.is_a?(Psych::Nodes::Mapping)
+
+    node.children.each_slice(2) do |key_node, value_node|
+      next unless mapping_key_value(key_node, anchors) == "jobs"
+
+      extract_workflow_uses(
+        value_node,
+        file,
+        "$.jobs",
+        :jobs,
+        depth + 1,
+        anchors,
+        limits,
+        state,
+        codeql_uses,
+        errors,
+      )
+    end
+  when :jobs
+    return unless node.is_a?(Psych::Nodes::Mapping)
+
+    node.children.each_slice(2) do |key_node, value_node|
+      job_path = mapping_path(path, mapping_key_value(key_node, anchors))
+      extract_workflow_uses(
+        value_node,
+        file,
+        job_path,
+        :job,
+        depth + 1,
+        anchors,
+        limits,
+        state,
+        codeql_uses,
+        errors,
+      )
+    end
+  when :job
+    return unless node.is_a?(Psych::Nodes::Mapping)
+
+    node.children.each_slice(2) do |key_node, value_node|
+      key = mapping_key_value(key_node, anchors)
+      child_path = mapping_path(path, key)
+      inspect_uses(value_node, file, child_path, anchors, codeql_uses, errors) if key == "uses"
+      next unless key == "steps"
+
+      extract_workflow_uses(
+        value_node,
+        file,
+        child_path,
+        :steps,
+        depth + 1,
+        anchors,
+        limits,
+        state,
+        codeql_uses,
+        errors,
+      )
+    end
+  when :steps
+    return unless node.is_a?(Psych::Nodes::Sequence)
+
+    node.children.each_with_index do |child, index|
+      extract_workflow_uses(
+        child,
+        file,
+        "#{path}[#{index}]",
+        :step,
+        depth + 1,
+        anchors,
+        limits,
+        state,
+        codeql_uses,
+        errors,
+      )
+    end
+  when :step
+    return unless node.is_a?(Psych::Nodes::Mapping)
+
+    node.children.each_slice(2) do |key_node, value_node|
+      key = mapping_key_value(key_node, anchors)
+      inspect_uses(
+        value_node,
+        file,
+        mapping_path(path, key),
+        anchors,
+        codeql_uses,
+        errors,
+      ) if key == "uses"
     end
   end
 ensure
@@ -557,7 +711,27 @@ with_validated_workflow_directory(repo_root, workflow_dir, limits, errors) do |
             active: {},
             visited: {},
           }
-          scan_ast(root, relative_file, "$", 1, anchors, limits, state, codeql_uses, file_errors)
+          scan_ast(root, relative_file, "$", 1, anchors, limits, state, file_errors)
+        end
+        if file_errors.empty?
+          extraction_state = {
+            work: 0,
+            work_exceeded: false,
+            active: {},
+            visited: {},
+          }
+          extract_workflow_uses(
+            root,
+            relative_file,
+            "$",
+            :root,
+            1,
+            anchors,
+            limits,
+            extraction_state,
+            codeql_uses,
+            file_errors,
+          )
         end
         errors.concat(file_errors)
       end

@@ -314,6 +314,7 @@ run_fail_case "different-refs.yml" "must use one ref" \
 run_fail_case "mixed-case-repository.yml" "must use one ref" \
   '$.jobs.analyze.steps[2].uses: upload-sarif@v4.36.2'
 run_fail_case "commit-tag-mismatch.yml" "must use one ref"
+run_fail_case "inert-uses.yml" "missing required CodeQL component: init"
 run_fail_case "no-codeql-uses.yml" "missing required CodeQL component"
 run_fail_case "malformed-codeql-use.yml" "malformed CodeQL uses value"
 run_fail_case "non-string-uses.yml" "uses value must be a string scalar"
