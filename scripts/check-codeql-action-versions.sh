@@ -288,7 +288,7 @@ workflow_files.each do |absolute_file|
 
   begin
     Timeout.timeout(limits[:seconds]) do
-      stream = Psych.parse_stream(content, relative_file)
+      stream = Psych.parse_stream(content, filename: relative_file)
       document_count = stream.children.length
       unless document_count == 1
         errors << "#{relative_file}: expected exactly one YAML document, found #{document_count}"
