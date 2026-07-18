@@ -9,14 +9,26 @@ trap 'rm -rf "$tmpdir"' EXIT
 
 passed=0
 
+assert_descriptor_cleanup() {
+  local output="$1"
+  local case_name="$2"
+
+  if [[ "$output" == *"workflow descriptor cleanup failed"* ]]; then
+    echo "CodeQL action version test failed: ${case_name} leaked workflow descriptors"
+    printf '%s\n' "$output"
+    exit 1
+  fi
+}
+
 run_checker() {
   local case_root="$1"
   local limit_assignment="${2:-}"
 
   if [ -n "$limit_assignment" ]; then
-    env "$limit_assignment" "$checker" "$case_root"
+    CODEQL_YAML_TEST_ASSERT_FD_CLEANUP=1 \
+      env "$limit_assignment" "$checker" "$case_root"
   else
-    "$checker" "$case_root"
+    CODEQL_YAML_TEST_ASSERT_FD_CLEANUP=1 "$checker" "$case_root"
   fi
 }
 
@@ -69,6 +81,7 @@ run_fail_case() {
     printf '%s\n' "$output"
     exit 1
   fi
+  assert_descriptor_cleanup "$output" "$fixture"
   passed=$((passed + 1))
 }
 
@@ -80,7 +93,7 @@ run_file_symlink_case() {
   cp "$fixtures/normal-block.yml" "$case_root/outside/codeql.yml"
   ln -s "$case_root/outside/codeql.yml" "$case_root/.github/workflows/codeql.yml"
 
-  if output="$("$checker" "$case_root" 2>&1)"; then
+  if output="$(CODEQL_YAML_TEST_ASSERT_FD_CLEANUP=1 "$checker" "$case_root" 2>&1)"; then
     echo "CodeQL action version test failed: workflow file symlink should fail"
     exit 1
   fi
@@ -88,6 +101,7 @@ run_file_symlink_case() {
     printf '%s\n' "$output"
     exit 1
   }
+  assert_descriptor_cleanup "$output" "workflow file symlink"
   passed=$((passed + 1))
 }
 
@@ -99,7 +113,7 @@ run_directory_symlink_case() {
   cp "$fixtures/normal-block.yml" "$case_root/real-workflows/codeql.yml"
   ln -s "$case_root/real-workflows" "$case_root/.github/workflows"
 
-  if output="$("$checker" "$case_root" 2>&1)"; then
+  if output="$(CODEQL_YAML_TEST_ASSERT_FD_CLEANUP=1 "$checker" "$case_root" 2>&1)"; then
     echo "CodeQL action version test failed: workflow directory symlink should fail"
     exit 1
   fi
@@ -107,6 +121,7 @@ run_directory_symlink_case() {
     printf '%s\n' "$output"
     exit 1
   }
+  assert_descriptor_cleanup "$output" "workflow directory symlink"
   passed=$((passed + 1))
 }
 
@@ -123,7 +138,7 @@ run_nonregular_case() {
     mkdir "$candidate"
   fi
 
-  if output="$("$checker" "$case_root" 2>&1)"; then
+  if output="$(CODEQL_YAML_TEST_ASSERT_FD_CLEANUP=1 "$checker" "$case_root" 2>&1)"; then
     echo "CodeQL action version test failed: ${kind} workflow entry should fail"
     exit 1
   fi
@@ -131,6 +146,7 @@ run_nonregular_case() {
     printf '%s\n' "$output"
     exit 1
   }
+  assert_descriptor_cleanup "$output" "${kind} workflow entry"
   passed=$((passed + 1))
 }
 
@@ -151,6 +167,7 @@ run_inode_swap_case() {
 
   CODEQL_YAML_TEST_MODE=1 \
     CODEQL_YAML_TEST_AFTER_LSTAT_MARKER="$marker" \
+    CODEQL_YAML_TEST_ASSERT_FD_CLEANUP=1 \
     CODEQL_YAML_MAX_SECONDS=10 \
     "$checker" "$case_root" >"$output_file" 2>&1 &
   checker_pid=$!
@@ -188,6 +205,67 @@ run_inode_swap_case() {
     printf '%s\n' "$output"
     exit 1
   }
+  assert_descriptor_cleanup "$output" "inode swap"
+  passed=$((passed + 1))
+}
+
+run_directory_swap_case() {
+  local case_root="$tmpdir/directory-swap"
+  local workflows="$case_root/.github/workflows"
+  local replacement="$case_root/replacement-workflows"
+  local marker="$case_root/after-enumeration"
+  local output_file="$case_root/checker-output"
+  local checker_pid
+  local status
+  local attempt
+  local output
+
+  mkdir -p "$workflows" "$replacement"
+  cp "$fixtures/normal-block.yml" "$workflows/codeql.yml"
+  cp "$fixtures/normal-block.yml" "$replacement/codeql.yml"
+
+  CODEQL_YAML_TEST_MODE=1 \
+    CODEQL_YAML_TEST_AFTER_DIRECTORY_ENUM_MARKER="$marker" \
+    CODEQL_YAML_TEST_ASSERT_FD_CLEANUP=1 \
+    CODEQL_YAML_MAX_SECONDS=10 \
+    "$checker" "$case_root" >"$output_file" 2>&1 &
+  checker_pid=$!
+
+  for attempt in $(seq 1 500); do
+    [ -f "$marker" ] && break
+    if ! kill -0 "$checker_pid" 2>/dev/null; then
+      break
+    fi
+    sleep 0.01
+  done
+
+  if [ ! -f "$marker" ]; then
+    kill "$checker_pid" 2>/dev/null || true
+    wait "$checker_pid" 2>/dev/null || true
+    echo "CodeQL action version test failed: directory swap synchronization marker was not created"
+    cat "$output_file"
+    exit 1
+  fi
+
+  mv "$workflows" "$case_root/original-workflows"
+  mv "$replacement" "$workflows"
+  : >"${marker}.continue"
+
+  set +e
+  wait "$checker_pid"
+  status=$?
+  set -e
+  output="$(cat "$output_file")"
+
+  if [ "$status" -eq 0 ]; then
+    echo "CodeQL action version test failed: workflow directory swap should fail"
+    exit 1
+  fi
+  [[ "$output" == *"workflow directory identity changed after enumeration"* ]] || {
+    printf '%s\n' "$output"
+    exit 1
+  }
+  assert_descriptor_cleanup "$output" "workflow directory swap"
   passed=$((passed + 1))
 }
 
@@ -243,5 +321,6 @@ run_directory_symlink_case
 run_nonregular_case "fifo"
 run_nonregular_case "directory"
 run_inode_swap_case
+run_directory_swap_case
 
 echo "OK: ${passed} adversarial CodeQL action version fixtures passed."

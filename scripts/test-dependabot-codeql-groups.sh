@@ -40,7 +40,13 @@ run_case() {
 
 run_case "valid.yml" "pass" "identically for version-updates and security-updates"
 run_case "missing-security.yml" "fail" "missing CodeQL group for security-updates"
-run_case "implicit-version-scope.yml" "fail" "must explicitly set applies-to"
-run_case "mismatched-patterns.yml" "fail" "security-updates CodeQL coverage must be exactly"
+run_case "implicit-version-scope.yml" "fail" "missing CodeQL group for version-updates"
+run_case "mismatched-patterns.yml" "fail" "missing CodeQL group for security-updates"
+run_case "required-analyze-exclusion.yml" "fail" "exclude-patterns entry \"github/codeql-action/analyze\" overlaps CodeQL actions"
+run_case "earlier-github-wildcard.yml" "fail" "captures CodeQL actions via \"github/*\""
+run_case "earlier-star.yml" "fail" "captures CodeQL actions via \"*\""
+run_case "later-broad-group.yml" "pass" "identically for version-updates and security-updates"
+run_case "earlier-benign-group.yml" "pass" "identically for version-updates and security-updates"
+run_case "earlier-broad-excluded.yml" "pass" "identically for version-updates and security-updates"
 
 echo "OK: ${passed} Dependabot CodeQL group fixtures passed."

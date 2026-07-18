@@ -12,6 +12,13 @@ fi
 exec ruby - "$repo_root" <<'RUBY'
 require "psych"
 require "timeout"
+require "fiddle/import"
+
+module Posix
+  extend Fiddle::Importer
+  dlload Fiddle.dlopen(nil)
+  extern "int openat(int, const char*, int, int)"
+end
 
 DEFAULT_LIMITS = {
   bytes: 256 * 1024,
@@ -72,7 +79,50 @@ def direct_child?(path, directory)
   File.dirname(path) == directory
 end
 
-def validate_workflow_directory(repo_root, workflow_dir, errors)
+def descriptor_count
+  descriptor_directory = Dir.exist?("/proc/self/fd") ? "/proc/self/fd" : "/dev/fd"
+  Dir.children(descriptor_directory).length
+end
+
+def verify_directory_identity(workflow_dir, canonical_directory, descriptor_stat, phase, errors)
+  path_stat_before = File.lstat(workflow_dir)
+  unless same_identity?(descriptor_stat, path_stat_before)
+    errors << ".github/workflows: workflow directory identity changed #{phase}"
+    return false
+  end
+
+  current_canonical = File.realpath(workflow_dir)
+  unless current_canonical == canonical_directory
+    errors << ".github/workflows: canonical workflow directory changed #{phase}"
+    return false
+  end
+
+  path_stat_after = File.lstat(workflow_dir)
+  unless same_identity?(descriptor_stat, path_stat_after)
+    errors << ".github/workflows: workflow directory identity changed #{phase}"
+    return false
+  end
+
+  true
+rescue SystemCallError => error
+  errors << ".github/workflows: could not verify workflow directory #{phase}: #{error.message}"
+  false
+end
+
+def pause_for_test(marker_env, limits)
+  return unless ENV["CODEQL_YAML_TEST_MODE"] == "1"
+
+  marker = ENV[marker_env]
+  return unless marker
+
+  File.open(marker, File::WRONLY | File::CREAT | File::EXCL, 0o600) { |file| file.write("ready\n") }
+  continue_marker = "#{marker}.continue"
+  Timeout.timeout(limits[:seconds]) do
+    sleep 0.01 until File.exist?(continue_marker)
+  end
+end
+
+def with_validated_workflow_directory(repo_root, workflow_dir, limits, errors)
   canonical_repo = File.realpath(repo_root)
   current = repo_root
 
@@ -96,7 +146,6 @@ def validate_workflow_directory(repo_root, workflow_dir, errors)
   end
 
   before = File.lstat(workflow_dir)
-  entries = nil
   Dir.open(workflow_dir) do |directory|
     descriptor_stat = IO.new(directory.fileno, autoclose: false).stat
     after = File.lstat(workflow_dir)
@@ -104,31 +153,67 @@ def validate_workflow_directory(repo_root, workflow_dir, errors)
       errors << ".github/workflows: workflow directory identity changed during enumeration"
       return
     end
+
     entries = directory.children.select { |name| name.end_with?(".yml", ".yaml") }.sort
+    pause_for_test("CODEQL_YAML_TEST_AFTER_DIRECTORY_ENUM_MARKER", limits)
+    return unless verify_directory_identity(
+      workflow_dir,
+      canonical_directory,
+      descriptor_stat,
+      "after enumeration",
+      errors,
+    )
+
+    yield directory, descriptor_stat, canonical_directory, entries
+
+    verify_directory_identity(
+      workflow_dir,
+      canonical_directory,
+      descriptor_stat,
+      "after workflow reads",
+      errors,
+    )
   end
-
-  [canonical_directory, entries]
-rescue SystemCallError => error
+rescue SystemCallError, Timeout::Error => error
   errors << ".github/workflows: could not validate workflow directory: #{error.message}"
-  nil
 end
 
-def pause_after_lstat_for_test
-  return unless ENV["CODEQL_YAML_TEST_MODE"] == "1"
-
-  marker = ENV["CODEQL_YAML_TEST_AFTER_LSTAT_MARKER"]
-  return unless marker
-
-  File.open(marker, File::WRONLY | File::CREAT | File::EXCL, 0o600) { |file| file.write("ready\n") }
-  continue_marker = "#{marker}.continue"
-  sleep 0.01 until File.exist?(continue_marker)
+def pause_after_lstat_for_test(limits)
+  pause_for_test("CODEQL_YAML_TEST_AFTER_LSTAT_MARKER", limits)
 end
 
-def read_workflow_file(path, relative_file, canonical_directory, limits, errors)
+def openat_readonly(directory_fd, entry, flags)
+  fd = Posix.openat(directory_fd, entry, flags, 0)
+  if fd.negative?
+    errno = Fiddle.last_error
+    raise SystemCallError.new("openat #{entry}", errno)
+  end
+  IO.new(fd, "rb")
+end
+
+def read_workflow_file(
+  directory,
+  directory_stat,
+  workflow_dir,
+  path,
+  entry,
+  relative_file,
+  canonical_directory,
+  limits,
+  errors
+)
   unless File.const_defined?(:NOFOLLOW)
     errors << "#{relative_file}: O_NOFOLLOW is unavailable on this platform"
     return
   end
+
+  return unless verify_directory_identity(
+    workflow_dir,
+    canonical_directory,
+    directory_stat,
+    "before file open",
+    errors,
+  )
 
   before = File.lstat(path)
   if before.symlink?
@@ -146,11 +231,12 @@ def read_workflow_file(path, relative_file, canonical_directory, limits, errors)
     return
   end
 
-  pause_after_lstat_for_test
+  pause_after_lstat_for_test(limits)
 
   flags = File::RDONLY | File::NOFOLLOW
   flags |= File::NONBLOCK if File.const_defined?(:NONBLOCK)
-  File.open(path, flags) do |file|
+  file = openat_readonly(directory.fileno, entry, flags)
+  begin
     descriptor_stat = file.stat
     unless descriptor_stat.file?
       errors << "#{relative_file}: opened workflow descriptor is not a regular file"
@@ -160,6 +246,14 @@ def read_workflow_file(path, relative_file, canonical_directory, limits, errors)
       errors << "#{relative_file}: workflow file identity changed before descriptor open"
       return
     end
+
+    return unless verify_directory_identity(
+      workflow_dir,
+      canonical_directory,
+      directory_stat,
+      "after descriptor open",
+      errors,
+    )
 
     during = File.lstat(path)
     canonical_during = File.realpath(path)
@@ -185,7 +279,16 @@ def read_workflow_file(path, relative_file, canonical_directory, limits, errors)
       return
     end
 
+    return unless verify_directory_identity(
+      workflow_dir,
+      canonical_directory,
+      directory_stat,
+      "after file read",
+      errors,
+    )
     content
+  ensure
+    file.close unless file.closed?
   end
 rescue SystemCallError => error
   errors << "#{relative_file}: could not safely open workflow file: #{error.message}"
@@ -392,73 +495,88 @@ unless Dir.exist?(workflow_dir)
   exit 1
 end
 
-directory_result = validate_workflow_directory(repo_root, workflow_dir, errors)
-if directory_result
-  canonical_workflow_dir, workflow_entries = directory_result
+check_fd_cleanup = ENV["CODEQL_YAML_TEST_ASSERT_FD_CLEANUP"] == "1"
+initial_fd_count = descriptor_count if check_fd_cleanup
+
+with_validated_workflow_directory(repo_root, workflow_dir, limits, errors) do |
+  directory,
+  directory_stat,
+  canonical_workflow_dir,
+  workflow_entries
+|
   errors << "no workflow YAML files found in .github/workflows" if workflow_entries.empty?
-else
-  workflow_entries = []
+
+  workflow_entries.each do |entry|
+    absolute_file = File.join(workflow_dir, entry)
+    relative_file = File.join(".github", "workflows", entry)
+    begin
+      Timeout.timeout(limits[:seconds]) do
+        content = read_workflow_file(
+          directory,
+          directory_stat,
+          workflow_dir,
+          absolute_file,
+          entry,
+          relative_file,
+          canonical_workflow_dir,
+          limits,
+          errors,
+        )
+        next unless content
+
+        if content.bytesize > limits[:bytes]
+          errors << "#{relative_file}: byte limit exceeded (limit #{limits[:bytes]})"
+          next
+        end
+
+        content.force_encoding(Encoding::UTF_8)
+        unless content.valid_encoding?
+          errors << "#{relative_file}: workflow YAML is not valid UTF-8"
+          next
+        end
+
+        stream = Psych.parse_stream(content, filename: relative_file)
+        document_count = stream.children.length
+        unless document_count == 1
+          errors << "#{relative_file}: expected exactly one YAML document, found #{document_count}"
+          next
+        end
+
+        document = stream.children.fetch(0)
+        root = document.children&.fetch(0, nil)
+        unless root
+          errors << "#{relative_file}: YAML document is empty"
+          next
+        end
+
+        file_errors = []
+        anchors = preflight_ast(root, relative_file, limits, file_errors)
+        if file_errors.empty?
+          state = {
+            work: 0,
+            work_exceeded: false,
+            active: {},
+            visited: {},
+          }
+          scan_ast(root, relative_file, "$", 1, anchors, limits, state, codeql_uses, file_errors)
+        end
+        errors.concat(file_errors)
+      end
+    rescue Psych::Exception => error
+      detail = error.message.lines.first.to_s.strip
+      errors << "#{relative_file}: could not parse YAML AST: #{detail}"
+    rescue Timeout::Error
+      errors << "#{relative_file}: YAML processing time limit exceeded (limit #{limits[:seconds]}s)"
+    rescue SystemStackError
+      errors << "#{relative_file}: YAML parser stack limit exceeded"
+    end
+  end
 end
 
-workflow_entries.each do |entry|
-  absolute_file = File.join(workflow_dir, entry)
-  relative_file = File.join(".github", "workflows", entry)
-  begin
-    Timeout.timeout(limits[:seconds]) do
-      content = read_workflow_file(
-        absolute_file,
-        relative_file,
-        canonical_workflow_dir,
-        limits,
-        errors,
-      )
-      next unless content
-
-      if content.bytesize > limits[:bytes]
-        errors << "#{relative_file}: byte limit exceeded (limit #{limits[:bytes]})"
-        next
-      end
-
-      content.force_encoding(Encoding::UTF_8)
-      unless content.valid_encoding?
-        errors << "#{relative_file}: workflow YAML is not valid UTF-8"
-        next
-      end
-
-      stream = Psych.parse_stream(content, filename: relative_file)
-      document_count = stream.children.length
-      unless document_count == 1
-        errors << "#{relative_file}: expected exactly one YAML document, found #{document_count}"
-        next
-      end
-
-      document = stream.children.fetch(0)
-      root = document.children&.fetch(0, nil)
-      unless root
-        errors << "#{relative_file}: YAML document is empty"
-        next
-      end
-
-      file_errors = []
-      anchors = preflight_ast(root, relative_file, limits, file_errors)
-      if file_errors.empty?
-        state = {
-          work: 0,
-          work_exceeded: false,
-          active: {},
-          visited: {},
-        }
-        scan_ast(root, relative_file, "$", 1, anchors, limits, state, codeql_uses, file_errors)
-      end
-      errors.concat(file_errors)
-    end
-  rescue Psych::Exception => error
-    detail = error.message.lines.first.to_s.strip
-    errors << "#{relative_file}: could not parse YAML AST: #{detail}"
-  rescue Timeout::Error
-    errors << "#{relative_file}: YAML processing time limit exceeded (limit #{limits[:seconds]}s)"
-  rescue SystemStackError
-    errors << "#{relative_file}: YAML parser stack limit exceeded"
+if check_fd_cleanup
+  final_fd_count = descriptor_count
+  if final_fd_count != initial_fd_count
+    errors << "workflow descriptor cleanup failed: before=#{initial_fd_count}, after=#{final_fd_count}"
   end
 end
 
