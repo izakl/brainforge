@@ -1,0 +1,10 @@
+---
+name: First document
+jobs:
+  initialize:
+    uses: github/codeql-action/init@1111111111111111111111111111111111111111
+---
+name: Second document
+jobs:
+  analyze:
+    uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

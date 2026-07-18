@@ -1,0 +1,19 @@
+name: Repeated shared alias
+on: [push]
+definitions:
+  initialize: &initialize
+    uses: github/codeql-action/init@1111111111111111111111111111111111111111
+  repeated:
+    - *initialize
+    - *initialize
+    - *initialize
+    - *initialize
+    - *initialize
+    - *initialize
+    - *initialize
+    - *initialize
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

@@ -10,33 +10,153 @@ if ! command -v ruby >/dev/null 2>&1; then
 fi
 
 exec ruby - "$repo_root" <<'RUBY'
-require "yaml"
+require "psych"
+require "timeout"
 
-repo_root = File.expand_path(ARGV.fetch(0))
-workflow_dir = File.join(repo_root, ".github", "workflows")
-errors = []
-codeql_uses = []
+DEFAULT_LIMITS = {
+  bytes: 256 * 1024,
+  ast_nodes: 10_000,
+  depth: 100,
+  anchors: 128,
+  aliases: 256,
+  traversal_work: 20_000,
+  seconds: 5,
+}.freeze
 
-unless Dir.exist?(workflow_dir)
-  warn "CodeQL action version alignment check failed:"
-  warn "  - missing workflow directory: .github/workflows"
-  exit 1
+LIMIT_ENV = {
+  bytes: "CODEQL_YAML_MAX_BYTES",
+  ast_nodes: "CODEQL_YAML_MAX_AST_NODES",
+  depth: "CODEQL_YAML_MAX_DEPTH",
+  anchors: "CODEQL_YAML_MAX_ANCHORS",
+  aliases: "CODEQL_YAML_MAX_ALIASES",
+  traversal_work: "CODEQL_YAML_MAX_TRAVERSAL_WORK",
+  seconds: "CODEQL_YAML_MAX_SECONDS",
+}.freeze
+
+EXPLICIT_STRING_TAG = "tag:yaml.org,2002:str"
+
+def read_limits
+  DEFAULT_LIMITS.each_with_object({}) do |(name, default), limits|
+    env_name = LIMIT_ENV.fetch(name)
+    value = Integer(ENV.fetch(env_name, default.to_s), 10)
+    raise ArgumentError, "#{env_name} must be greater than zero" unless value.positive?
+    limits[name] = value
+  end
+end
+
+def node_location(file, node)
+  "#{file}:#{node.start_line + 1}:#{node.start_column + 1}"
+end
+
+def ast_children(node)
+  children = node.respond_to?(:children) ? node.children : nil
+  children || []
+end
+
+def allowed_tag?(node)
+  # GitHub workflow YAML needs no explicit collection tags. The only explicit
+  # scalar tag accepted here is the standard YAML string tag.
+  return true if node.tag.nil?
+  node.is_a?(Psych::Nodes::Scalar) && node.tag == EXPLICIT_STRING_TAG
+end
+
+def container_node?(node)
+  node.is_a?(Psych::Nodes::Mapping) || node.is_a?(Psych::Nodes::Sequence)
+end
+
+def preflight_ast(root, file, limits, errors)
+  anchors = {}
+  node_count = 0
+  anchor_count = 0
+  alias_count = 0
+  stack = [[root, 1]]
+
+  until stack.empty?
+    node, depth = stack.pop
+    node_count += 1
+    if node_count > limits[:ast_nodes]
+      errors << "#{file}: AST node limit exceeded (limit #{limits[:ast_nodes]})"
+      break
+    end
+    if depth > limits[:depth]
+      errors << "#{node_location(file, node)}: AST depth limit exceeded (limit #{limits[:depth]})"
+      next
+    end
+
+    if node.respond_to?(:tag) && !allowed_tag?(node)
+      errors << "#{node_location(file, node)}: explicit YAML tag is not allowed: #{node.tag.inspect}"
+    end
+
+    anchor = node.respond_to?(:anchor) ? node.anchor : nil
+    if node.is_a?(Psych::Nodes::Alias)
+      alias_count += 1
+      if alias_count > limits[:aliases]
+        errors << "#{node_location(file, node)}: YAML alias limit exceeded (limit #{limits[:aliases]})"
+        break
+      end
+      unless anchors.key?(anchor)
+        errors << "#{node_location(file, node)}: undefined YAML alias '*#{anchor}'"
+      end
+    elsif anchor
+      anchor_count += 1
+      if anchor_count > limits[:anchors]
+        errors << "#{node_location(file, node)}: YAML anchor limit exceeded (limit #{limits[:anchors]})"
+        break
+      end
+      if anchors.key?(anchor)
+        errors << "#{node_location(file, node)}: duplicate YAML anchor '&#{anchor}'"
+      else
+        anchors[anchor] = node
+      end
+    end
+
+    ast_children(node).reverse_each { |child| stack << [child, depth + 1] }
+  end
+
+  anchors
+end
+
+def resolve_alias(node, anchors)
+  node.is_a?(Psych::Nodes::Alias) ? anchors[node.anchor] : node
+end
+
+def mapping_key_value(node, anchors)
+  resolved = resolve_alias(node, anchors)
+  resolved.value if resolved.is_a?(Psych::Nodes::Scalar)
 end
 
 def mapping_path(parent, key)
-  if key.is_a?(String) && key.match?(/\A[A-Za-z_][A-Za-z0-9_-]*\z/)
+  if key && key.match?(/\A[A-Za-z_][A-Za-z0-9_-]*\z/)
     "#{parent}.#{key}"
   else
     "#{parent}[#{key.inspect}]"
   end
 end
 
-def inspect_uses(value, file, path, codeql_uses, errors)
-  unless value.is_a?(String)
-    errors << "#{file}:#{path}: uses value must be a string, got #{value.class}"
+def string_scalar?(node)
+  return true if node.tag == EXPLICIT_STRING_TAG
+  return true unless node.plain
+
+  loader = Psych::ClassLoader::Restricted.new([], [])
+  Psych::ScalarScanner.new(loader).tokenize(node.value).is_a?(String)
+rescue Psych::DisallowedClass
+  false
+end
+
+def inspect_uses(node, file, path, anchors, codeql_uses, errors)
+  resolved = resolve_alias(node, anchors)
+  unless resolved.is_a?(Psych::Nodes::Scalar)
+    type = resolved ? resolved.class.name.split("::").last : "undefined alias"
+    errors << "#{file}:#{path}: uses value must be a string scalar, got #{type}"
     return
   end
 
+  unless string_scalar?(resolved)
+    errors << "#{file}:#{path}: uses value must resolve to a string scalar"
+    return
+  end
+
+  value = resolved.value
   prefix = "github/codeql-action"
   return unless value == prefix || value.start_with?("#{prefix}/")
 
@@ -59,65 +179,155 @@ def inspect_uses(value, file, path, codeql_uses, errors)
   }
 end
 
-def walk_yaml(node, file, path, codeql_uses, errors, active_containers)
-  added_guard = false
-  container = node.is_a?(Hash) || node.is_a?(Array)
-  if container
+def scan_ast(node, file, path, depth, anchors, limits, state, codeql_uses, errors)
+  return if state[:work_exceeded]
+
+  state[:work] += 1
+  if state[:work] > limits[:traversal_work]
+    errors << "#{file}:#{path}: traversal work limit exceeded (limit #{limits[:traversal_work]})"
+    state[:work_exceeded] = true
+    return
+  end
+  if depth > limits[:depth]
+    errors << "#{file}:#{path}: traversal depth limit exceeded (limit #{limits[:depth]})"
+    return
+  end
+
+  if node.is_a?(Psych::Nodes::Alias)
+    target = anchors[node.anchor]
+    unless target
+      errors << "#{file}:#{path}: undefined YAML alias '*#{node.anchor}'"
+      return
+    end
+    scan_ast(
+      target,
+      file,
+      "#{path}->*#{node.anchor}",
+      depth + 1,
+      anchors,
+      limits,
+      state,
+      codeql_uses,
+      errors,
+    )
+    return
+  end
+
+  added_active = false
+  if container_node?(node)
     object_id = node.object_id
-    if active_containers[object_id]
+    if state[:active][object_id]
       errors << "#{file}:#{path}: recursive YAML alias is not supported"
       return
     end
-    active_containers[object_id] = true
-    added_guard = true
+    return if state[:visited][object_id]
+
+    state[:active][object_id] = true
+    state[:visited][object_id] = true
+    added_active = true
   end
 
   case node
-  when Hash
-    node.each do |key, value|
+  when Psych::Nodes::Mapping
+    node.children.each_slice(2) do |key_node, value_node|
+      key = mapping_key_value(key_node, anchors)
       child_path = mapping_path(path, key)
-      inspect_uses(value, file, child_path, codeql_uses, errors) if key == "uses"
-      walk_yaml(value, file, child_path, codeql_uses, errors, active_containers)
+      inspect_uses(value_node, file, child_path, anchors, codeql_uses, errors) if key == "uses"
+      scan_ast(key_node, file, "#{child_path}<key>", depth + 1, anchors, limits, state, codeql_uses, errors)
+      scan_ast(value_node, file, child_path, depth + 1, anchors, limits, state, codeql_uses, errors)
     end
-  when Array
-    node.each_with_index do |value, index|
-      child_path = "#{path}[#{index}]"
-      walk_yaml(value, file, child_path, codeql_uses, errors, active_containers)
+  when Psych::Nodes::Sequence
+    node.children.each_with_index do |child, index|
+      scan_ast(child, file, "#{path}[#{index}]", depth + 1, anchors, limits, state, codeql_uses, errors)
     end
   end
 ensure
-  active_containers.delete(node.object_id) if added_guard
+  state[:active].delete(node.object_id) if added_active
+end
+
+begin
+  limits = read_limits
+rescue ArgumentError => error
+  warn "CodeQL action version alignment check failed:"
+  warn "  - invalid parser limit: #{error.message}"
+  exit 1
+end
+
+repo_root = File.expand_path(ARGV.fetch(0))
+workflow_dir = File.join(repo_root, ".github", "workflows")
+errors = []
+codeql_uses = []
+
+unless Dir.exist?(workflow_dir)
+  warn "CodeQL action version alignment check failed:"
+  warn "  - missing workflow directory: .github/workflows"
+  exit 1
 end
 
 workflow_files = Dir.glob(File.join(workflow_dir, "*.{yml,yaml}")).sort
-if workflow_files.empty?
-  errors << "no workflow YAML files found in .github/workflows"
-end
+errors << "no workflow YAML files found in .github/workflows" if workflow_files.empty?
 
 workflow_files.each do |absolute_file|
   relative_file = absolute_file.delete_prefix("#{repo_root}/")
   begin
-    document = Psych.safe_load(
-      File.read(absolute_file, encoding: "UTF-8"),
-      permitted_classes: [],
-      permitted_symbols: [],
-      aliases: true,
-      filename: relative_file,
-    )
-  rescue Psych::Exception, ArgumentError => error
-    detail = error.message.lines.first.to_s.strip
-    errors << "#{relative_file}: could not parse YAML safely: #{detail}"
+    content = File.open(absolute_file, "rb") { |file| file.read(limits[:bytes] + 1) }
+  rescue SystemCallError => error
+    errors << "#{relative_file}: could not read workflow YAML: #{error.message}"
+    next
+  end
+  if content.bytesize > limits[:bytes]
+    errors << "#{relative_file}: byte limit exceeded (limit #{limits[:bytes]})"
     next
   end
 
-  walk_yaml(document, relative_file, "$", codeql_uses, errors, {})
+  content.force_encoding(Encoding::UTF_8)
+  unless content.valid_encoding?
+    errors << "#{relative_file}: workflow YAML is not valid UTF-8"
+    next
+  end
+
+  begin
+    Timeout.timeout(limits[:seconds]) do
+      stream = Psych.parse_stream(content, relative_file)
+      document_count = stream.children.length
+      unless document_count == 1
+        errors << "#{relative_file}: expected exactly one YAML document, found #{document_count}"
+        next
+      end
+
+      document = stream.children.fetch(0)
+      root = document.children&.fetch(0, nil)
+      unless root
+        errors << "#{relative_file}: YAML document is empty"
+        next
+      end
+
+      file_errors = []
+      anchors = preflight_ast(root, relative_file, limits, file_errors)
+      if file_errors.empty?
+        state = {
+          work: 0,
+          work_exceeded: false,
+          active: {},
+          visited: {},
+        }
+        scan_ast(root, relative_file, "$", 1, anchors, limits, state, codeql_uses, file_errors)
+      end
+      errors.concat(file_errors)
+    end
+  rescue Psych::Exception => error
+    detail = error.message.lines.first.to_s.strip
+    errors << "#{relative_file}: could not parse YAML AST: #{detail}"
+  rescue Timeout::Error
+    errors << "#{relative_file}: YAML processing time limit exceeded (limit #{limits[:seconds]}s)"
+  rescue SystemStackError
+    errors << "#{relative_file}: YAML parser stack limit exceeded"
+  end
 end
 
 components = codeql_uses.group_by { |entry| entry[:component] }
 %w[init analyze].each do |required_component|
-  unless components.key?(required_component)
-    errors << "missing required CodeQL component: #{required_component}"
-  end
+  errors << "missing required CodeQL component: #{required_component}" unless components.key?(required_component)
 end
 
 refs = codeql_uses.map { |entry| entry[:ref] }.uniq

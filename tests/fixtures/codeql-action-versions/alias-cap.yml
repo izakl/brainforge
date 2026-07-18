@@ -1,0 +1,3 @@
+name: Alias cap
+value: &value shared
+aliases: [*value, *value, *value]

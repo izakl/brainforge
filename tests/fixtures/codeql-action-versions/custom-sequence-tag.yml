@@ -1,0 +1,8 @@
+name: Custom sequence tag
+on: [push]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps: !custom-sequence
+      - uses: github/codeql-action/init@1111111111111111111111111111111111111111
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111
