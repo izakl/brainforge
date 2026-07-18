@@ -150,6 +150,7 @@ bash scripts/check-security-guardrails.sh
 
 # CodeQL action component version alignment
 bash scripts/check-codeql-action-versions.sh
+bash scripts/test-codeql-action-versions.sh
 
 # ADR / runbooks / examples index parity (ADR 0016)
 bash scripts/check-index-parity.sh

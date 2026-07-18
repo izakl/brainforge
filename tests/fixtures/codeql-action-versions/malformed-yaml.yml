@@ -1,0 +1,5 @@
+name: Malformed YAML
+on: [push
+jobs:
+  analyze:
+    uses: github/codeql-action/init@1111111111111111111111111111111111111111

@@ -1,0 +1,12 @@
+name: Scalar and comment false positives
+on: [push]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      # uses: github/codeql-action/init@2222222222222222222222222222222222222222
+      - name: Print inert workflow text
+        run: |
+          echo "uses: github/codeql-action/analyze@3333333333333333333333333333333333333333"
+      - uses: github/codeql-action/init@1111111111111111111111111111111111111111
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111
