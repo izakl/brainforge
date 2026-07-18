@@ -43,6 +43,8 @@ run_case "missing-security.yml" "fail" "missing CodeQL group for security-update
 run_case "implicit-version-scope.yml" "fail" "missing CodeQL group for version-updates"
 run_case "mismatched-patterns.yml" "fail" "missing CodeQL group for security-updates"
 run_case "required-analyze-exclusion.yml" "fail" "exclude-patterns entry \"github/codeql-action/analyze\" overlaps CodeQL actions"
+run_case "required-update-types.yml" "fail" "must not set \"update-types\""
+run_case "required-dependency-type.yml" "fail" "must not set \"dependency-type\""
 run_case "earlier-github-wildcard.yml" "fail" "captures CodeQL actions via \"github/*\""
 run_case "earlier-star.yml" "fail" "captures CodeQL actions via \"*\""
 run_case "later-broad-group.yml" "pass" "identically for version-updates and security-updates"

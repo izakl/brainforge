@@ -168,6 +168,7 @@ groups.each do |name, spec|
   parsed_groups << {
     name: name,
     path: group_path,
+    spec: spec,
     explicit_scope: explicit_scope,
     scope: scope,
     patterns: patterns,
@@ -190,6 +191,12 @@ required_scopes.each do |scope|
 
   required_group = candidates.fetch(0)
   required_index = parsed_groups.index(required_group)
+
+  %w[update-types dependency-type group-by].each do |selector|
+    next unless required_group[:spec].key?(selector)
+
+    errors << "#{required_group[:path]} must not set #{selector.inspect}; CodeQL grouping must cover every update"
+  end
 
   required_group[:exclusions].each do |exclusion|
     next unless glob_patterns_intersect?(codeql_pattern, exclusion)
