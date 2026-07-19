@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      codeql-action:
+        applies-to: "version-updates"
+        patterns:
+          - "github/codeql-action/*"
+      all-version-updates:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+      codeql-action-security:
+        applies-to: "security-updates"
+        patterns:
+          - "github/codeql-action/*"
+      all-security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "github/*"

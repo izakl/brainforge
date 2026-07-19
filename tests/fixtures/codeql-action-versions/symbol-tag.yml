@@ -1,0 +1,8 @@
+name: Ruby symbol tag
+on: [push]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: !ruby/symbol codeql-init
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

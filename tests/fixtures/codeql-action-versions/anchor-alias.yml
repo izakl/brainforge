@@ -1,0 +1,10 @@
+name: Anchor and alias
+on: [push]
+env:
+  CODEQL_INIT_ACTION: &codeql-init github/codeql-action/init@1111111111111111111111111111111111111111
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: *codeql-init
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

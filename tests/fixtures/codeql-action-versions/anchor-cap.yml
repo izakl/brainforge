@@ -1,0 +1,4 @@
+name: Anchor cap
+first: &first one
+second: &second two
+third: &third three

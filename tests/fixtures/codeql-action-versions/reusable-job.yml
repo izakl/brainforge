@@ -1,0 +1,7 @@
+name: Reusable job uses
+on: [push]
+jobs:
+  initialize:
+    uses: github/codeql-action/init@1111111111111111111111111111111111111111
+  analyze:
+    uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

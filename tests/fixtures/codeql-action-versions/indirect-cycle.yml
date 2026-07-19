@@ -1,0 +1,10 @@
+name: Indirect alias cycle
+outer: &outer
+  inner: &inner
+    back: *outer
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/codeql-action/init@1111111111111111111111111111111111111111
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

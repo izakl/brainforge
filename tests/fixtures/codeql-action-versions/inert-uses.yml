@@ -1,0 +1,11 @@
+name: Inert uses keys
+on: [push]
+env:
+  uses: github/codeql-action/init@1111111111111111111111111111111111111111
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          uses: github/codeql-action/analyze@1111111111111111111111111111111111111111
+        run: echo "No CodeQL action runs"

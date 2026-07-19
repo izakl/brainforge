@@ -1,0 +1,28 @@
+name: Layered alias DAG
+on: [push]
+definitions:
+  base: &base
+    uses: github/codeql-action/init@1111111111111111111111111111111111111111
+  layer01: &layer01 [*base, *base]
+  layer02: &layer02 [*layer01, *layer01]
+  layer03: &layer03 [*layer02, *layer02]
+  layer04: &layer04 [*layer03, *layer03]
+  layer05: &layer05 [*layer04, *layer04]
+  layer06: &layer06 [*layer05, *layer05]
+  layer07: &layer07 [*layer06, *layer06]
+  layer08: &layer08 [*layer07, *layer07]
+  layer09: &layer09 [*layer08, *layer08]
+  layer10: &layer10 [*layer09, *layer09]
+  layer11: &layer11 [*layer10, *layer10]
+  layer12: &layer12 [*layer11, *layer11]
+  layer13: &layer13 [*layer12, *layer12]
+  layer14: &layer14 [*layer13, *layer13]
+  layer15: &layer15 [*layer14, *layer14]
+  layer16: &layer16 [*layer15, *layer15]
+  result: *layer16
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/codeql-action/init@1111111111111111111111111111111111111111
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

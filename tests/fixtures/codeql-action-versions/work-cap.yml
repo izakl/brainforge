@@ -1,0 +1,14 @@
+name: Traversal work cap
+on: [push]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: One
+        run: echo one
+      - name: Two
+        run: echo two
+      - name: Three
+        run: echo three
+      - uses: github/codeql-action/init@1111111111111111111111111111111111111111
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

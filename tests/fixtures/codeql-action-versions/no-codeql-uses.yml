@@ -1,0 +1,7 @@
+name: No CodeQL uses
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@1111111111111111111111111111111111111111

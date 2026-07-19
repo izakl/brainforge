@@ -1,0 +1,10 @@
+name: Non-string uses
+on: [push]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses:
+          action: github/codeql-action/init
+          ref: 1111111111111111111111111111111111111111
+      - uses: github/codeql-action/analyze@1111111111111111111111111111111111111111

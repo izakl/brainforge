@@ -1,0 +1,8 @@
+name: Flow mapping
+on: [push]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - { name: Initialize, uses: github/codeql-action/init@1111111111111111111111111111111111111111 }
+      - { name: Analyze, uses: github/codeql-action/analyze@1111111111111111111111111111111111111111 }
